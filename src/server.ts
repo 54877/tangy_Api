@@ -6,9 +6,17 @@ import { query } from "./db/db.js";
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
-  console.log("server started on", PORT);
+async function start() {
+  try {
+    await query("SELECT 1");
 
-  const result = await query("SELECT NOW()");
-  console.log("DB connected:", result.rows);
-});
+    app.listen(PORT, () => {
+      console.log("Server running on", PORT);
+    });
+  } catch (err) {
+    console.error("DB not ready:", err);
+    process.exit(1);
+  }
+}
+
+start();
