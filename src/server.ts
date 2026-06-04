@@ -2,20 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import app from "./app.js";
-import { query } from "./db/db.js";
 
+// 啟動伺服器
 const PORT = process.env.PORT || 3000;
-
-async function start() {
-  try {
-    await query("SELECT 1");
-
-    app.listen(PORT, () => {
-      console.log("Server running on", PORT);
-    });
-  } catch (err) {
-    console.error("DB not ready:", err);
-  }
-}
-
-start();
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
