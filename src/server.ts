@@ -10,6 +10,9 @@ async function start() {
   try {
     await query("SELECT 1");
     console.log("DB connected");
+    console.log("RAW DATABASE_URL:");
+    console.log(process.env.DATABASE_URL);
+    console.log("TYPE:", typeof process.env.DATABASE_URL);
   } catch (err) {
     console.error("DB failed:", err);
   }
