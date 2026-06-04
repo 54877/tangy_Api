@@ -9,13 +9,14 @@ const PORT = process.env.PORT || 3000;
 async function start() {
   try {
     await query("SELECT 1");
-
-    app.listen(PORT, () => {
-      console.log("Server running on", PORT);
-    });
+    console.log("DB connected");
   } catch (err) {
-    console.error("DB not ready:", err);
+    console.error("DB failed:", err);
   }
+
+  app.listen(PORT, () => {
+    console.log("Server running");
+  });
 }
 
 start();
