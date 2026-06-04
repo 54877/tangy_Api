@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const errors_js_1 = require("./utils/errors.js");
+const db_js_1 = require("./db/db.js");
 const app = (0, express_1.default)();
 //跨網域設定
 app.use((0, cors_1.default)({
@@ -21,6 +22,21 @@ app.use((0, cors_1.default)({
 // 解析 JSON 格式的請求體
 app.use(express_1.default.json());
 //api
+app.get("/health", async (req, res) => {
+    try {
+        const result = await (0, db_js_1.query)("SELECT NOW()");
+        res.json({
+            ok: true,
+            time: result.rows[0],
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            ok: false,
+            error: err,
+        });
+    }
+});
 app.use(errors_js_1.errorHandler);
 exports.default = app;
 //# sourceMappingURL=app.js.map
