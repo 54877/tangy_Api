@@ -8,5 +8,4 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-console.log(`123123132132`, process.env.DATABASE_URL);
 export const query = (text: string, params?: any[]) => pool.query(text, params);
