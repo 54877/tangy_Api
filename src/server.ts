@@ -15,7 +15,6 @@ async function start() {
     });
   } catch (err) {
     console.error("DB not ready:", err);
-    process.exit(1);
   }
 }
 
