@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { errorHandler } from "./utils/errors.js";
-import { query } from "./db/db.js";
 
 const app = express();
 
@@ -23,20 +22,6 @@ app.use(
 app.use(express.json());
 
 //api
-app.get("/health", async (req, res) => {
-  try {
-    const result = await query("SELECT NOW()");
-    res.json({
-      ok: true,
-      time: result.rows[0],
-    });
-  } catch (err) {
-    res.status(500).json({
-      ok: false,
-      error: err,
-    });
-  }
-});
 
 app.use(errorHandler);
 export default app;
