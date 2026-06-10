@@ -8,7 +8,7 @@ export const auth_router = express.Router();
 
 openapiRoute({
   method: "post",
-  path: "/register",
+  path: "/auth/register",
   tags: ["Auth"],
   summary: "註冊帳號",
   schema: registerSchema,
