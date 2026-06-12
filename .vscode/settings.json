@@ -9,7 +9,7 @@
             },
             "ssh": "Disabled",
             "previewLimit": 50,
-            "server": "db.ityfhdglftfwqkqccpay.supabase.co",
+            "server": "@db.ityfhdglftfwqkqccpay.supabase.co",
             "port": 5432,
             "askForPassword": true,
             "driver": "PostgreSQL",

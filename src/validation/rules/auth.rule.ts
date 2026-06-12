@@ -1,16 +1,5 @@
-import { z } from "zod";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { z } from "../../config/zod";
 
-extendZodWithOpenApi(z);
-export const accountScheme = z
-  .string()
-  .trim()
-  .min(3, "帳號不可少於3個字元")
-  .max(20, "帳號不可超過20個字元")
-  .regex(/^[a-zA-Z0-9_]+$/, "只能包含英文、數字、底線")
-  .openapi({
-    example: "test",
-  });
 export const passwordScheme = z
   .string()
   .trim()

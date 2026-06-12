@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export interface TokenPayload {
-  id: number;
+  id: string;
   email: string;
   role: "user" | "admin";
 }

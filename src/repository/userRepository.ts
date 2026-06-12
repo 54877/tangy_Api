@@ -2,16 +2,13 @@ import { DatabaseError } from "pg";
 import { query } from "../db/db";
 import { user } from "../types/authType";
 import { AppError } from "../utils/errors";
+import { prisma } from "../db/prisma";
 
-export const registerUserDb = async ({
-  account,
-  password,
-  user_name,
-}: user) => {
+export const registerUserDb = async ({ password, user_name, email }: user) => {
   try {
     const result = await query(
-      `INSERT INTO user_table (account, password , user_name) VALUES ($1, $2 , $3) RETURNING id , account`,
-      [account, password, user_name],
+      `INSERT INTO user_table ( password , user_name , email) VALUES ($1, $2 , $3 ) RETURNING id , email , user_name`,
+      [password, user_name, email],
     );
 
     return result.rows[0];
@@ -21,4 +18,12 @@ export const registerUserDb = async ({
     }
     throw err;
   }
+};
+
+export const userDb = async (email: string) => {
+  return await prisma.userTable.findUnique({
+    where: {
+      email,
+    },
+  });
 };
