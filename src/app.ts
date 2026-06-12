@@ -1,10 +1,9 @@
-import "./config/zod";
 import express from "express";
 import cors from "cors";
 import { errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
 import swaggerUi from "swagger-ui-express";
-import { getSwaggerSpec } from "./config/swagger.js";
+import { swaggerSpec } from "./config/swagger.js";
 
 const app = express();
 
@@ -22,11 +21,22 @@ app.use(
   }),
 );
 
+app.get("/api-docs.json", (req, res) => {
+  res.json(swaggerSpec);
+});
 // 解析 JSON 格式的請求體
+console.log("swaggerSpec =", swaggerSpec);
 app.use(express.json());
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(getSwaggerSpec));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: "/api-docs.json",
+    },
+  }),
+);
 //api
 app.use("/auth", auth_router);
-
 app.use(errorHandler);
 export default app;
