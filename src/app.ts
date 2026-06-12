@@ -21,21 +21,10 @@ app.use(
   }),
 );
 
-app.get("/api-docs.json", (req, res) => {
-  res.json(swaggerSpec);
-});
 // 解析 JSON 格式的請求體
 console.log("swaggerSpec =", swaggerSpec);
 app.use(express.json());
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: "/api-docs.json",
-    },
-  }),
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/auth", auth_router);
 app.use(errorHandler);
