@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { z } from "zod";
+import { z } from "../config/zod";
 
 export const validateRequest =
   <T extends z.ZodTypeAny>(schema: T) =>
