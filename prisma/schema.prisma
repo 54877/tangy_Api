@@ -23,7 +23,7 @@ model userTable {
   @@map("user_table")
 }
 
-model email {
+model emailTable {
   id String @id @default(uuid())
   email String @unique
   code  String

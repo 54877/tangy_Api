@@ -35,7 +35,7 @@ export const userDb = async (email: string) => {
 // 建立驗證碼
 export const createEmailVerification = async (code: string, email: string) => {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-  await prisma.email.upsert({
+  await prisma.emailTable.upsert({
     where: {
       email: email,
     },
@@ -54,7 +54,7 @@ export const createEmailVerification = async (code: string, email: string) => {
 
 //過期刪除驗證
 export const expiredCodeDb = async (email: string) => {
-  await prisma.email.delete({
+  await prisma.emailTable.delete({
     where: {
       email,
     },
@@ -63,7 +63,7 @@ export const expiredCodeDb = async (email: string) => {
 
 //驗證計數器
 export const codeCountDb = async (email: string) => {
-  await prisma.email.update({
+  await prisma.emailTable.update({
     where: {
       email,
     },
@@ -77,7 +77,7 @@ export const codeCountDb = async (email: string) => {
 
 //驗證 驗證碼
 export const verifyDb = async (email: string) => {
-  const record = await prisma.email.findUnique({
+  const record = await prisma.emailTable.findUnique({
     where: {
       email,
     },
@@ -94,7 +94,7 @@ export const newPasswordDb = async (email: string, newPassword: string) => {
       data: { password: newPassword },
     });
 
-    await tx.email.deleteMany({
+    await tx.emailTable.deleteMany({
       where: { email },
     });
     return result;
