@@ -6,23 +6,19 @@ const globalForPrisma = globalThis as unknown as {
 
 const basePrisma = globalForPrisma.prisma ?? new PrismaClient();
 
-export const prisma = basePrisma.$extends({
-  query: {
-    $allModels: {
-      async $allOperations({ model, operation, args, query }) {
-        console.log("🔥 PRISMA HIT");
-        console.log("model:", model);
-        console.log("action:", operation);
-        console.log("args:", args);
-
-        return query(args);
-      },
-    },
-  },
-});
-
+// ✅ cache base instance
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = basePrisma;
 }
 
-export default prisma;
+// ❗ extend 不要破壞 base type
+export const prisma = basePrisma.$extends({
+  query: {
+    $allModels: {
+      async $allOperations({ args, query }) {
+        console.log("🔥 PRISMA HIT");
+        return query(args);
+      },
+    },
+  },
+}) as typeof basePrisma;
