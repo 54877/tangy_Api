@@ -25,6 +25,6 @@ app.use(
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
-app.use("/auth", auth_router);
+app.use("/tangy", auth_router);
 app.use(errorHandler);
 export default app;
