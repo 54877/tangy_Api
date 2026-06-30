@@ -6,13 +6,13 @@ import { prisma } from "../db/prisma";
 
 export const registerUserDb = async ({
   password,
-  user_name,
+  userName,
   email,
 }: UserType) => {
   try {
     const result = await query(
-      `INSERT INTO user_table ( password , user_name , email) VALUES ($1, $2 , $3 ) RETURNING id , email , user_name`,
-      [password, user_name, email],
+      `INSERT INTO user_table ( password , userName , email) VALUES ($1, $2 , $3 ) RETURNING id , email , userName`,
+      [password, userName, email],
     );
 
     return result.rows[0];

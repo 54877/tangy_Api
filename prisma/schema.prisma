@@ -17,7 +17,7 @@ model userTable {
   id        String @id @default(uuid())
   email     String @unique
   password  String
-  user_name String
+  userName String
   role      String?
 
   @@map("user_table")

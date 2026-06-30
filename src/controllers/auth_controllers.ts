@@ -7,8 +7,8 @@ import {
 import { AsyncFunction } from "../types/asyncType";
 
 export const registerUser: AsyncFunction = async (req, res) => {
-  const { password, user_name, email } = req.body || {};
-  await registerUserLogic({ password, user_name, email });
+  const { password, userName, email } = req.body || {};
+  await registerUserLogic({ password, userName, email });
 
   res.status(201).json({
     message: "註冊成功",

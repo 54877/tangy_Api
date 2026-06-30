@@ -9,7 +9,7 @@ import {
 export const registerSchema = z.object({
   email: email,
   password: passwordScheme("strong"),
-  user_name: userNameScheme,
+  userName: userNameScheme,
 });
 
 export const loginSchema = z.object({

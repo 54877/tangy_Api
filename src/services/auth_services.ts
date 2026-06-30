@@ -24,13 +24,13 @@ const userEmail = async (email: string, ErrorMessage: string) => {
 //註冊
 export const registerUserLogic = async ({
   password,
-  user_name,
+  userName,
   email,
 }: UserType) => {
   const hashPassword = await bcrypt.hash(password, 10);
   const result = await registerUserDb({
     password: hashPassword,
-    user_name,
+    userName,
     email,
   });
   return result;
@@ -40,7 +40,7 @@ export const registerUserLogic = async ({
 export const loginUserLogic = async ({
   email,
   password,
-}: Omit<UserType, "user_name">) => {
+}: Omit<UserType, "userName">) => {
   const user = await userEmail(email, "帳密有誤");
   const psd = await bcrypt.compare(password, user.password);
   if (!psd) {
