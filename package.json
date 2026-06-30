@@ -4,7 +4,7 @@
   "description": "tangy api for express system",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js"
   },
