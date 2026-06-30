@@ -1,5 +1,3 @@
-import { DatabaseError } from "pg";
-import { query } from "../db/db";
 import { UserType } from "../types/authType";
 import { AppError } from "../utils/errors";
 import { prisma } from "../db/prisma";
@@ -10,14 +8,21 @@ export const registerUserDb = async ({
   email,
 }: UserType) => {
   try {
-    const result = await query(
-      `INSERT INTO user_table ( password , userName , email) VALUES ($1, $2 , $3 ) RETURNING id , email , userName`,
-      [password, userName, email],
-    );
-
-    return result.rows[0];
-  } catch (err) {
-    if (err instanceof DatabaseError && err.code === "23505") {
+    return await prisma.userTable.create({
+      data: {
+        password,
+        userName,
+        email,
+      },
+      select: {
+        id: true,
+        email: true,
+        userName: true,
+      },
+    });
+  } catch (err: any) {
+    // Prisma unique error
+    if (err.code === "P2002") {
       throw new AppError("使用者已存在", 400);
     }
     throw err;
@@ -94,7 +99,7 @@ export const newPasswordDb = async (email: string, newPassword: string) => {
       data: { password: newPassword },
     });
 
-    await tx.emailTable.deleteMany({
+    await tx.emailTable.delete({
       where: { email },
     });
     return result;
