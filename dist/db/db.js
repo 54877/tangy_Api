@@ -8,7 +8,9 @@ const pg_1 = __importDefault(require("pg"));
 const { Pool } = pg_1.default;
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 const query = (text, params) => pool.query(text, params);
 exports.query = query;
