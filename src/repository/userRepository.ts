@@ -1,10 +1,14 @@
 import { DatabaseError } from "pg";
 import { query } from "../db/db";
-import { user } from "../types/authType";
+import { UserType } from "../types/authType";
 import { AppError } from "../utils/errors";
 import { prisma } from "../db/prisma";
 
-export const registerUserDb = async ({ password, user_name, email }: user) => {
+export const registerUserDb = async ({
+  password,
+  user_name,
+  email,
+}: UserType) => {
   try {
     const result = await query(
       `INSERT INTO user_table ( password , user_name , email) VALUES ($1, $2 , $3 ) RETURNING id , email , user_name`,
@@ -25,5 +29,74 @@ export const userDb = async (email: string) => {
     where: {
       email,
     },
+  });
+};
+
+// 建立驗證碼
+export const createEmailVerification = async (code: string, email: string) => {
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  await prisma.email.upsert({
+    where: {
+      email: email,
+    },
+    create: {
+      email,
+      code,
+      expires_at: expiresAt,
+    },
+    update: {
+      code,
+      expires_at: expiresAt,
+      count: 0,
+    },
+  });
+};
+
+//過期刪除驗證
+export const expiredCodeDb = async (email: string) => {
+  await prisma.email.delete({
+    where: {
+      email,
+    },
+  });
+};
+
+//驗證計數器
+export const codeCountDb = async (email: string) => {
+  await prisma.email.update({
+    where: {
+      email,
+    },
+    data: {
+      count: {
+        increment: 1,
+      },
+    },
+  });
+};
+
+//驗證 驗證碼
+export const verifyDb = async (email: string) => {
+  const record = await prisma.email.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return record;
+};
+
+//更新密碼
+export const newPasswordDb = async (email: string, newPassword: string) => {
+  return await prisma.$transaction(async (tx) => {
+    const result = await tx.userTable.update({
+      where: { email },
+      data: { password: newPassword },
+    });
+
+    await tx.email.deleteMany({
+      where: { email },
+    });
+    return result;
   });
 };

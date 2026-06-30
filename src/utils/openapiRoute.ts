@@ -1,4 +1,5 @@
 import { registry } from "../config/openapiRegister";
+import { validateRequest } from "../middlewares/validateRequest";
 
 export const openapiRoute = ({
   method,
@@ -14,15 +15,17 @@ export const openapiRoute = ({
     path,
     tags,
     summary,
-    request: {
-      body: {
-        content: {
-          "application/json": {
-            schema,
+    ...(schema && {
+      request: {
+        body: {
+          content: {
+            "application/json": {
+              schema,
+            },
           },
         },
       },
-    },
+    }),
     responses: {
       200: {
         description: "success",
@@ -30,5 +33,9 @@ export const openapiRoute = ({
     },
   });
 
-  router[method](path, handler);
+  router[method](
+    path,
+    ...(schema ? [validateRequest(schema)] : []),
+    ...handler,
+  );
 };

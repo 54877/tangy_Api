@@ -22,3 +22,14 @@ model userTable {
 
   @@map("user_table")
 }
+
+model email {
+  id String @id @default(uuid())
+  email String @unique
+  code  String
+  expires_at DateTime
+  created_at DateTime @default(now())
+  count       Int      @default(0)
+
+  @@map("email_verification")
+}

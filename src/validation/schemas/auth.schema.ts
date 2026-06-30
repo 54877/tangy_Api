@@ -1,5 +1,10 @@
 import { z } from "../../config/zod";
-import { email, passwordScheme, userNameScheme } from "../rules/auth.rule";
+import {
+  codeScheme,
+  email,
+  passwordScheme,
+  userNameScheme,
+} from "../rules/auth.rule";
 
 export const registerSchema = z.object({
   email: email,
@@ -14,4 +19,15 @@ export const loginSchema = z.object({
 
 export const forgotSchema = z.object({
   email: email,
+});
+
+export const verifySchema = z.object({
+  email: email,
+  code: codeScheme,
+});
+
+export const newPasswordSchema = z.object({
+  email: email,
+  code: codeScheme,
+  password: passwordScheme("strong"),
 });

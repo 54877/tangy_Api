@@ -11,10 +11,12 @@ export const passwordScheme = (mode: "strong" | "weak") => {
 
   return base.min(8, "不可低於8個字元").refine(
     (val: string) => {
-      return /[A-Z]/.test(val) && /[a-z]/.test(val) && /[0-9]/.test(val);
+      return /[A-Z]/.test(val) && /[a-z]/.test(val) && /\d/.test(val);
     },
     {
       message: "密碼需包含大寫、小寫與數字",
     },
   );
 };
+
+export const codeScheme = requiredString.max(7, "不可超過7個字元");

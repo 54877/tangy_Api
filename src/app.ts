@@ -6,7 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 
 const app = express();
-
+app.disable("x-powered-by");
 //跨網域設定
 app.use(
   cors({
@@ -22,7 +22,6 @@ app.use(
 );
 
 // 解析 JSON 格式的請求體
-console.log("swaggerSpec =", swaggerSpec);
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
