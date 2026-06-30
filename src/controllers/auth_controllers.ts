@@ -27,7 +27,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
   });
 };
 
-export const forgotPassword: AsyncFunction = async (req, res) => {
+export const sendEmailControllers: AsyncFunction = async (req, res) => {
   const { email } = req.body || {};
   await sendEmail(email);
 

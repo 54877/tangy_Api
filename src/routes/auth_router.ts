@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  forgotPassword,
   loginUser,
   newPassword,
   registerUser,
+  sendEmailControllers,
 } from "../controllers/auth_controllers";
 
 import {
@@ -39,17 +39,17 @@ openapiRoute({
 
 openapiRoute({
   method: "post",
-  path: "/forgot",
+  path: "/forgotPassword",
   tags: ["Auth"],
-  summary: "忘記密碼",
+  summary: "忘記密碼 - 寄驗證信",
   schema: forgotSchema,
-  handler: [asyncHandler(forgotPassword)],
+  handler: [asyncHandler(sendEmailControllers)],
   router: auth_router,
 });
 
 openapiRoute({
   method: "put",
-  path: "/verify",
+  path: "/resetPassword",
   tags: ["Auth"],
   summary: "更新密碼",
   schema: newPasswordSchema,
