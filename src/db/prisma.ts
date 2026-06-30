@@ -6,7 +6,7 @@ const globalForPrisma = globalThis as unknown as {
 
 const basePrisma = globalForPrisma.prisma ?? new PrismaClient();
 
-export const prisma = basePrisma.$extends({
+export const extendedPrisma = basePrisma.$extends({
   query: {
     $allModels: {
       async $allOperations({ model, operation, args, query }) {
@@ -25,4 +25,4 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = basePrisma;
 }
 
-export default prisma;
+export const prisma = extendedPrisma;
