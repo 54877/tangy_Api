@@ -23,7 +23,7 @@ export const registerUserDb = async ({
   } catch (err: any) {
     // Prisma unique error
     if (err.code === "P2002") {
-      throw new AppError("使用者已存在", 400);
+      throw new AppError("使用者已存在", 400, "email");
     }
     throw err;
   }
