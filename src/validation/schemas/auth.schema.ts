@@ -29,5 +29,5 @@ export const verifySchema = z.object({
 export const newPasswordSchema = z.object({
   email: email,
   code: codeScheme,
-  password: passwordScheme("strong"),
+  newPassword: passwordScheme("strong"),
 });

@@ -87,7 +87,7 @@ export const verifyDb = async (email: string) => {
       email,
     },
   });
-
+  console.log("record", record);
   return record;
 };
 

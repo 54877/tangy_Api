@@ -64,11 +64,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 //驗證碼寄信
 export const sendEmail = async (email: string) => {
-  const user = await userEmail(email, "無效請求", "email");
+  const user = await userEmail(email, "查無此信箱", "email");
 
   const code = String(Math.floor(100000 + Math.random() * 900000));
-  await createEmailVerification(code, email);
+  const result = await createEmailVerification(code, email);
 
+  console.log("result", result);
   return await resend.emails.send({
     from: "onboarding@resend.dev",
     to: user.email,
@@ -85,6 +86,7 @@ export const newPasswordLogic = async (
 ) => {
   //驗證 驗證碼
   const record = await verifyDb(email);
+  console.log("record", record);
   if (!record) {
     throw new AppError("驗證失敗", 400, "email");
   }
@@ -106,6 +108,8 @@ export const newPasswordLogic = async (
 
   //驗證密碼是否與舊密碼相同
   const user = await userEmail(email, "驗證失敗", "email");
+  console.log("user", user);
+  console.log("newPassword", newPassword);
   const psd = await bcrypt.compare(newPassword, user.password);
   if (psd) {
     throw new AppError("新舊密碼不可相同", 400, "newPassword");
