@@ -2,7 +2,9 @@ import { requiredString } from "../primitives/string";
 
 export const userNameScheme = requiredString.max(20, "不可超過20個字元");
 
-export const email = requiredString.email("請輸入正確email格式");
+export const email = requiredString
+  .email("請輸入正確email格式")
+  .max(100, "不可超過100個字元");
 
 export const passwordScheme = (mode: "strong" | "weak") => {
   const base = requiredString.max(40, "不可超過40個字元");
