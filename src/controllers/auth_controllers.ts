@@ -6,10 +6,8 @@ import {
   sendEmail,
 } from "../services/auth_services";
 import { AsyncFunction } from "../types/asyncType";
-import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { createAccessToken } from "../utils/jwt";
-import { TokenPayload } from "../utils/jwt";
+import { createAccessToken, TokenPayload } from "../utils/jwt";
 
 export const registerUser: AsyncFunction = async (req, res) => {
   const { password, userName, email } = req.body || {};

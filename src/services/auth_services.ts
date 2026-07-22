@@ -9,6 +9,7 @@ import {
   userDb,
   verifyDb,
 } from "../repository/userRepository";
+import { randomInt } from "crypto";
 import { AppError } from "../utils/errors";
 import {
   createAccessToken,
@@ -82,7 +83,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendEmail = async (email: string) => {
   const user = await userEmail(email, "查無此信箱", "email");
 
-  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const code = randomInt(100000, 1000000).toString();
   const result = await createEmailVerification(code, email);
 
   console.log("result", result);
