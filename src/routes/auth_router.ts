@@ -60,7 +60,7 @@ openapiRoute({
 });
 
 openapiRoute({
-  method: "get",
+  method: "post",
   path: "/logout",
   tags: ["Auth"],
   summary: "登出",
