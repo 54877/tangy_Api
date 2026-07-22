@@ -1,7 +1,9 @@
 import express from "express";
 import {
   loginUser,
+  logoutControllers,
   newPassword,
+  refresh,
   registerUser,
   sendEmailControllers,
 } from "../controllers/auth_controllers";
@@ -54,5 +56,23 @@ openapiRoute({
   summary: "更新密碼",
   schema: newPasswordSchema,
   handler: [asyncHandler(newPassword)],
+  router: auth_router,
+});
+
+openapiRoute({
+  method: "get",
+  path: "/logout",
+  tags: ["Auth"],
+  summary: "登出",
+  handler: [asyncHandler(logoutControllers)],
+  router: auth_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/refresh",
+  tags: ["Auth"],
+  summary: "accessToken替換",
+  handler: [asyncHandler(refresh)],
   router: auth_router,
 });

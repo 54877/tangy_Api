@@ -10,7 +10,11 @@ import {
   verifyDb,
 } from "../repository/userRepository";
 import { AppError } from "../utils/errors";
-import { generateAccessToken } from "../utils/jwt";
+import {
+  createAccessToken,
+  createRefreshToken,
+  TokenPayload,
+} from "../utils/jwt";
 import { Resend } from "resend";
 
 const userEmail = async (
@@ -47,17 +51,29 @@ export const loginUserLogic = async ({
 }: Omit<UserType, "userName">) => {
   const user = await userEmail(email, "帳密有誤");
   const psd = await bcrypt.compare(password, user.password);
-  if (!psd) {
-    throw new AppError("帳密有誤", 400);
-  }
-  const accessToken = generateAccessToken({
+  const userDate = {
     id: user.id,
     email: user.email,
     //TODO 後續須改回依照USER判斷
     role: "admin",
-  });
+  } as TokenPayload;
+  if (!psd) {
+    throw new AppError("帳密有誤", 400);
+  }
+  const accessToken = createAccessToken(userDate);
 
-  return accessToken;
+  const refreshToken = createRefreshToken(userDate);
+
+  return {
+    accessToken,
+    refreshToken,
+    userDate,
+  };
+};
+
+export const logoutLogic = async () => {
+  // const res = await logoutDb();
+  //   return res;
 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);

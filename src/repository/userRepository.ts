@@ -37,6 +37,9 @@ export const userDb = async (email: string) => {
   });
 };
 
+//登出
+export const logoutDb = async () => {};
+
 // 建立驗證碼
 export const createEmailVerification = async (code: string, email: string) => {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
