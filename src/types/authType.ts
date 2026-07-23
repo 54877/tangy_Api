@@ -3,3 +3,10 @@ export interface UserType {
   userName: string;
   email: string;
 }
+
+export interface TokenType {
+  email: string;
+  password: string;
+  userAgent: string;
+  ip: string;
+}

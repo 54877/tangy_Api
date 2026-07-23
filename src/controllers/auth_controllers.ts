@@ -2,13 +2,14 @@ import {
   loginUserLogic,
   logoutLogic,
   newPasswordLogic,
+  refreshTokenLogic,
   registerUserLogic,
   sendEmail,
 } from "../services/auth_services";
 import { AsyncFunction } from "../types/asyncType";
-import jwt from "jsonwebtoken";
-import { createAccessToken, TokenPayload } from "../utils/jwt";
+import { createAccessToken } from "../utils/jwt";
 
+//註冊
 export const registerUser: AsyncFunction = async (req, res) => {
   const { password, userName, email } = req.body || {};
   await registerUserLogic({ password, userName, email });
@@ -19,9 +20,13 @@ export const registerUser: AsyncFunction = async (req, res) => {
   });
 };
 
+//登入
 export const loginUser: AsyncFunction = async (req, res) => {
   const { email, password } = req.body || {};
-  const Token = await loginUserLogic({ email, password });
+  const userAgent = req.headers["user-agent"] ?? "unknown";
+  const ip = req.ip ?? "unknown";
+
+  const Token = await loginUserLogic({ email, password, userAgent, ip });
   const { refreshToken, accessToken, userDate } = Token;
 
   res.cookie("refreshToken", refreshToken, {
@@ -39,6 +44,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
   });
 };
 
+//寄信
 export const sendEmailControllers: AsyncFunction = async (req, res) => {
   const { email } = req.body || {};
   await sendEmail(email);
@@ -49,6 +55,7 @@ export const sendEmailControllers: AsyncFunction = async (req, res) => {
   });
 };
 
+//更新密碼
 export const newPassword: AsyncFunction = async (req, res) => {
   const { email, code, newPassword } = req.body || {};
   await newPasswordLogic(email, code, newPassword);
@@ -59,9 +66,17 @@ export const newPassword: AsyncFunction = async (req, res) => {
   });
 };
 
+//登出
 export const logoutControllers: AsyncFunction = async (req, res) => {
-  await logoutLogic();
-  res.clearCookie("refreshToken");
+  const refreshToken = req.cookies.refreshToken;
+  await logoutLogic(refreshToken);
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+
   res.status(200).json({
     message: "成功登出",
     state: true,
@@ -71,16 +86,28 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
+  const userAgent = req.headers["user-agent"] ?? "unknown";
+  const ip = req.ip ?? "unknown";
 
-  const payload = jwt.verify(
+  const { newPayload, newRefreshToken } = await refreshTokenLogic(
     refreshToken,
-    process.env.REFRESH_SECRET!,
-  ) as TokenPayload;
+    userAgent,
+    ip,
+  );
 
+  //建立新access token
   const accessToken = createAccessToken({
-    id: payload.id,
-    email: payload.email,
-    role: payload.role,
+    id: newPayload.id,
+    email: newPayload.email,
+    role: newPayload.role,
+  });
+
+  //設置新cookies refresh token
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   res.status(200).json({

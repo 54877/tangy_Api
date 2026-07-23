@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 export class AppError extends Error {
   statusCode: number;
@@ -19,6 +20,19 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  // JWT 錯誤
+  if (
+    err instanceof jwt.TokenExpiredError ||
+    err instanceof jwt.JsonWebTokenError
+  ) {
+    return res.status(401).json({
+      state: false,
+      errors: {
+        message: "Refresh Token 無效",
+      },
+    });
+  }
+
   const statusCode = err instanceof AppError ? err.statusCode : 500;
 
   const message = err instanceof Error ? err.message : "伺服器錯誤";

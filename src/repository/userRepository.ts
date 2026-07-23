@@ -8,7 +8,7 @@ export const registerUserDb = async ({
   email,
 }: UserType) => {
   try {
-    return await prisma.userTable.create({
+    return await prisma.user.create({
       data: {
         password,
         userName,
@@ -30,15 +30,55 @@ export const registerUserDb = async ({
 };
 
 export const userDb = async (email: string) => {
-  return await prisma.userTable.findUnique({
+  return await prisma.user.findUnique({
     where: {
       email,
     },
   });
 };
 
+//紀錄refreshToken
+export const refreshTokenDb = async (
+  token: string,
+  userId: string,
+  userAgent: string,
+  ip: string,
+  expiresAt: Date,
+  absoluteExpiresAt: Date,
+) => {
+  await prisma.refreshToken.create({
+    data: {
+      tokenHash: token,
+      userId,
+      userAgent,
+      ip,
+      expiresAt,
+      absoluteExpiresAt,
+    },
+  });
+};
+
+//storedToken
+export const storedTokenDb = async (tokenHash: string) => {
+  return await prisma.refreshToken.findUnique({
+    where: {
+      tokenHash,
+    },
+  });
+};
+
 //登出
-export const logoutDb = async () => {};
+export const logoutDb = async (tokenHash: string) => {
+  await prisma.refreshToken.updateMany({
+    where: {
+      tokenHash,
+      revokedAt: null,
+    },
+    data: {
+      revokedAt: new Date(),
+    },
+  });
+};
 
 // 建立驗證碼
 export const createEmailVerification = async (code: string, email: string) => {
@@ -50,11 +90,11 @@ export const createEmailVerification = async (code: string, email: string) => {
     create: {
       email,
       code,
-      expires_at: expiresAt,
+      expiresAt: expiresAt,
     },
     update: {
       code,
-      expires_at: expiresAt,
+      expiresAt: expiresAt,
       count: 0,
     },
   });
@@ -97,7 +137,7 @@ export const verifyDb = async (email: string) => {
 //更新密碼
 export const newPasswordDb = async (email: string, newPassword: string) => {
   return await prisma.$transaction(async (tx) => {
-    const result = await tx.userTable.update({
+    const result = await tx.user.update({
       where: { email },
       data: { password: newPassword },
     });
@@ -106,5 +146,39 @@ export const newPasswordDb = async (email: string, newPassword: string) => {
       where: { email },
     });
     return result;
+  });
+};
+
+//refresh token 替換
+export const refreshTokenChange = async (
+  tokenHash: string,
+  newHashToken: string,
+  userId: string,
+  userAgent: string,
+  ip: string,
+  expiresAt: Date,
+  absoluteExpiresAt: Date,
+) => {
+  return await prisma.$transaction(async (tx) => {
+    await tx.refreshToken.updateMany({
+      where: {
+        tokenHash,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+
+    await tx.refreshToken.create({
+      data: {
+        tokenHash: newHashToken,
+        userId,
+        userAgent,
+        ip,
+        expiresAt,
+        absoluteExpiresAt,
+      },
+    });
   });
 };
