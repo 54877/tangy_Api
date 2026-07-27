@@ -156,6 +156,7 @@ export const refreshTokenLogic = async (
   const newRefreshToken = createRefreshToken(newPayload);
 
   const newHashToken = hash(newRefreshToken);
+
   let expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const absoluteExpiresAt = storedToken.absoluteExpiresAt;
   if (absoluteExpiresAt < expiresAt) {

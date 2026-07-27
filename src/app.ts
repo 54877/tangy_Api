@@ -4,6 +4,7 @@ import { errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.disable("x-powered-by");
@@ -21,6 +22,7 @@ app.use(
   }),
 );
 
+app.use(cookieParser());
 // 解析 JSON 格式的請求體
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
