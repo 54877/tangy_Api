@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { profile_router } from "./routes/profile_router.js";
 
 const app = express();
 app.use(helmet());
@@ -30,5 +31,6 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
+app.use("/tangy", profile_router);
 app.use(errorHandler);
 export default app;
