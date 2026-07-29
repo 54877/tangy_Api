@@ -7,5 +7,11 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     throw new AppError("未登入", 401);
   }
 
-  return await getUserById(id);
+  const user = await getUserById(id);
+  return {
+    id: user?.id,
+    email: user?.email,
+    userName: user?.userName,
+    role: user?.role,
+  };
 };
