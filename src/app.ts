@@ -2,11 +2,12 @@ import express from "express";
 import cors from "cors";
 import { errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
+import { profile_router } from "./routes/profile_router.js";
+
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { profile_router } from "./routes/profile_router.js";
 
 const app = express();
 //header 防護 (helmet 套件)
