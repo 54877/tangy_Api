@@ -29,7 +29,8 @@ export const authMiddleware = (
     req.user = decoded;
 
     next();
-  } catch {
+  } catch (error) {
+    console.log(error);
     return res.status(401).json({
       message: "Token 無效",
     });
