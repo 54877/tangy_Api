@@ -12,7 +12,7 @@ import {
   storedTokenDb,
   userDb,
   verifyDb,
-} from "../repository/userRepository";
+} from "../repository/auth_Repository";
 import jwt from "jsonwebtoken";
 import crypto, { randomInt } from "node:crypto";
 import { AppError } from "../utils/errors";
@@ -122,11 +122,12 @@ export const refreshTokenLogic = async (
     process.env.REFRESH_SECRET!,
   ) as TokenPayload;
 
-  //查詢使用者 若有修改使用者則可以立即更新
+  //查詢使用者
   const user = await userEmail(payload.email, "帳密有誤");
   const newPayload = {
     id: user.id,
     email: user.email,
+    userName: user.userName,
     role: user.role,
   } as TokenPayload;
 
