@@ -12,6 +12,7 @@ openapiRoute({
   method: "get",
   path: "/me",
   tags: ["Profile"],
+  needAuth: true,
   summary: "個人資料",
   handler: [asyncHandler(getUser)],
   router: profile_router,

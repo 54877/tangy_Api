@@ -9,12 +9,22 @@ export const openapiRoute = ({
   schema,
   handler,
   router,
+  needAuth = false,
 }: any) => {
   registry.registerPath({
     method,
     path,
     tags,
     summary,
+
+    ...(needAuth && {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+    }),
+
     ...(schema && {
       request: {
         body: {
@@ -26,6 +36,7 @@ export const openapiRoute = ({
         },
       },
     }),
+
     responses: {
       200: {
         description: "success",
