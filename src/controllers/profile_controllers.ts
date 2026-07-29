@@ -6,7 +6,7 @@ export const getUser: JwtAsyncFunction = async (req, res) => {
 
   const userDate = await getUserByIdLogic(id);
 
-  res.status(201).json({
+  res.status(200).json({
     userDate,
     message: "登入成功",
     state: true,
