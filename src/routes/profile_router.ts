@@ -11,7 +11,7 @@ profile_router.use(authMiddleware);
 openapiRoute({
   method: "get",
   path: "/me",
-  tags: ["profile"],
+  tags: ["Auth"],
   summary: "個人資料",
   handler: [asyncHandler(getUser)],
   router: profile_router,
