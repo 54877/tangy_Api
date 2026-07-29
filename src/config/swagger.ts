@@ -9,4 +9,10 @@ export const swaggerSpec = new OpenApiGeneratorV3(
     title: "My API",
     version: "1.0.0",
   },
+  servers: [
+    {
+      url: "/tangy",
+      description: "API base path",
+    },
+  ],
 });
