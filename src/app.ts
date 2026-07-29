@@ -9,6 +9,7 @@ import helmet from "helmet";
 import { profile_router } from "./routes/profile_router.js";
 
 const app = express();
+//header 防護 (helmet 套件)
 app.use(helmet());
 app.disable("x-powered-by");
 //跨網域設定
@@ -24,13 +25,16 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
-
+//refresh token
 app.use(cookieParser());
 // 解析 JSON 格式的請求體
 app.use(express.json());
+//swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
 app.use("/tangy", profile_router);
+
+//統一處理錯誤
 app.use(errorHandler);
 export default app;
