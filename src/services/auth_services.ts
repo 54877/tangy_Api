@@ -68,6 +68,7 @@ export const loginUserLogic = async ({
   const userDate = {
     id: user.id,
     email: user.email,
+    userName: user.userName,
     role: user.role,
   } as TokenPayload;
   if (!psd) {

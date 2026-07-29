@@ -98,6 +98,7 @@ export const refresh: AsyncFunction = async (req, res) => {
   //建立新access token
   const accessToken = createAccessToken({
     id: newPayload.id,
+    userName: newPayload.userName,
     email: newPayload.email,
     role: newPayload.role,
   });

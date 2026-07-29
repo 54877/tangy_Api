@@ -5,8 +5,10 @@ import { auth_router } from "./routes/auth_router.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 const app = express();
+app.use(helmet());
 app.disable("x-powered-by");
 //跨網域設定
 app.use(
