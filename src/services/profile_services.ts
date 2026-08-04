@@ -12,6 +12,10 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     id: user?.id,
     email: user?.email,
     userName: user?.userName,
+    createdAt: user?.createdAt,
+    birthday: user?.birthday,
+    gender: user?.gender,
+    introduction: user?.introduction,
     role: user?.role,
   };
 };

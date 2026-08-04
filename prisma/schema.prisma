@@ -18,6 +18,10 @@ model User {
   email         String         @unique
   password      String
   userName      String         @map("user_name")
+  createdAt     String         @map("created_at")
+  gender        String
+  introduction  String
+  birthday      String
   role          String?
   refreshTokens RefreshToken[]
 
@@ -25,12 +29,12 @@ model User {
 }
 
 model emailTable {
-  id         String   @id @default(uuid())
-  email      String   @unique
-  code       String
+  id        String   @id @default(uuid())
+  email     String   @unique
+  code      String
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
-  count      Int      @default(0)
+  count     Int      @default(0)
 
   @@map("email_verification")
 }
@@ -44,9 +48,9 @@ model RefreshToken {
   userAgent         String?   @map("user_agent")
   revokedAt         DateTime? @map("revoked_at")
   ip                String?
-  createdAt        DateTime  @default(now()) @map("created_at")
-  expiresAt        DateTime  @map("expires_at")
-  absoluteExpiresAt DateTime @map("absolute_expires_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  expiresAt         DateTime  @map("expires_at")
+  absoluteExpiresAt DateTime  @map("absolute_expires_at")
 
   @@index([userId])
   @@index([expiresAt])
