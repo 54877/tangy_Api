@@ -18,10 +18,10 @@ model User {
   email         String         @unique
   password      String
   userName      String         @map("user_name")
-  createdAt     String         @map("created_at")
-  gender        String
-  introduction  String
-  birthday      String
+  createdAt     DateTime       @default(now()) @map("created_at")
+  gender        String?
+  introduction  String?
+  birthday      DateTime?      @db.Date
   role          String?
   refreshTokens RefreshToken[]
 
