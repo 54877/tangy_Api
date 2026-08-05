@@ -1,7 +1,7 @@
-import { getUserById } from "../repository/profile_Repository";
+import { getUserById } from "../repository/nav_Repository";
 import { AppError } from "../utils/errors";
 
-//get user
+//get user (nav)
 export const getUserByIdLogic = async (id: string | undefined) => {
   if (!id) {
     throw new AppError("未登入", 401);
@@ -12,10 +12,6 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     id: user?.id,
     email: user?.email,
     userName: user?.userName,
-    createdAt: user?.createdAt,
-    birthday: user?.birthday,
-    gender: user?.gender,
-    introduction: user?.introduction,
     role: user?.role,
   };
 };

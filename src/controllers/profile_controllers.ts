@@ -1,14 +1,16 @@
-import { getUserByIdLogic } from "../services/profile_services";
+import { getPersonalByIdLogic } from "../services/profile_router";
 import { JwtAsyncFunction } from "../types/asyncType";
 
-export const getUser: JwtAsyncFunction = async (req, res) => {
+//個人資料
+export const getPersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
 
-  const userDate = await getUserByIdLogic(id);
+  const { userDate, genderSelect } = await getPersonalByIdLogic(id);
 
   res.status(200).json({
     userDate,
-    message: "登入成功",
+    genderSelect,
+    message: "成功",
     state: true,
   });
 };

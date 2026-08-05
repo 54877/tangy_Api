@@ -2,12 +2,13 @@ import express from "express";
 import cors from "cors";
 import { errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
-import { profile_router } from "./routes/profile_router.js";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { nav_router } from "./routes/nav_router.js";
+import { profile_router } from "./routes/profile_router.js";
 
 const app = express();
 //header 防護 (helmet 套件)
@@ -35,6 +36,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
 app.use("/tangy", profile_router);
+app.use("/tangy", nav_router);
 
 //統一處理錯誤
 app.use(errorHandler);

@@ -1,8 +1,8 @@
 import express from "express";
-import { openapiRoute } from "../utils/openapiRoute";
 import { asyncHandler } from "../utils/asyncHandler";
 import { authMiddleware } from "../middlewares/auth";
-import { getUser } from "../controllers/profile_controllers";
+import { openapiRoute } from "../utils/openapiRoute";
+import { getPersonal } from "../controllers/profile_controllers";
 
 export const profile_router = express.Router();
 
@@ -10,10 +10,10 @@ profile_router.use(authMiddleware);
 
 openapiRoute({
   method: "get",
-  path: "/me",
+  path: "/personal",
   tags: ["Profile"],
   needAuth: true,
   summary: "個人資料",
-  handler: [asyncHandler(getUser)],
+  handler: [asyncHandler(getPersonal)],
   router: profile_router,
 });
