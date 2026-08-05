@@ -1,14 +1,32 @@
 import prisma from "../db/prisma";
-import { UserProfileType } from "../types/profileType";
 
-export const updateUserById = async (data: UserProfileType) => {
-  const { id, password, createdAt, email, ...userDate } = data;
+export const updateUserById = async (
+  id: string,
+  userName: string,
+  gender: string,
+  introduction: string,
+  birthday: string,
+) => {
   await prisma.user.update({
     where: {
       id: id,
     },
     data: {
-      ...userDate,
+      userName,
+      gender,
+      introduction,
+      birthday,
+    },
+  });
+};
+
+export const updatePasswordDb = async (newPassword: string, id: string) => {
+  await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      password: newPassword,
     },
   });
 };

@@ -1,5 +1,6 @@
 import {
   getPersonalByIdLogic,
+  updatePasswordLogic,
   updatePersonalByIdLogic,
 } from "../services/profile_service";
 import { JwtAsyncFunction } from "../types/asyncType";
@@ -19,8 +20,19 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
 };
 
 export const updatePersonal: JwtAsyncFunction = async (req, res) => {
-  const { userDate } = req.body || {};
-  await updatePersonalByIdLogic(userDate);
+  const id = req.user?.id;
+  const { userName, gender, introduction, birthday } = req.body || {};
+  await updatePersonalByIdLogic(id, userName, gender, introduction, birthday);
+
+  res.status(201).json({
+    message: "更新成功",
+    state: true,
+  });
+};
+
+export const updatePassword: JwtAsyncFunction = async (req, res) => {
+  const { newPassword, oldPassword, id } = req.body || {};
+  await updatePasswordLogic(newPassword, oldPassword, id);
 
   res.status(201).json({
     message: "更新成功",

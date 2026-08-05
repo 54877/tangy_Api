@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { TokenPayload } from "../utils/jwt";
 
@@ -6,6 +6,10 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 
 export interface AuthRequest extends Request {
   user?: TokenPayload;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user: TokenPayload;
 }
 
 export const authMiddleware = (
