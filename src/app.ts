@@ -27,7 +27,6 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
 //refresh token
 app.use(cookieParser());
 // 解析 JSON 格式的請求體
