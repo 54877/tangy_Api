@@ -11,7 +11,7 @@ nav_router.use(authMiddleware);
 openapiRoute({
   method: "get",
   path: "/me",
-  tags: ["Profile"],
+  tags: ["Nav"],
   needAuth: true,
   summary: "個人資料",
   handler: [asyncHandler(getUser)],
