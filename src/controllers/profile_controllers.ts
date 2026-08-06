@@ -31,7 +31,9 @@ export const updatePersonal: JwtAsyncFunction = async (req, res) => {
 };
 
 export const updatePassword: JwtAsyncFunction = async (req, res) => {
-  const { newPassword, oldPassword, id } = req.body || {};
+  const id = req.user?.id;
+  const { newPassword, oldPassword } = req.body || {};
+  console.log("我是id :", id);
   await updatePasswordLogic(newPassword, oldPassword, id);
 
   res.status(201).json({
