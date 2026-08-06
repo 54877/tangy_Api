@@ -28,7 +28,7 @@ openapiRoute({
 
 openapiRoute({
   method: "put",
-  path: "/personal",
+  path: "/updatePersonal",
   tags: ["Profile"],
   needAuth: true,
   summary: "更新個人資料",
