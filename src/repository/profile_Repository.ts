@@ -5,7 +5,7 @@ export const updateUserById = async (
   userName: string,
   gender: string,
   introduction: string,
-  birthday: string,
+  birthday: Date,
 ) => {
   await prisma.user.update({
     where: {

@@ -27,7 +27,8 @@ export const updatePersonalByIdLogic = async (
   introduction: string,
   birthday: string,
 ) => {
-  await updateUserById(id, userName, gender, introduction, birthday);
+  const birthdayDate = new Date(birthday);
+  await updateUserById(id, userName, gender, introduction, birthdayDate);
 };
 
 export const updatePasswordLogic = async (
@@ -42,11 +43,11 @@ export const updatePasswordLogic = async (
 
   const psd = await bcrypt.compare(oldPassword, userDate.password);
   if (!psd) {
-    throw new AppError("請輸入正確的舊密碼", 400);
+    throw new AppError("請輸入正確的舊密碼", 400, "oldPassword");
   }
 
   if (newPassword == oldPassword) {
-    throw new AppError("新密碼不可與舊密碼相同", 400);
+    throw new AppError("新密碼不可與舊密碼相同", 400, "newPassword");
   }
   const hashPassword = await bcrypt.hash(newPassword, 10);
 
