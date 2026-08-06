@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../db/prisma";
 import { UserType } from "../types/authType";
 import { AppError } from "../utils/errors";
@@ -137,7 +136,7 @@ export const verifyDb = async (email: string) => {
 
 //更新密碼
 export const newPasswordDb = async (email: string, newPassword: string) => {
-  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+  return await prisma.$transaction(async (tx) => {
     const result = await tx.user.update({
       where: { email },
       data: { password: newPassword },
@@ -160,7 +159,7 @@ export const refreshTokenChange = async (
   expiresAt: Date,
   absoluteExpiresAt: Date,
 ) => {
-  return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+  return await prisma.$transaction(async (tx) => {
     await tx.refreshToken.updateMany({
       where: {
         tokenHash,
