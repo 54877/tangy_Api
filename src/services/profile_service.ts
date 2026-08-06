@@ -14,8 +14,15 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
 
   const userDate = await getUserById(id);
 
+  if (!userDate) {
+    throw new AppError("使用者不存在", 404);
+  }
+
   return {
-    userDate,
+    ...userDate,
+    birthday: userDate.birthday
+      ? userDate.birthday.toISOString().split("T")[0]
+      : null,
     genderSelect,
   };
 };
