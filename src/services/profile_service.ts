@@ -19,10 +19,12 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
   }
 
   return {
-    ...userDate,
-    birthday: userDate.birthday
-      ? userDate.birthday.toISOString().split("T")[0]
-      : null,
+    userDate: {
+      ...userDate,
+      birthday: userDate?.birthday
+        ? userDate.birthday.toISOString().split("T")[0]
+        : null,
+    },
     genderSelect,
   };
 };
