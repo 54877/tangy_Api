@@ -11,6 +11,8 @@ import {
   personalSchema,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
+import { forgotSchema } from "../validation/schemas/auth.schema";
+import { sendEmailControllers } from "../controllers/auth_controllers";
 
 export const profile_router = express.Router();
 
@@ -45,5 +47,16 @@ openapiRoute({
   schema: updatePasswordScheme,
   summary: "更新密碼(已登入)",
   handler: [asyncHandler(updatePassword)],
+  router: profile_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/SvSendEmail",
+  tags: ["Auth"],
+  needAuth: true,
+  summary: "sv寄信驗證",
+  schema: forgotSchema,
+  handler: [asyncHandler(sendEmailControllers)],
   router: profile_router,
 });
