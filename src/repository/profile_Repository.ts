@@ -30,3 +30,26 @@ export const updatePasswordDb = async (newPassword: string, id: string) => {
     },
   });
 };
+
+// 建立驗證碼
+export const createSVEmailVerification = async (
+  codeHash: string,
+  email: string,
+) => {
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  await prisma.svTable.upsert({
+    where: {
+      email: email,
+    },
+    create: {
+      email,
+      codeHash,
+      expiresAt: expiresAt,
+    },
+    update: {
+      codeHash,
+      expiresAt: expiresAt,
+      count: 0,
+    },
+  });
+};

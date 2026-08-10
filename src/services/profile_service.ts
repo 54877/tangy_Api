@@ -2,10 +2,15 @@ import bcrypt from "bcrypt";
 import { genderSelect } from "../constants/gender";
 import { getUserById } from "../repository/nav_Repository";
 import {
+  createSVEmailVerification,
   updatePasswordDb,
   updateUserById,
 } from "../repository/profile_Repository";
 import { AppError } from "../utils/errors";
+import { randomInt } from "node:crypto";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const getPersonalByIdLogic = async (id: string | undefined) => {
   if (!id) {
@@ -61,4 +66,23 @@ export const updatePasswordLogic = async (
   const hashPassword = await bcrypt.hash(newPassword, 10);
 
   await updatePasswordDb(hashPassword, id);
+};
+
+//驗證碼寄信
+export const sendSVEmail = async (id: string, email: string) => {
+  const userDate = await getUserById(id);
+  if (userDate?.email !== email) {
+    throw new AppError("請輸入正確email", 400, "email");
+  }
+
+  const code = randomInt(100000, 1000000).toString();
+  const codeHash = await bcrypt.hash(code, 10);
+  await createSVEmailVerification(codeHash, email);
+
+  return await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: email,
+    subject: "驗證碼",
+    html: `<p>你的驗證碼是：<b>${code}</b></p>`,
+  });
 };

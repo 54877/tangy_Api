@@ -1,5 +1,6 @@
 import {
   getPersonalByIdLogic,
+  sendSVEmail,
   updatePasswordLogic,
   updatePersonalByIdLogic,
 } from "../services/profile_service";
@@ -33,11 +34,22 @@ export const updatePersonal: JwtAsyncFunction = async (req, res) => {
 export const updatePassword: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
   const { newPassword, oldPassword } = req.body || {};
-  console.log("我是id :", id);
   await updatePasswordLogic(newPassword, oldPassword, id);
 
   res.status(201).json({
     message: "更新成功",
+    state: true,
+  });
+};
+
+//寄信
+export const sendSVEmailControllers: JwtAsyncFunction = async (req, res) => {
+  const id = req.user?.id;
+  const { email } = req.body || {};
+  await sendSVEmail(id, email);
+
+  res.status(201).json({
+    message: "email存在",
     state: true,
   });
 };

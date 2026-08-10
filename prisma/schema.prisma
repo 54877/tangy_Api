@@ -22,10 +22,22 @@ model User {
   gender        String?        @default("male")
   introduction  String?
   birthday      DateTime?      @db.Date
-  role          String?        @default("admin")
+  role          String?        @default("user")
+  svType        Boolean?       @default(false) @map("sv_type")
   refreshTokens RefreshToken[]
 
   @@map("user_table")
+}
+
+model svTable {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  codeHash  String   @map("code_hash")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  count     Int      @default(0)
+
+  @@map("email_sv")
 }
 
 model emailTable {
