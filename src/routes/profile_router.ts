@@ -53,7 +53,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/SvSendEmail",
-  tags: ["Auth"],
+  tags: ["Profile"],
   needAuth: true,
   summary: "sv寄信驗證",
   schema: forgotSchema,
