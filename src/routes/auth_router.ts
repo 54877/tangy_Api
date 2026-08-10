@@ -41,7 +41,7 @@ openapiRoute({
 
 openapiRoute({
   method: "post",
-  path: "/forgotPassword",
+  path: "/sendEmail",
   tags: ["Auth"],
   summary: "忘記密碼 - 寄驗證信",
   schema: forgotSchema,
