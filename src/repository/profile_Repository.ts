@@ -36,6 +36,7 @@ export const createSVEmailVerification = async (
   codeHash: string,
   email: string,
 ) => {
+  console.log("🔥🔥 SV FUNCTION HIT");
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
   const result = await prisma.svTable.upsert({
     where: {
