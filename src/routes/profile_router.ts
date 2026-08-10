@@ -2,6 +2,7 @@ import express from "express";
 import {
   getPersonal,
   sendSVEmailControllers,
+  svControllers,
   updatePassword,
   updatePersonal,
 } from "../controllers/profile_controllers";
@@ -50,6 +51,8 @@ openapiRoute({
   router: profile_router,
 });
 
+//TODO 以下SCHEMA 要改
+
 openapiRoute({
   method: "post",
   path: "/SvSendEmail",
@@ -58,5 +61,27 @@ openapiRoute({
   summary: "sv寄信驗證",
   schema: forgotSchema,
   handler: [asyncHandler(sendSVEmailControllers)],
+  router: profile_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/sv",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "開始2FA",
+  schema: forgotSchema,
+  handler: [asyncHandler(svControllers)],
+  router: profile_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/sv",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "關閉2FA",
+  schema: forgotSchema,
+  handler: [asyncHandler(svControllers)],
   router: profile_router,
 });

@@ -1,4 +1,5 @@
 import prisma from "../db/prisma";
+import { email } from "../validation/rules/auth.rule";
 
 export const updateUserById = async (
   id: string,
@@ -36,7 +37,7 @@ export const createSVEmailVerification = async (
   codeHash: string,
   email: string,
 ) => {
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
   await prisma.svTable.upsert({
     where: {
       email,
@@ -50,6 +51,30 @@ export const createSVEmailVerification = async (
       codeHash,
       expiresAt,
       count: 0,
+    },
+  });
+};
+
+//開啟2FA
+export const SVDb = async (email: string) => {
+  await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      svType: true,
+    },
+  });
+};
+
+//關閉
+export const svCloseDb = async (id: string) => {
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      svType: false,
     },
   });
 };

@@ -100,9 +100,18 @@ export const createEmailVerification = async (code: string, email: string) => {
   });
 };
 
-//過期刪除驗證
+//刪除驗證
 export const expiredCodeDb = async (email: string) => {
   await prisma.emailTable.delete({
+    where: {
+      email,
+    },
+  });
+};
+
+//刪除sv驗證
+export const expiredSVCodeDb = async (email: string) => {
+  await prisma.svTable.delete({
     where: {
       email,
     },
@@ -123,6 +132,20 @@ export const codeCountDb = async (email: string) => {
   });
 };
 
+//sv驗證計數器
+export const codeSVCountDb = async (email: string) => {
+  await prisma.svTable.update({
+    where: {
+      email,
+    },
+    data: {
+      count: {
+        increment: 1,
+      },
+    },
+  });
+};
+
 //驗證 驗證碼
 export const verifyDb = async (email: string) => {
   const record = await prisma.emailTable.findUnique({
@@ -130,7 +153,16 @@ export const verifyDb = async (email: string) => {
       email,
     },
   });
-  console.log("record", record);
+  return record;
+};
+
+//驗證 SV驗證碼
+export const verifySVDb = async (email: string) => {
+  const record = await prisma.svTable.findUnique({
+    where: {
+      email,
+    },
+  });
   return record;
 };
 

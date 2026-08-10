@@ -1,6 +1,7 @@
 import express from "express";
 import {
   loginUser,
+  loginUserSV,
   logoutControllers,
   newPassword,
   refresh,
@@ -36,6 +37,17 @@ openapiRoute({
   summary: "登入帳號",
   schema: loginSchema,
   handler: [asyncHandler(loginUser)],
+  router: auth_router,
+});
+
+//TODO SCHEMA 要改
+openapiRoute({
+  method: "post",
+  path: "/loginSV",
+  tags: ["Auth"],
+  summary: "登入帳號-(二次驗證)",
+  schema: loginSchema,
+  handler: [asyncHandler(loginUserSV)],
   router: auth_router,
 });
 

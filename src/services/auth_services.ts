@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
-import { TokenType, UserType } from "../types/authType";
+import { TokenType, UserProps, UserType } from "../types/authType";
 import {
   codeCountDb,
   createEmailVerification,
   expiredCodeDb,
+  expiredSVCodeDb,
   logoutDb,
   newPasswordDb,
   refreshTokenChange,
@@ -12,6 +13,7 @@ import {
   storedTokenDb,
   userDb,
   verifyDb,
+  verifySVDb,
 } from "../repository/auth_Repository";
 import jwt from "jsonwebtoken";
 import crypto, { randomInt } from "node:crypto";
@@ -22,6 +24,8 @@ import {
   TokenPayload,
 } from "../utils/jwt";
 import { Resend } from "resend";
+import { sendSVEmail, svCodeCheck } from "./profile_service";
+import { getUserRole } from "../utils/role";
 
 const userEmail = async (
   email: string,
@@ -57,23 +61,14 @@ export const registerUserLogic = async ({
 };
 
 //登入
-export const loginUserLogic = async ({
-  email,
-  password,
-  userAgent,
-  ip,
-}: TokenType) => {
-  const user = await userEmail(email, "帳密有誤");
-  const psd = await bcrypt.compare(password, user.password);
+export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
   const userDate = {
     id: user.id,
     email: user.email,
     userName: user.userName,
     role: user.role,
-  } as TokenPayload;
-  if (!psd) {
-    throw new AppError("帳密有誤", 400);
-  }
+  } as UserProps;
+
   const accessToken = createAccessToken(userDate);
 
   const refreshToken = createRefreshToken(userDate);
@@ -95,6 +90,16 @@ export const loginUserLogic = async ({
     refreshToken,
     userDate,
   };
+};
+
+//是否二次驗證
+export const isSvLogic = async (email: string) => {
+  const user = await userEmail(email, "帳密有誤");
+  if (user.svType) {
+    await sendSVEmail(user.id, user.email);
+    return true;
+  }
+  return false;
 };
 
 //登出
@@ -221,6 +226,8 @@ export const newPasswordLogic = async (
     throw new AppError("驗證碼錯誤", 400, "code");
   }
 
+  await expiredCodeDb(email);
+
   //驗證密碼是否與舊密碼相同
   const user = await userEmail(email, "驗證失敗", "email");
   const psd = await bcrypt.compare(newPassword, user.password);
@@ -232,4 +239,30 @@ export const newPasswordLogic = async (
   const hashPassword = await bcrypt.hash(newPassword, 10);
   const result = await newPasswordDb(email, hashPassword);
   return result;
+};
+
+//驗證帳密
+export const verifyLoginUser = async (
+  email: string,
+  password: string,
+  code?: string,
+) => {
+  const user = await userEmail(email, "帳密有誤");
+  const psd = await bcrypt.compare(password, user.password);
+  if (!psd) {
+    throw new AppError("帳密有誤", 400);
+  }
+
+  if (code) {
+    await svCodeCheck(email, code);
+  }
+
+  const userDate: UserProps = {
+    id: user.id,
+    email: user.email,
+    userName: user.userName,
+    role: getUserRole(user.role),
+  };
+
+  return userDate;
 };

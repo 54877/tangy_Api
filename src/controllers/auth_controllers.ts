@@ -1,10 +1,12 @@
 import {
+  isSvLogic,
   loginUserLogic,
   logoutLogic,
   newPasswordLogic,
   refreshTokenLogic,
   registerUserLogic,
   sendEmail,
+  verifyLoginUser,
 } from "../services/auth_services";
 import { AsyncFunction } from "../types/asyncType";
 import { createAccessToken } from "../utils/jwt";
@@ -26,7 +28,44 @@ export const loginUser: AsyncFunction = async (req, res) => {
   const userAgent = req.headers["user-agent"] ?? "unknown";
   const ip = req.ip ?? "unknown";
 
-  const Token = await loginUserLogic({ email, password, userAgent, ip });
+  const user = await verifyLoginUser(email, password);
+
+  const isSV = await isSvLogic(email);
+
+  if (isSV) {
+    res.status(200).json({
+      message: "驗證碼成功寄出",
+      state: true,
+    });
+    return;
+  }
+  const Token = await loginUserLogic({ user, userAgent, ip });
+  const { refreshToken, accessToken, userDate } = Token;
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({
+    accessToken,
+    userDate,
+    message: "登入成功",
+    state: true,
+  });
+};
+
+//登入SV
+export const loginUserSV: AsyncFunction = async (req, res) => {
+  const { email, code, password } = req.body || {};
+  const userAgent = req.headers["user-agent"] ?? "unknown";
+  const ip = req.ip ?? "unknown";
+  const user = await verifyLoginUser(email, password, code);
+
+  const Token = await loginUserLogic({ user, userAgent, ip });
+
   const { refreshToken, accessToken, userDate } = Token;
 
   res.cookie("refreshToken", refreshToken, {

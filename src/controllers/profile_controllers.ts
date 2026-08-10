@@ -1,6 +1,8 @@
 import {
   getPersonalByIdLogic,
   sendSVEmail,
+  SV,
+  svClose,
   updatePasswordLogic,
   updatePersonalByIdLogic,
 } from "../services/profile_service";
@@ -49,7 +51,29 @@ export const sendSVEmailControllers: JwtAsyncFunction = async (req, res) => {
   await sendSVEmail(id, email);
 
   res.status(201).json({
-    message: "email存在",
+    message: "email已寄出",
+    state: true,
+  });
+};
+
+//sv開啟
+export const svControllers: JwtAsyncFunction = async (req, res) => {
+  const { email, code } = req.body || {};
+  await SV(email, code);
+
+  res.status(201).json({
+    message: "成功開啟2FA",
+    state: true,
+  });
+};
+
+//sv關閉
+export const svCloseControllers: JwtAsyncFunction = async (req, res) => {
+  const id = req.user?.id;
+  await svClose(id);
+
+  res.status(201).json({
+    message: "成功關閉2FA",
     state: true,
   });
 };
