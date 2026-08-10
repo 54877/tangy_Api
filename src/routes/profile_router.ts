@@ -2,6 +2,7 @@ import express from "express";
 import {
   getPersonal,
   sendSVEmailControllers,
+  svCloseControllers,
   svControllers,
   updatePassword,
   updatePersonal,
@@ -51,7 +52,7 @@ openapiRoute({
   router: profile_router,
 });
 
-//TODO 以下SCHEMA 要改
+//TODO 以下SCHEMA method要確認 要改 登入使用者資料要新增svType
 
 openapiRoute({
   method: "post",
@@ -81,7 +82,6 @@ openapiRoute({
   tags: ["Profile"],
   needAuth: true,
   summary: "關閉2FA",
-  schema: forgotSchema,
-  handler: [asyncHandler(svControllers)],
+  handler: [asyncHandler(svCloseControllers)],
   router: profile_router,
 });
