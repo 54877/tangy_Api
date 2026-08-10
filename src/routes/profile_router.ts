@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getPersonal,
+  sendSVEmailControllers,
   updatePassword,
   updatePersonal,
 } from "../controllers/profile_controllers";
@@ -12,7 +13,6 @@ import {
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
 import { forgotSchema } from "../validation/schemas/auth.schema";
-import { sendEmailControllers } from "../controllers/auth_controllers";
 
 export const profile_router = express.Router();
 
@@ -57,6 +57,6 @@ openapiRoute({
   needAuth: true,
   summary: "sv寄信驗證",
   schema: forgotSchema,
-  handler: [asyncHandler(sendEmailControllers)],
+  handler: [asyncHandler(sendSVEmailControllers)],
   router: profile_router,
 });

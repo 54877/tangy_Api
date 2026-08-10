@@ -77,9 +77,9 @@ export const sendSVEmail = async (id: string, email: string) => {
 
   const code = randomInt(100000, 1000000).toString();
   const codeHash = await bcrypt.hash(code, 10);
-  console.log("🔥 sendSVEmail HIT");
+
   await createSVEmailVerification(codeHash, email);
-  console.log("🔥 createSVEmailVerification FINISHED");
+
   return await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
