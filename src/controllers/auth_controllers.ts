@@ -34,6 +34,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
   if (isSV) {
     res.status(200).json({
+      svType: true,
       message: "驗證碼成功寄出",
       state: true,
     });

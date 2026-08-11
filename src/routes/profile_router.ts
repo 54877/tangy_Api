@@ -70,7 +70,7 @@ openapiRoute({
   path: "/2FA",
   tags: ["Profile"],
   needAuth: true,
-  summary: "開始2FA",
+  summary: "開啟2FA",
   schema: svOpen,
   handler: [asyncHandler(svControllers)],
   router: profile_router,
