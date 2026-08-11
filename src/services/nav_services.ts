@@ -8,10 +8,16 @@ export const getUserByIdLogic = async (id: string | undefined) => {
   }
 
   const user = await getUserById(id);
+
+  if (!user) {
+    throw new AppError("查無資料", 400);
+  }
+
   return {
-    id: user?.id,
-    email: user?.email,
-    userName: user?.userName,
-    role: user?.role,
+    id: user.id,
+    email: user.email,
+    userName: user.userName,
+    svType: user.svType,
+    role: user.role,
   };
 };

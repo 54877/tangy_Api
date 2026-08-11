@@ -1,5 +1,4 @@
 import prisma from "../db/prisma";
-import { email } from "../validation/rules/auth.rule";
 
 export const updateUserById = async (
   id: string,

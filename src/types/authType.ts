@@ -10,6 +10,7 @@ export interface UserProps {
   id: string;
   email: string;
   userName: string;
+  svType: boolean;
   role: UserRole;
 }
 

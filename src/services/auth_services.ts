@@ -4,7 +4,6 @@ import {
   codeCountDb,
   createEmailVerification,
   expiredCodeDb,
-  expiredSVCodeDb,
   logoutDb,
   newPasswordDb,
   refreshTokenChange,
@@ -13,7 +12,6 @@ import {
   storedTokenDb,
   userDb,
   verifyDb,
-  verifySVDb,
 } from "../repository/auth_Repository";
 import jwt from "jsonwebtoken";
 import crypto, { randomInt } from "node:crypto";
@@ -66,6 +64,7 @@ export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
     id: user.id,
     email: user.email,
     userName: user.userName,
+    svType: user.svType,
     role: user.role,
   } as UserProps;
 
@@ -261,6 +260,7 @@ export const verifyLoginUser = async (
     id: user.id,
     email: user.email,
     userName: user.userName,
+    svType: user.svType,
     role: getUserRole(user.role),
   };
 

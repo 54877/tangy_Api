@@ -23,7 +23,7 @@ model User {
   introduction  String?
   birthday      DateTime?      @db.Date
   role          String         @default("user")
-  svType        Boolean?       @default(false) @map("sv_type")
+  svType        Boolean        @default(false) @map("sv_type")
   refreshTokens RefreshToken[]
 
   @@map("user_table")
