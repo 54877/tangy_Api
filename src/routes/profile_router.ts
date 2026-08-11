@@ -13,6 +13,7 @@ import { openapiRoute } from "../utils/openapiRoute";
 import {
   personalSchema,
   svEmail,
+  svOpen,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
 import { forgotSchema } from "../validation/schemas/auth.schema";
@@ -53,8 +54,6 @@ openapiRoute({
   router: profile_router,
 });
 
-//TODO 以下SCHEMA要確認
-
 openapiRoute({
   method: "post",
   path: "/SvSendEmail",
@@ -72,7 +71,7 @@ openapiRoute({
   tags: ["Profile"],
   needAuth: true,
   summary: "開始2FA",
-  schema: forgotSchema,
+  schema: svOpen,
   handler: [asyncHandler(svControllers)],
   router: profile_router,
 });
