@@ -17,6 +17,12 @@ export const loginSchema = z.object({
   password: passwordScheme("weak"),
 });
 
+export const loginSvSchema = z.object({
+  email: email,
+  password: passwordScheme("weak"),
+  code: codeScheme,
+});
+
 export const forgotSchema = z.object({
   email: email,
 });

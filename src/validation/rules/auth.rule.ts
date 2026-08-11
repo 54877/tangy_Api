@@ -21,4 +21,4 @@ export const passwordScheme = (mode: "strong" | "weak") => {
   );
 };
 
-export const codeScheme = requiredString.max(7, "不可超過7個字元");
+export const codeScheme = requiredString.max(20, "不可超過20個字元");

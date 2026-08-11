@@ -12,6 +12,7 @@ import {
 import {
   forgotSchema,
   loginSchema,
+  loginSvSchema,
   newPasswordSchema,
   registerSchema,
 } from "../validation/schemas/auth.schema";
@@ -40,13 +41,12 @@ openapiRoute({
   router: auth_router,
 });
 
-//TODO SCHEMA 要改
 openapiRoute({
   method: "post",
   path: "/loginSV",
   tags: ["Auth"],
   summary: "登入帳號-(二次驗證)",
-  schema: loginSchema,
+  schema: loginSvSchema,
   handler: [asyncHandler(loginUserSV)],
   router: auth_router,
 });

@@ -12,6 +12,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { openapiRoute } from "../utils/openapiRoute";
 import {
   personalSchema,
+  svEmail,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
 import { forgotSchema } from "../validation/schemas/auth.schema";
@@ -52,7 +53,7 @@ openapiRoute({
   router: profile_router,
 });
 
-//TODO 以下SCHEMA method要確認 要改 登入使用者資料要新增svType
+//TODO 以下SCHEMA要確認
 
 openapiRoute({
   method: "post",
@@ -60,14 +61,14 @@ openapiRoute({
   tags: ["Profile"],
   needAuth: true,
   summary: "sv寄信驗證",
-  schema: forgotSchema,
+  schema: svEmail,
   handler: [asyncHandler(sendSVEmailControllers)],
   router: profile_router,
 });
 
 openapiRoute({
   method: "post",
-  path: "/sv",
+  path: "/2FA",
   tags: ["Profile"],
   needAuth: true,
   summary: "開始2FA",
@@ -78,7 +79,7 @@ openapiRoute({
 
 openapiRoute({
   method: "post",
-  path: "/sv",
+  path: "/2FAClose",
   tags: ["Profile"],
   needAuth: true,
   summary: "關閉2FA",
