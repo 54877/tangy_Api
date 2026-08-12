@@ -225,8 +225,6 @@ export const newPasswordLogic = async (
     throw new AppError("驗證碼錯誤", 400, "code");
   }
 
-  await expiredCodeDb(email);
-
   //驗證密碼是否與舊密碼相同
   const user = await userEmail(email, "驗證失敗", "email");
   const psd = await bcrypt.compare(newPassword, user.password);
