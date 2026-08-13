@@ -16,7 +16,6 @@ import {
   svOpen,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
-import { forgotSchema } from "../validation/schemas/auth.schema";
 
 export const profile_router = express.Router();
 

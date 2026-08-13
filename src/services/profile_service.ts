@@ -56,10 +56,11 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
   if (!userDate) {
     throw new AppError("使用者不存在", 404);
   }
+  const { password, ...safeUserDate } = userDate;
 
   return {
     userDate: {
-      ...userDate,
+      ...safeUserDate,
       birthday: userDate?.birthday
         ? userDate.birthday.toISOString().split("T")[0]
         : null,
