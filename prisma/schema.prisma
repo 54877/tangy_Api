@@ -55,9 +55,20 @@ model RefreshToken {
   id        String @id @default(uuid())
   tokenHash String @unique @map("token_hash")
   userId    String @map("user_id")
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userAgent         String?   @map("user_agent")
+  // Device
+  userAgent      String  @map("user_agent")
+  deviceType     String? @map("device_type")
+  deviceVendor   String? @map("device_vendor")
+  deviceModel    String? @map("device_model")
+  // OS
+  os             String?
+  osVersion      String? @map("os_version")
+  // Browser
+  browser        String?
+  browserVersion String? @map("browser_version")
+
   revokedAt         DateTime? @map("revoked_at")
   ip                String?
   createdAt         DateTime  @default(now()) @map("created_at")

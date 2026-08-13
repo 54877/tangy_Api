@@ -1,3 +1,4 @@
+import { UAParser } from "ua-parser-js";
 import {
   isSvLogic,
   loginUserLogic,
@@ -61,7 +62,12 @@ export const loginUser: AsyncFunction = async (req, res) => {
 //登入SV
 export const loginUserSV: AsyncFunction = async (req, res) => {
   const { email, code, password } = req.body || {};
+  //裝置資訊
   const userAgent = req.headers["user-agent"] ?? "unknown";
+  const parser = new UAParser(userAgent);
+  const result = parser.getResult();
+  console.log(result);
+
   const ip = req.ip ?? "unknown";
   const user = await verifyLoginUser(email, password, code);
 
