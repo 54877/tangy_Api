@@ -1,6 +1,6 @@
 import { requiredDate, requiredString } from "../primitives/string";
 
-export const genderScheme = requiredString.max(5, "不可超過5個字元");
+export const genderScheme = requiredString.max(10, "不可超過10個字元");
 
 export const birthdayScheme = requiredDate.max(20, "不可超過20個字元");
 
