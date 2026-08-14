@@ -10,10 +10,10 @@ export const prisma = client.$extends({
   query: {
     $allModels: {
       async $allOperations({ model, operation, args, query }) {
-        console.log("🔥 PRISMA HIT");
-        console.log("model:", model);
-        console.log("action:", operation);
-        console.log("args:", args);
+        // console.log("🔥 PRISMA HIT");
+        // console.log("model:", model);
+        // console.log("action:", operation);
+        // console.log("args:", args);
 
         return query(args);
       },

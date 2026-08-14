@@ -29,7 +29,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
   const userAgent = req.headers["user-agent"] ?? "unknown";
   const parser = new UAParser(userAgent);
   const result = parser.getResult();
-  console.log(result);
+  console.log("我是裝置", result);
 
   const ip = req.ip ?? "unknown";
 
