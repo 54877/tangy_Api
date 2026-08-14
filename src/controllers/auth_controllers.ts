@@ -15,12 +15,11 @@ import { createAccessToken } from "../utils/jwt";
 const getLoginData = async (req: Request) => {
   const { email, password, code } = req.body || {};
   const userAgent = req.headers["user-agent"] ?? "unknown";
-  const refreshToken = req.cookies.refreshToken;
   const ip = req.ip ?? "unknown";
   const deviceId = req.cookies.deviceId;
   const user = await verifyLoginUser(email, password, code);
 
-  return { userAgent, ip, deviceId, user, email, refreshToken };
+  return { userAgent, ip, deviceId, user, email };
 };
 
 const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
@@ -125,7 +124,8 @@ export const newPassword: AsyncFunction = async (req, res) => {
 
 //登出
 export const logoutControllers: AsyncFunction = async (req, res) => {
-  const { refreshToken, deviceId } = await getLoginData(req);
+  const refreshToken = req.cookies.refreshToken;
+  const { deviceId } = await getLoginData(req);
   await logoutLogic(refreshToken, deviceId);
 
   res.clearCookie("refreshToken", {
@@ -142,8 +142,8 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
 
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
-  const { refreshToken, ip } = await getLoginData(req);
-
+  const { ip } = await getLoginData(req);
+  const refreshToken = req.cookies.refreshToken;
   const { newPayload, newRefreshToken } = await refreshTokenLogic(
     refreshToken,
     ip,
