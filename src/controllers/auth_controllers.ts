@@ -125,7 +125,7 @@ export const newPassword: AsyncFunction = async (req, res) => {
 //登出
 export const logoutControllers: AsyncFunction = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  const { deviceId } = await getLoginData(req);
+  const deviceId = req.cookies.deviceId;
   await logoutLogic(refreshToken, deviceId);
 
   res.clearCookie("refreshToken", {
@@ -142,7 +142,7 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
 
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
-  const { ip } = await getLoginData(req);
+  const ip = req.ip ?? "unknown";
   const refreshToken = req.cookies.refreshToken;
   const { newPayload, newRefreshToken } = await refreshTokenLogic(
     refreshToken,
