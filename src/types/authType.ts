@@ -18,6 +18,7 @@ export interface TokenType {
   user: UserProps;
   userAgent: string;
   ip: string;
+  deviceId: string;
 }
 
 export interface LoginToken {
@@ -28,19 +29,21 @@ export interface LoginToken {
 
 export interface RefreshTokenProps {
   tokenHash: string;
-  userId: string;
-  userAgent: string;
+  deviceId: string;
   ip: string;
   expiresAt: Date;
   absoluteExpiresAt: Date;
+}
 
+export interface DeviceProps {
+  deviceId: string | undefined;
+  userId: string;
+  userAgent: string;
   deviceType?: string | null;
   deviceVendor?: string | null;
   deviceModel?: string | null;
-
   os?: string | null;
   osVersion?: string | null;
-
   browser?: string | null;
   browserVersion?: string | null;
 }

@@ -3,6 +3,7 @@ import { TokenType, UserProps, UserType } from "../types/authType";
 import {
   codeCountDb,
   createEmailVerification,
+  deviceDb,
   expiredCodeDb,
   logoutDb,
   newPasswordDb,
@@ -79,7 +80,12 @@ export const registerUserLogic = async ({
 };
 
 //登入
-export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
+export const loginUserLogic = async ({
+  user,
+  userAgent,
+  ip,
+  deviceId,
+}: TokenType) => {
   const userDate = {
     id: user.id,
     email: user.email,
@@ -98,14 +104,11 @@ export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
 
   const deviceInfo = getDeviceInfo(userAgent);
 
-  await refreshTokenDb({
-    tokenHash,
+  //裝置DB
+  const device = await deviceDb({
+    deviceId: deviceId,
     userId: user.id,
     userAgent: deviceInfo.userAgent,
-    ip,
-    expiresAt,
-    absoluteExpiresAt,
-
     deviceType: deviceInfo.deviceType,
     deviceVendor: deviceInfo.deviceVendor,
     deviceModel: deviceInfo.deviceModel,
@@ -117,9 +120,19 @@ export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
     browserVersion: deviceInfo.browserVersion,
   });
 
+  //建立refreshToken
+  await refreshTokenDb({
+    tokenHash,
+    deviceId: device.id,
+    ip,
+    expiresAt,
+    absoluteExpiresAt,
+  });
+
   return {
     accessToken,
     refreshToken,
+    id: device.id,
     userDate,
   };
 };
@@ -135,21 +148,17 @@ export const isSvLogic = async (email: string) => {
 };
 
 //登出
-export const logoutLogic = async (refreshToken: string) => {
+export const logoutLogic = async (refreshToken: string, deviceId: string) => {
   if (!refreshToken) {
     throw new AppError("未登入", 401);
   }
 
   const tokenHash = hash(refreshToken);
-  await logoutDb(tokenHash);
+  await logoutDb(tokenHash, deviceId);
 };
 
 //Refresh token
-export const refreshTokenLogic = async (
-  token: string | null,
-  userAgent: string,
-  ip: string,
-) => {
+export const refreshTokenLogic = async (token: string | null, ip: string) => {
   if (!token) {
     throw new AppError("未登入", 401);
   }
@@ -181,13 +190,13 @@ export const refreshTokenLogic = async (
 
   // 判斷是否過期
   if (storedToken.expiresAt < new Date()) {
-    await logoutDb(tokenHash);
+    await logoutDb(tokenHash, storedToken.deviceId);
     throw new AppError("Refresh Token 過期", 401);
   }
 
   // 判斷是否超過最大滑動時間
   if (storedToken.absoluteExpiresAt < new Date()) {
-    await logoutDb(tokenHash);
+    await logoutDb(tokenHash, storedToken.deviceId);
     throw new AppError("Refresh Token 過期", 401);
   }
 
@@ -204,10 +213,9 @@ export const refreshTokenLogic = async (
 
   //移除舊refresh token 建立新 refresh token
   await refreshTokenChange(
-    tokenHash,
+    storedToken.tokenHash,
+    storedToken.deviceId,
     newHashToken,
-    storedToken.userId,
-    userAgent,
     ip,
     expiresAt,
     absoluteExpiresAt,

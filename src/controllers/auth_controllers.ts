@@ -1,4 +1,3 @@
-import { UAParser } from "ua-parser-js";
 import {
   isSvLogic,
   loginUserLogic,
@@ -9,8 +8,38 @@ import {
   sendEmail,
   verifyLoginUser,
 } from "../services/auth_services";
+import { Request, Response } from "express";
 import { AsyncFunction } from "../types/asyncType";
 import { createAccessToken } from "../utils/jwt";
+
+const getLoginData = async (req: Request) => {
+  const { email, password, code } = req.body || {};
+  const userAgent = req.headers["user-agent"] ?? "unknown";
+  const refreshToken = req.cookies.refreshToken;
+  const ip = req.ip ?? "unknown";
+  const deviceId = req.cookies.deviceId;
+  const user = await verifyLoginUser(email, password, code);
+
+  return { userAgent, ip, deviceId, user, email, refreshToken };
+};
+
+const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  if (deviceId) {
+    res.cookie("deviceId", deviceId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+  }
+};
 
 //註冊
 export const registerUser: AsyncFunction = async (req, res) => {
@@ -25,11 +54,7 @@ export const registerUser: AsyncFunction = async (req, res) => {
 
 //登入
 export const loginUser: AsyncFunction = async (req, res) => {
-  const { email, password } = req.body || {};
-  const userAgent = req.headers["user-agent"] ?? "unknown";
-  const ip = req.ip ?? "unknown";
-
-  const user = await verifyLoginUser(email, password);
+  const { userAgent, ip, deviceId, user, email } = await getLoginData(req);
 
   const isSV = await isSvLogic(email);
 
@@ -41,15 +66,13 @@ export const loginUser: AsyncFunction = async (req, res) => {
     });
     return;
   }
-  const Token = await loginUserLogic({ user, userAgent, ip });
-  const { refreshToken, accessToken, userDate } = Token;
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  const Token = await loginUserLogic({ user, userAgent, ip, deviceId });
+
+  const { refreshToken, accessToken, userDate, id } = Token;
+
+  //建立cookies
+  cookiesFn(res, refreshToken, id);
 
   res.status(201).json({
     accessToken,
@@ -61,21 +84,14 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
 //登入SV
 export const loginUserSV: AsyncFunction = async (req, res) => {
-  const { email, code, password } = req.body || {};
-  const userAgent = req.headers["user-agent"] ?? "unknown";
-  const ip = req.ip ?? "unknown";
-  const user = await verifyLoginUser(email, password, code);
+  const { userAgent, ip, deviceId, user } = await getLoginData(req);
 
-  const Token = await loginUserLogic({ user, userAgent, ip });
+  const Token = await loginUserLogic({ user, userAgent, ip, deviceId });
 
-  const { refreshToken, accessToken, userDate } = Token;
+  const { refreshToken, accessToken, userDate, id } = Token;
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  //建立cookies
+  cookiesFn(res, refreshToken, id);
 
   res.status(201).json({
     accessToken,
@@ -109,8 +125,8 @@ export const newPassword: AsyncFunction = async (req, res) => {
 
 //登出
 export const logoutControllers: AsyncFunction = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  await logoutLogic(refreshToken);
+  const { refreshToken, deviceId } = await getLoginData(req);
+  await logoutLogic(refreshToken, deviceId);
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
@@ -126,13 +142,10 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
 
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const userAgent = req.headers["user-agent"] ?? "unknown";
-  const ip = req.ip ?? "unknown";
+  const { refreshToken, ip } = await getLoginData(req);
 
   const { newPayload, newRefreshToken } = await refreshTokenLogic(
     refreshToken,
-    userAgent,
     ip,
   );
 
@@ -145,12 +158,7 @@ export const refresh: AsyncFunction = async (req, res) => {
   });
 
   //設置新cookies refresh token
-  res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  cookiesFn(res, newRefreshToken);
 
   res.status(200).json({
     accessToken,

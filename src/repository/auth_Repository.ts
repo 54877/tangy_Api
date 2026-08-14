@@ -1,5 +1,5 @@
 import { prisma } from "../db/prisma";
-import { RefreshTokenProps, UserType } from "../types/authType";
+import { DeviceProps, RefreshTokenProps, UserType } from "../types/authType";
 import { AppError } from "../utils/errors";
 
 export const registerUserDb = async ({
@@ -40,41 +40,46 @@ export const userDb = async (email: string) => {
 //紀錄refreshToken
 export const refreshTokenDb = async ({
   tokenHash,
-  userId,
-  userAgent,
+  deviceId,
   ip,
   expiresAt,
   absoluteExpiresAt,
-
-  deviceType,
-  deviceVendor,
-  deviceModel,
-
-  os,
-  osVersion,
-
-  browser,
-  browserVersion,
 }: RefreshTokenProps) => {
   await prisma.refreshToken.create({
     data: {
       tokenHash,
-      userId,
-      userAgent,
+      deviceId,
       ip,
       expiresAt,
       absoluteExpiresAt,
-
-      deviceType,
-      deviceVendor,
-      deviceModel,
-
-      os,
-      osVersion,
-
-      browser,
-      browserVersion,
     },
+  });
+};
+
+//紀錄device
+export const deviceDb = async (device: DeviceProps) => {
+  const { deviceId, ...deviceData } = device;
+  if (deviceId) {
+    const existingDevice = await prisma.deviceTable.findUnique({
+      where: {
+        id: deviceId,
+      },
+    });
+
+    if (existingDevice) {
+      return await prisma.deviceTable.update({
+        where: {
+          id: existingDevice.id,
+        },
+        data: {
+          lastUseAt: new Date(),
+        },
+      });
+    }
+  }
+
+  return await prisma.deviceTable.create({
+    data: deviceData,
   });
 };
 
@@ -88,15 +93,26 @@ export const storedTokenDb = async (tokenHash: string) => {
 };
 
 //登出
-export const logoutDb = async (tokenHash: string) => {
-  await prisma.refreshToken.updateMany({
-    where: {
-      tokenHash,
-      revokedAt: null,
-    },
-    data: {
-      revokedAt: new Date(),
-    },
+export const logoutDb = async (tokenHash: string, deviceId: string) => {
+  await prisma.$transaction(async (tx) => {
+    await tx.refreshToken.updateMany({
+      where: {
+        tokenHash,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+
+    await tx.deviceTable.update({
+      where: {
+        id: deviceId,
+      },
+      data: {
+        lastUseAt: new Date(),
+      },
+    });
   });
 };
 
@@ -203,19 +219,17 @@ export const newPasswordDb = async (email: string, newPassword: string) => {
 
 //refresh token 替換
 export const refreshTokenChange = async (
-  tokenHash: string,
+  oldToken: string,
+  deviceId: string,
   newHashToken: string,
-  userId: string,
-  userAgent: string,
   ip: string,
   expiresAt: Date,
   absoluteExpiresAt: Date,
 ) => {
   return await prisma.$transaction(async (tx) => {
-    await tx.refreshToken.updateMany({
+    await tx.refreshToken.update({
       where: {
-        tokenHash,
-        revokedAt: null,
+        tokenHash: oldToken,
       },
       data: {
         revokedAt: new Date(),
@@ -225,11 +239,19 @@ export const refreshTokenChange = async (
     await tx.refreshToken.create({
       data: {
         tokenHash: newHashToken,
-        userId,
-        userAgent,
+        deviceId: deviceId,
         ip,
         expiresAt,
         absoluteExpiresAt,
+      },
+    });
+
+    await tx.deviceTable.update({
+      where: {
+        id: deviceId,
+      },
+      data: {
+        lastUseAt: new Date(),
       },
     });
   });
