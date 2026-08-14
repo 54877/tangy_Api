@@ -27,6 +27,10 @@ export const registerUser: AsyncFunction = async (req, res) => {
 export const loginUser: AsyncFunction = async (req, res) => {
   const { email, password } = req.body || {};
   const userAgent = req.headers["user-agent"] ?? "unknown";
+  const parser = new UAParser(userAgent);
+  const result = parser.getResult();
+  console.log(result);
+
   const ip = req.ip ?? "unknown";
 
   const user = await verifyLoginUser(email, password);
