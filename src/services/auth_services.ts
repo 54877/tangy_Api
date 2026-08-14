@@ -24,6 +24,7 @@ import {
 import { Resend } from "resend";
 import { sendSVEmail, svCodeCheck } from "./profile_service";
 import { getUserRole } from "../utils/role";
+import { UAParser } from "ua-parser-js";
 
 const userEmail = async (
   email: string,
@@ -42,6 +43,25 @@ const hash = (token: string) => {
 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const getDeviceInfo = (userAgent: string) => {
+  const parser = new UAParser(userAgent);
+  const result = parser.getResult();
+
+  return {
+    userAgent,
+    // Device
+    deviceType: result.device.type ?? null,
+    deviceVendor: result.device.vendor ?? null,
+    deviceModel: result.device.model ?? null,
+    // OS
+    os: result.os.name ?? null,
+    osVersion: result.os.version ?? null,
+    // Browser
+    browser: result.browser.name ?? null,
+    browserVersion: result.browser.version ?? null,
+  };
+};
 
 //註冊
 export const registerUserLogic = async ({
@@ -75,14 +95,27 @@ export const loginUserLogic = async ({ user, userAgent, ip }: TokenType) => {
   const tokenHash = hash(refreshToken);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const absoluteExpiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
-  await refreshTokenDb(
+
+  const deviceInfo = getDeviceInfo(userAgent);
+
+  await refreshTokenDb({
     tokenHash,
-    user.id,
-    userAgent,
+    userId: user.id,
+    userAgent: deviceInfo.userAgent,
     ip,
     expiresAt,
     absoluteExpiresAt,
-  );
+
+    deviceType: deviceInfo.deviceType,
+    deviceVendor: deviceInfo.deviceVendor,
+    deviceModel: deviceInfo.deviceModel,
+
+    os: deviceInfo.os,
+    osVersion: deviceInfo.osVersion,
+
+    browser: deviceInfo.browser,
+    browserVersion: deviceInfo.browserVersion,
+  });
 
   return {
     accessToken,

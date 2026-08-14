@@ -25,3 +25,22 @@ export interface LoginToken {
   refreshToken: string;
   userDate: UserProps;
 }
+
+export interface RefreshTokenProps {
+  tokenHash: string;
+  userId: string;
+  userAgent: string;
+  ip: string;
+  expiresAt: Date;
+  absoluteExpiresAt: Date;
+
+  deviceType?: string | null;
+  deviceVendor?: string | null;
+  deviceModel?: string | null;
+
+  os?: string | null;
+  osVersion?: string | null;
+
+  browser?: string | null;
+  browserVersion?: string | null;
+}

@@ -1,5 +1,5 @@
 import { prisma } from "../db/prisma";
-import { UserType } from "../types/authType";
+import { RefreshTokenProps, UserType } from "../types/authType";
 import { AppError } from "../utils/errors";
 
 export const registerUserDb = async ({
@@ -38,22 +38,42 @@ export const userDb = async (email: string) => {
 };
 
 //紀錄refreshToken
-export const refreshTokenDb = async (
-  token: string,
-  userId: string,
-  userAgent: string,
-  ip: string,
-  expiresAt: Date,
-  absoluteExpiresAt: Date,
-) => {
+export const refreshTokenDb = async ({
+  tokenHash,
+  userId,
+  userAgent,
+  ip,
+  expiresAt,
+  absoluteExpiresAt,
+
+  deviceType,
+  deviceVendor,
+  deviceModel,
+
+  os,
+  osVersion,
+
+  browser,
+  browserVersion,
+}: RefreshTokenProps) => {
   await prisma.refreshToken.create({
     data: {
-      tokenHash: token,
+      tokenHash,
       userId,
       userAgent,
       ip,
       expiresAt,
       absoluteExpiresAt,
+
+      deviceType,
+      deviceVendor,
+      deviceModel,
+
+      os,
+      osVersion,
+
+      browser,
+      browserVersion,
     },
   });
 };
