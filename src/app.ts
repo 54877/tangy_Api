@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 
 const app = express();
+//解析ip
+app.set("trust proxy", 1);
 //header 防護 (helmet 套件)
 app.use(helmet());
 app.disable("x-powered-by");
