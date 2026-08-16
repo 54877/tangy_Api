@@ -108,6 +108,7 @@ export const loginUserLogic = async ({
   const device = await deviceDb({
     deviceId: deviceId,
     userId: user.id,
+    ip: ip,
     userAgent: deviceInfo.userAgent,
     deviceType: deviceInfo.deviceType,
     deviceVendor: deviceInfo.deviceVendor,

@@ -38,6 +38,7 @@ export interface RefreshTokenProps {
 export interface DeviceProps {
   deviceId: string | undefined;
   userId: string;
+  ip: string;
   userAgent: string;
   deviceType?: string | null;
   deviceVendor?: string | null;

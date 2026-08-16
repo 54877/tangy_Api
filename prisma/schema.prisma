@@ -73,6 +73,7 @@ model RefreshToken {
 model deviceTable {
   id        String   @id @default(uuid())
   lastUseAt DateTime @default(now()) @map("last_use")
+  ip        String
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

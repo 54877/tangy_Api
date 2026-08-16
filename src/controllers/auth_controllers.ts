@@ -17,6 +17,7 @@ const getLoginData = async (req: Request) => {
   const userAgent = req.headers["user-agent"] ?? "unknown";
   const ip = req.ip ?? "unknown";
   const deviceId = req.cookies.deviceId;
+  console.log(ip);
   const user = await verifyLoginUser(email, password, code);
 
   return { userAgent, ip, deviceId, user, email };
