@@ -12,11 +12,12 @@ import { JwtAsyncFunction } from "../types/asyncType";
 export const getPersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
 
-  const { userDate, genderSelect } = await getPersonalByIdLogic(id);
+  const { userDate, genderSelect, deviceDate } = await getPersonalByIdLogic(id);
 
   res.status(200).json({
     userDate,
     genderSelect,
+    deviceDate,
     message: "成功",
     state: true,
   });

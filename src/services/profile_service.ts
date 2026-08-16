@@ -3,6 +3,7 @@ import { genderSelect } from "../constants/gender";
 import { getUserById } from "../repository/nav_Repository";
 import {
   createSVEmailVerification,
+  getUserDeviceByUserId,
   svCloseDb,
   SVDb,
   updatePasswordDb,
@@ -56,7 +57,10 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
   if (!userDate) {
     throw new AppError("使用者不存在", 404);
   }
+
   const { password, ...safeUserDate } = userDate;
+
+  const deviceDate = await getUserDeviceByUserId(userDate.id);
 
   return {
     userDate: {
@@ -66,6 +70,7 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
         : null,
     },
     genderSelect,
+    deviceDate,
   };
 };
 

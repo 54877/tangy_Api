@@ -77,3 +77,11 @@ export const svCloseDb = async (id: string) => {
     },
   });
 };
+
+export const getUserDeviceByUserId = async (userId: string) => {
+  return await prisma.deviceTable.findMany({
+    where: {
+      userId,
+    },
+  });
+};
