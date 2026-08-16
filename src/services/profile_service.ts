@@ -60,7 +60,7 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
 
   const { password, ...safeUserDate } = userDate;
 
-  const deviceDate = await getUserDeviceByUserId(userDate.id);
+  const device = await getUserDeviceByUserId(userDate.id);
 
   return {
     userDate: {
@@ -70,7 +70,7 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
         : null,
     },
     genderSelect,
-    deviceDate,
+    device,
   };
 };
 

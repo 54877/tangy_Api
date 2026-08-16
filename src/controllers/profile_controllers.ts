@@ -11,8 +11,12 @@ import { JwtAsyncFunction } from "../types/asyncType";
 //個人資料
 export const getPersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
-
-  const { userDate, genderSelect, deviceDate } = await getPersonalByIdLogic(id);
+  const deviceId = req.cookies.deviceId;
+  const { userDate, genderSelect, device } = await getPersonalByIdLogic(id);
+  const deviceDate = device.map((device) => ({
+    ...device,
+    isCurrent: device.id === deviceId,
+  }));
 
   res.status(200).json({
     userDate,
