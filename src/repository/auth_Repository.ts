@@ -41,7 +41,6 @@ export const userDb = async (email: string) => {
 export const refreshTokenDb = async ({
   tokenHash,
   deviceId,
-  ip,
   expiresAt,
   absoluteExpiresAt,
 }: RefreshTokenProps) => {
@@ -49,7 +48,6 @@ export const refreshTokenDb = async ({
     data: {
       tokenHash,
       deviceId,
-      ip,
       expiresAt,
       absoluteExpiresAt,
     },
@@ -222,7 +220,6 @@ export const refreshTokenChange = async (
   oldToken: string,
   deviceId: string,
   newHashToken: string,
-  ip: string,
   expiresAt: Date,
   absoluteExpiresAt: Date,
 ) => {
@@ -240,7 +237,6 @@ export const refreshTokenChange = async (
       data: {
         tokenHash: newHashToken,
         deviceId: deviceId,
-        ip,
         expiresAt,
         absoluteExpiresAt,
       },

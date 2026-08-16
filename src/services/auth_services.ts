@@ -217,7 +217,6 @@ export const refreshTokenLogic = async (token: string | null, ip: string) => {
     storedToken.tokenHash,
     storedToken.deviceId,
     newHashToken,
-    ip,
     expiresAt,
     absoluteExpiresAt,
   );

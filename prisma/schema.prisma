@@ -60,7 +60,6 @@ model RefreshToken {
   device   deviceTable @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
   revokedAt         DateTime? @map("revoked_at")
-  ip                String?
   createdAt         DateTime  @default(now()) @map("created_at")
   expiresAt         DateTime  @map("expires_at")
   absoluteExpiresAt DateTime  @map("absolute_expires_at")
