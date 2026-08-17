@@ -57,7 +57,12 @@ const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
   console.log("登入產生 deviceId:", deviceId);
 
   if (deviceId) {
-    res.cookie("deviceId", deviceId, cookieOptions);
+    res.cookie("testCookie", "hello", {
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
   }
 };
 
@@ -93,10 +98,10 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
-
   console.log("Set-Cookie deviceId:", deviceId);
   console.log("User-Agent:", req.headers["user-agent"]);
   console.log("Origin:", req.headers.origin);
+
   res.status(201).json({
     accessToken,
     userDate,
