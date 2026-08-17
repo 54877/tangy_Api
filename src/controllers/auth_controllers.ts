@@ -75,6 +75,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
+  console.log("Set-Cookie:", res.getHeader("Set-Cookie"));
 
   res.status(201).json({
     accessToken,
@@ -94,6 +95,7 @@ export const loginUserSV: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
+  console.log("Set-Cookie:", res.getHeader("Set-Cookie"));
 
   res.status(201).json({
     accessToken,
