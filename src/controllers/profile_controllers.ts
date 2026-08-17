@@ -1,4 +1,5 @@
 import {
+  deviceCloseByIdLogic,
   getPersonalByIdLogic,
   sendSVEmail,
   SV,
@@ -82,6 +83,21 @@ export const svCloseControllers: JwtAsyncFunction = async (req, res) => {
 
   res.status(201).json({
     message: "成功關閉2FA",
+    state: true,
+  });
+};
+
+//登出device by id
+export const deviceCloseByIdControllers: JwtAsyncFunction = async (
+  req,
+  res,
+) => {
+  const { id } = req.body || {};
+
+  await deviceCloseByIdLogic(id);
+
+  res.status(201).json({
+    message: "成功關閉device",
     state: true,
   });
 };

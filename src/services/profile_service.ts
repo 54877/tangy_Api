@@ -3,6 +3,7 @@ import { genderSelect } from "../constants/gender";
 import { getUserById } from "../repository/nav_Repository";
 import {
   createSVEmailVerification,
+  deviceCloseById,
   getUserDeviceByUserId,
   svCloseDb,
   SVDb,
@@ -138,4 +139,8 @@ export const SV = async (email: string, code: string) => {
 //關閉sv
 export const svClose = async (id: string) => {
   await svCloseDb(id);
+};
+
+export const deviceCloseByIdLogic = async (id: string) => {
+  await deviceCloseById(id);
 };

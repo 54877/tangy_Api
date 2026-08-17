@@ -78,10 +78,20 @@ export const svCloseDb = async (id: string) => {
   });
 };
 
+//裝置Data
 export const getUserDeviceByUserId = async (userId: string) => {
   return await prisma.deviceTable.findMany({
     where: {
       userId,
+    },
+  });
+};
+
+//刪除id裝置
+export const deviceCloseById = async (id: string) => {
+  return await prisma.deviceTable.delete({
+    where: {
+      id,
     },
   });
 };
