@@ -22,44 +22,44 @@ const getLoginData = async (req: Request) => {
   return { userAgent, ip, deviceId, user, email };
 };
 
-// const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
-//   res.cookie("refreshToken", refreshToken, {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production",
-//     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-//     maxAge: 7 * 24 * 60 * 60 * 1000,
-//   });
-
-//   if (deviceId) {
-//     res.cookie("deviceId", deviceId, {
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === "production",
-//       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-//       maxAge: 7 * 24 * 60 * 60 * 1000,
-//     });
-//   }
-// };
-
 const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
-  const cookieOptions = {
+  res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite:
-      process.env.NODE_ENV === "production"
-        ? ("none" as const)
-        : ("lax" as const),
-    path: "/",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
-  };
-
-  res.cookie("refreshToken", refreshToken, cookieOptions);
-
-  console.log("登入產生 deviceId:", deviceId);
+  });
 
   if (deviceId) {
-    res.cookie("deviceId", deviceId, cookieOptions);
+    res.cookie("deviceId", deviceId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
   }
 };
+
+// const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
+//   const cookieOptions = {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite:
+//       process.env.NODE_ENV === "production"
+//         ? ("none" as const)
+//         : ("lax" as const),
+//     path: "/",
+//     maxAge: 7 * 24 * 60 * 60 * 1000,
+//   };
+
+//   res.cookie("refreshToken", refreshToken, cookieOptions);
+
+//   console.log("登入產生 deviceId:", deviceId);
+
+//   if (deviceId) {
+//     res.cookie("deviceId", deviceId, cookieOptions);
+//   }
+// };
 
 //註冊
 export const registerUser: AsyncFunction = async (req, res) => {
