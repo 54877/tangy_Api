@@ -75,7 +75,6 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
-  console.log("Set-Cookie:", res.getHeader("Set-Cookie"));
 
   res.status(201).json({
     accessToken,
@@ -95,7 +94,6 @@ export const loginUserSV: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
-  console.log("Set-Cookie:", res.getHeader("Set-Cookie"));
 
   res.status(201).json({
     accessToken,
@@ -148,16 +146,18 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
   const ip = req.ip ?? "unknown";
+  const deviceId = req.cookies.deviceId;
   const refreshToken = req.cookies.refreshToken;
   const { newPayload, newRefreshToken } = await refreshTokenLogic(
     refreshToken,
-    ip,
+    deviceId,
   );
 
   //建立新access token
   const accessToken = createAccessToken({
     id: newPayload.id,
     userName: newPayload.userName,
+    deviceId: newPayload.deviceId,
     email: newPayload.email,
     role: newPayload.role,
   });

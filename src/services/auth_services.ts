@@ -86,22 +86,6 @@ export const loginUserLogic = async ({
   ip,
   deviceId,
 }: TokenType) => {
-  const userDate = {
-    id: user.id,
-    email: user.email,
-    userName: user.userName,
-    svType: user.svType,
-    role: user.role,
-  } as UserProps;
-
-  const accessToken = createAccessToken(userDate);
-
-  const refreshToken = createRefreshToken(userDate);
-
-  const tokenHash = hash(refreshToken);
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const absoluteExpiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
-
   const deviceInfo = getDeviceInfo(userAgent);
 
   //裝置DB
@@ -121,6 +105,23 @@ export const loginUserLogic = async ({
     browserVersion: deviceInfo.browserVersion,
   });
 
+  const userDate = {
+    id: user.id,
+    deviceId: device.id,
+    email: user.email,
+    userName: user.userName,
+    svType: user.svType,
+    role: user.role,
+  } as TokenPayload;
+
+  const accessToken = createAccessToken(userDate);
+
+  const refreshToken = createRefreshToken(userDate);
+
+  const tokenHash = hash(refreshToken);
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const absoluteExpiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+
   //建立refreshToken
   await refreshTokenDb({
     tokenHash,
@@ -129,8 +130,6 @@ export const loginUserLogic = async ({
     expiresAt,
     absoluteExpiresAt,
   });
-
-  console.log("LOGIN deviceId:", device.id);
 
   return {
     accessToken,
@@ -161,7 +160,10 @@ export const logoutLogic = async (refreshToken: string, deviceId: string) => {
 };
 
 //Refresh token
-export const refreshTokenLogic = async (token: string | null, ip: string) => {
+export const refreshTokenLogic = async (
+  token: string | null,
+  deviceId: string,
+) => {
   if (!token) {
     throw new AppError("未登入", 401);
   }
@@ -176,6 +178,7 @@ export const refreshTokenLogic = async (token: string | null, ip: string) => {
   const newPayload = {
     id: user.id,
     email: user.email,
+    deviceId: deviceId,
     userName: user.userName,
     role: user.role,
   } as TokenPayload;
