@@ -17,7 +17,6 @@ const getLoginData = async (req: Request) => {
   const userAgent = req.headers["user-agent"] ?? "unknown";
   const ip = req.ip ?? "unknown";
   const deviceId = req.cookies.deviceId;
-  console.log(ip);
   const user = await verifyLoginUser(email, password, code);
 
   return { userAgent, ip, deviceId, user, email };
@@ -30,12 +29,12 @@ const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
-
+  console.log("登入產生 deviceId:", deviceId);
   if (deviceId) {
     res.cookie("deviceId", deviceId, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   }
