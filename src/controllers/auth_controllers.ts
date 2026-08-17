@@ -57,12 +57,7 @@ const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
   console.log("登入產生 deviceId:", deviceId);
 
   if (deviceId) {
-    res.cookie("testCookie", "hello", {
-      httpOnly: false,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-    });
+    res.cookie("deviceId", deviceId, cookieOptions);
   }
 };
 
