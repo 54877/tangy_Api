@@ -130,6 +130,8 @@ export const loginUserLogic = async ({
     absoluteExpiresAt,
   });
 
+  console.log("LOGIN deviceId:", device.id);
+
   return {
     accessToken,
     refreshToken,

@@ -38,28 +38,10 @@ const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   }
+
+  console.log("LOGIN response cookies set");
+  console.log("deviceId:", deviceId);
 };
-
-// const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
-//   const cookieOptions = {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production",
-//     sameSite:
-//       process.env.NODE_ENV === "production"
-//         ? ("none" as const)
-//         : ("lax" as const),
-//     path: "/",
-//     maxAge: 7 * 24 * 60 * 60 * 1000,
-//   };
-
-//   res.cookie("refreshToken", refreshToken, cookieOptions);
-
-//   console.log("登入產生 deviceId:", deviceId);
-
-//   if (deviceId) {
-//     res.cookie("deviceId", deviceId, cookieOptions);
-//   }
-// };
 
 //註冊
 export const registerUser: AsyncFunction = async (req, res) => {
@@ -93,9 +75,6 @@ export const loginUser: AsyncFunction = async (req, res) => {
 
   //建立cookies
   cookiesFn(res, refreshToken, id);
-  console.log("Set-Cookie deviceId:", deviceId);
-  console.log("User-Agent:", req.headers["user-agent"]);
-  console.log("Origin:", req.headers.origin);
 
   res.status(201).json({
     accessToken,
