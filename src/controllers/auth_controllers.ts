@@ -94,6 +94,9 @@ export const loginUser: AsyncFunction = async (req, res) => {
   //建立cookies
   cookiesFn(res, refreshToken, id);
 
+  console.log("Set-Cookie deviceId:", deviceId);
+  console.log("User-Agent:", req.headers["user-agent"]);
+  console.log("Origin:", req.headers.origin);
   res.status(201).json({
     accessToken,
     userDate,

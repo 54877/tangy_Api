@@ -13,12 +13,13 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
   const deviceId = req.cookies.deviceId;
   const { userDate, genderSelect, device } = await getPersonalByIdLogic(id);
-  console.log("deviceId cookie =", deviceId);
   const deviceDate = device.map((device) => ({
     ...device,
     isCurrent: device.id === deviceId,
   }));
 
+  console.log("Cookie:", req.headers.cookie);
+  console.log("deviceId:", req.cookies.deviceId);
   res.status(200).json({
     userDate,
     genderSelect,
