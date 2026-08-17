@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deviceCloseByIdControllers,
+  deviceCloseByUserIdControllers,
   getPersonal,
   sendSVEmailControllers,
   svCloseControllers,
@@ -93,5 +94,15 @@ openapiRoute({
   needAuth: true,
   summary: "登出裝置",
   handler: [asyncHandler(deviceCloseByIdControllers)],
+  router: profile_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/DeviceCloseByUserId",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "登出所有裝置",
+  handler: [asyncHandler(deviceCloseByUserIdControllers)],
   router: profile_router,
 });

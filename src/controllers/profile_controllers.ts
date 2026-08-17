@@ -1,5 +1,6 @@
 import {
   deviceCloseByIdLogic,
+  deviceCloseByUserIdLogic,
   getPersonalByIdLogic,
   sendSVEmail,
   SV,
@@ -95,6 +96,21 @@ export const deviceCloseByIdControllers: JwtAsyncFunction = async (
   const { id } = req.body || {};
 
   await deviceCloseByIdLogic(id);
+
+  res.status(201).json({
+    message: "成功關閉device",
+    state: true,
+  });
+};
+
+//登出所有device by id
+export const deviceCloseByUserIdControllers: JwtAsyncFunction = async (
+  req,
+  res,
+) => {
+  const { userId } = req.body || {};
+
+  await deviceCloseByUserIdLogic(userId);
 
   res.status(201).json({
     message: "成功關閉device",

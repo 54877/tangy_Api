@@ -4,6 +4,7 @@ import { getUserById } from "../repository/nav_Repository";
 import {
   createSVEmailVerification,
   deviceCloseById,
+  deviceCloseByUserId,
   getUserDeviceByUserId,
   svCloseDb,
   SVDb,
@@ -143,4 +144,8 @@ export const svClose = async (id: string) => {
 
 export const deviceCloseByIdLogic = async (id: string) => {
   await deviceCloseById(id);
+};
+
+export const deviceCloseByUserIdLogic = async (userId: string) => {
+  await deviceCloseByUserId(userId);
 };
