@@ -38,9 +38,6 @@ const cookiesFn = (res: Response, refreshToken: string, deviceId?: string) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   }
-
-  console.log("LOGIN response cookies set");
-  console.log("deviceId:", deviceId);
 };
 
 //註冊

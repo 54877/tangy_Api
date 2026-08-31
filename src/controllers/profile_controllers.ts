@@ -20,9 +20,6 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
     isCurrent: device.id === deviceId,
   }));
 
-  console.log("Origin:", req.headers.origin);
-  console.log("Cookie:", req.headers.cookie);
-  console.log("Authorization:", req.headers.authorization);
   res.status(200).json({
     userDate,
     genderSelect,
