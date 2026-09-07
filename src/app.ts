@@ -9,6 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { course_router } from "./routes/course_router.js";
 
 const app = express();
 //解析ip
@@ -39,6 +40,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
 app.use("/tangy", profile_router);
+app.use("/tangy", course_router);
 app.use("/tangy", nav_router);
 
 //統一處理錯誤
