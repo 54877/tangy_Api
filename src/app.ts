@@ -4,12 +4,12 @@ import { errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
 import { nav_router } from "./routes/nav_router.js";
 import { profile_router } from "./routes/profile_router.js";
+import { course_router } from "./routes/course_router.js";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { course_router } from "./routes/course_router.js";
 
 const app = express();
 //解析ip
