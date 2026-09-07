@@ -10,6 +10,8 @@ export const openapiRoute = ({
   handler,
   router,
   needAuth = false,
+  formData = false,
+  middlewares = [],
 }: any) => {
   registry.registerPath({
     method,
@@ -29,7 +31,7 @@ export const openapiRoute = ({
       request: {
         body: {
           content: {
-            "application/json": {
+            [formData ? "multipart/form-data" : "application/json"]: {
               schema,
             },
           },
@@ -46,6 +48,7 @@ export const openapiRoute = ({
 
   router[method](
     path,
+    ...middlewares,
     ...(schema ? [validateRequest(schema)] : []),
     ...handler,
   );
