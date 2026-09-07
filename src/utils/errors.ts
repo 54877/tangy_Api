@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import multer from "multer";
 
 export class AppError extends Error {
   statusCode: number;
@@ -31,6 +32,18 @@ export const errorHandler = (
         message: "Refresh Token 無效",
       },
     });
+  }
+
+  // Multer 錯誤
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({
+        state: false,
+        errors: {
+          message: "圖片大小不可超過 5 MB",
+        },
+      });
+    }
   }
 
   const statusCode = err instanceof AppError ? err.statusCode : 500;

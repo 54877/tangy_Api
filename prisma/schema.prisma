@@ -95,3 +95,17 @@ model deviceTable {
   @@index([userId])
   @@map("device_table")
 }
+
+model courseTable {
+  id            String @id @default(uuid()) @db.Uuid
+  title         String
+  teacher       String
+  rating        String @default("5")
+  studentCount  String @default("0")
+  duration      String @default("0")
+  price         String
+  originalPrice String @map("original_price")
+  image         String
+
+  @@map("course")
+}
