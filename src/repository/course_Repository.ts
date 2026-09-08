@@ -17,3 +17,7 @@ export const createCourseDb = async (
     },
   });
 };
+
+export const getCourseDb = async () => {
+  await prisma.courseTable.findMany();
+};

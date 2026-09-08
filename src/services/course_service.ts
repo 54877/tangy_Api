@@ -1,7 +1,7 @@
 import { AppError } from "../utils/errors";
 import { supabase } from "../config/supabase";
 import { useImageRuler } from "../utils/imageValidation";
-import { createCourseDb } from "../repository/course_Repository";
+import { createCourseDb, getCourseDb } from "../repository/course_Repository";
 
 export const createCourseLogic = async (
   title: string,
@@ -23,4 +23,39 @@ export const createCourseLogic = async (
   }
 
   await createCourseDb(title, teacher, price, originalPrice, fileName);
+};
+
+export const getCourseLogic = async () => {
+  const dataList = await getCourseDb();
+
+  if (!dataList || dataList.length === 0) {
+    return [];
+  }
+
+  const result = await Promise.all(
+    dataList.map(async (course) => {
+      const { data, error } = await supabase.storage
+        .from("course")
+        .download(course.image);
+
+      if (error) {
+        console.error("圖片下載失敗", {
+          courseId: course.id,
+          error,
+        });
+
+        return {
+          ...course,
+          image: null,
+        };
+      }
+
+      return {
+        ...course,
+        image: data,
+      };
+    }),
+  );
+
+  return result;
 };
