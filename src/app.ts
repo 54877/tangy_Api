@@ -39,8 +39,8 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
-app.use("/tangy", profile_router);
 app.use("/tangy", course_router);
+app.use("/tangy", profile_router);
 app.use("/tangy", nav_router);
 
 //統一處理錯誤

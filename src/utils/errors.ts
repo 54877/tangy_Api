@@ -15,6 +15,24 @@ export class AppError extends Error {
   }
 }
 
+export const imageUploadType = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  req.uploadType = "image";
+  next();
+};
+
+export const videoUploadType = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  req.uploadType = "video";
+  next();
+};
+
 export const errorHandler = (
   err: unknown,
   req: Request,
@@ -33,6 +51,10 @@ export const errorHandler = (
       },
     });
   }
+  const multerMessage =
+    req.uploadType === "video"
+      ? "影片大小不可超過 500 MB"
+      : "圖片大小不可超過 5 MB";
 
   // Multer 錯誤
   if (err instanceof multer.MulterError) {
@@ -40,7 +62,7 @@ export const errorHandler = (
       return res.status(413).json({
         state: false,
         errors: {
-          message: "圖片大小不可超過 5 MB",
+          message: multerMessage,
         },
       });
     }

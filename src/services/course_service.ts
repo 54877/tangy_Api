@@ -2,6 +2,28 @@ import { AppError } from "../utils/errors";
 import { supabase } from "../config/supabase";
 import { useImageRuler } from "../utils/imageValidation";
 import { createCourseDb, getCourseDb } from "../repository/course_Repository";
+import { useVideoRuler } from "../utils/videoValidation";
+import { uploadCourseVideo } from "../utils/uploadCourseVideo";
+import fs from "node:fs/promises";
+
+export const createCourseVideoLogic = async (
+  video: Express.Multer.File | undefined,
+) => {
+  if (!video) {
+    throw new AppError("請上傳影片", 400, "video");
+  }
+  try {
+    // 影片驗證並回傳時間
+    const duration = await useVideoRuler(video);
+
+    // 上傳影片
+    const videoKey = await uploadCourseVideo(video);
+
+    return { duration, videoKey };
+  } finally {
+    await fs.unlink(video.path).catch(() => {});
+  }
+};
 
 export const createCourseLogic = async (
   title: string,
@@ -36,7 +58,7 @@ export const getCourseLogic = async () => {
     dataList.map(async (course) => {
       const { data, error } = await supabase.storage
         .from("course")
-        .download(course.image);
+        .createSignedUrl(course.image, 60 * 10);
 
       if (error) {
         console.error("圖片下載失敗", {
