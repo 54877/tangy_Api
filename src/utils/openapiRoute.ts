@@ -12,6 +12,7 @@ export const openapiRoute = ({
   needAuth = false,
   formData = false,
   middlewares = [],
+  extraProperties = {},
 }: any) => {
   registry.registerPath({
     method,
@@ -32,7 +33,15 @@ export const openapiRoute = ({
         body: {
           content: {
             [formData ? "multipart/form-data" : "application/json"]: {
-              schema,
+              schema: {
+                ...schema,
+                ...(formData && {
+                  properties: {
+                    ...schema.properties,
+                    ...extraProperties,
+                  },
+                }),
+              },
             },
           },
         },

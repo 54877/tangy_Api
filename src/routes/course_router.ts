@@ -34,6 +34,12 @@ openapiRoute({
   formData: true,
   middlewares: [imageUploadType, upload.single("image")],
   schema: courseSchema,
+  extraProperties: {
+    image: {
+      type: "string",
+      format: "binary",
+    },
+  },
   handler: [asyncHandler(createCourse)],
   router: course_router,
 });
