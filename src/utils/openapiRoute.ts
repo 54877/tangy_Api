@@ -17,6 +17,22 @@ export const openapiRoute = ({
 }: any) => {
   const hasSchema = schema !== undefined && schema !== null;
 
+  let requestSchema = schema;
+
+  if (hasSchema && formData) {
+    requestSchema = {
+      ...schema,
+      properties: {
+        ...schema.properties,
+        ...extraProperties,
+      },
+      required: [
+        ...(Array.isArray(schema.required) ? schema.required : []),
+        ...requiredProperties,
+      ],
+    };
+  }
+
   registry.registerPath({
     method,
     path,
@@ -36,16 +52,7 @@ export const openapiRoute = ({
         body: {
           content: {
             [formData ? "multipart/form-data" : "application/json"]: {
-              schema: formData
-                ? {
-                    type: "object",
-                    properties: {
-                      ...schema.shape,
-                      ...extraProperties,
-                    },
-                    required: requiredProperties,
-                  }
-                : schema,
+              schema: requestSchema,
             },
           },
         },
