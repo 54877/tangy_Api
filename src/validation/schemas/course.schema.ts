@@ -24,7 +24,7 @@ export const createCourseOpenapiSchema = courseSchema.extend({
   }),
 });
 
-export const createCourseVideoOpenapiSchema = courseSchema.extend({
+export const createCourseVideoOpenapiSchema = z.object({
   video: z.string().openapi({
     format: "binary",
     description: "MP4 (video/mp4)、WebM (video/webm)",
