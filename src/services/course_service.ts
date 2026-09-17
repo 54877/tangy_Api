@@ -31,6 +31,8 @@ export const createCourseLogic = async (
   price: string,
   originalPrice: string,
   image: Express.Multer.File | undefined,
+  video: string,
+  duration: string,
 ) => {
   const { processedImage, fileName } = await useImageRuler(image);
   //上傳到supabase storage
@@ -44,7 +46,15 @@ export const createCourseLogic = async (
     throw new AppError("圖片上傳失敗", 500, "image");
   }
 
-  await createCourseDb(title, teacher, price, originalPrice, fileName);
+  await createCourseDb(
+    title,
+    teacher,
+    price,
+    originalPrice,
+    fileName,
+    video,
+    duration,
+  );
 };
 
 export const getCourseLogic = async () => {

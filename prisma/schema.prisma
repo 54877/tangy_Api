@@ -106,6 +106,7 @@ model courseTable {
   price         String
   originalPrice String @map("original_price")
   image         String
+  video         String
 
   @@map("course_table")
 }

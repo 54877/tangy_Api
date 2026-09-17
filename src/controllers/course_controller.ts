@@ -20,10 +20,18 @@ export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
 
 //建立線上課程
 export const createCourse: JwtAsyncFunction = async (req, res) => {
-  const { title, teacher, price, originalPrice } = req.body;
+  const { title, teacher, price, originalPrice, videoKey, duration } = req.body;
   const image = req.file;
 
-  await createCourseLogic(title, teacher, price, originalPrice, image);
+  await createCourseLogic(
+    title,
+    teacher,
+    price,
+    originalPrice,
+    image,
+    videoKey,
+    duration,
+  );
 
   success(res, 200);
 };

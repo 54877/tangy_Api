@@ -46,7 +46,6 @@ openapiRoute({
   summary: "建立線上課程-影片",
   formData: true,
   middlewares: [videoUploadType, videoUpload.single("video")],
-  // schema: courseSchema,
   handler: [asyncHandler(createCourseVideo)],
   router: course_router,
 });
