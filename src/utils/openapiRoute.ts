@@ -7,7 +7,6 @@ export const openapiRoute = ({
   tags,
   summary,
   schema,
-  openapiSchema = schema,
   handler,
   router,
   needAuth = false,
@@ -28,12 +27,12 @@ export const openapiRoute = ({
       ],
     }),
 
-    ...(openapiSchema && {
+    ...(schema && {
       request: {
         body: {
           content: {
             [formData ? "multipart/form-data" : "application/json"]: {
-              schema: openapiSchema,
+              schema,
             },
           },
         },
