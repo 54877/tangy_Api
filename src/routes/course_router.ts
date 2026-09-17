@@ -40,6 +40,7 @@ openapiRoute({
       format: "binary",
     },
   },
+  requiredProperties: ["image"],
   handler: [asyncHandler(createCourse)],
   router: course_router,
 });
