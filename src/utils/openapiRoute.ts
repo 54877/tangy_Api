@@ -15,6 +15,25 @@ export const openapiRoute = ({
   extraProperties = {},
   requiredProperties = [],
 }: any) => {
+  const hasSchema = schema !== undefined && schema !== null;
+
+  const schemaRequired = Array.isArray(schema?.required) ? schema.required : [];
+
+  const required = [...schemaRequired, ...requiredProperties];
+
+  const requestSchema = formData
+    ? {
+        ...schema,
+        properties: {
+          ...schema?.properties,
+          ...extraProperties,
+        },
+        ...(required.length > 0 && {
+          required,
+        }),
+      }
+    : schema;
+
   registry.registerPath({
     method,
     path,
@@ -29,21 +48,12 @@ export const openapiRoute = ({
       ],
     }),
 
-    ...(schema && {
+    ...(hasSchema && {
       request: {
         body: {
           content: {
             [formData ? "multipart/form-data" : "application/json"]: {
-              schema: {
-                ...schema,
-                ...(formData && {
-                  properties: {
-                    ...schema.properties,
-                    ...extraProperties,
-                  },
-                  required: [...(schema.required ?? []), ...requiredProperties],
-                }),
-              },
+              schema: requestSchema,
             },
           },
         },
@@ -60,7 +70,7 @@ export const openapiRoute = ({
   router[method](
     path,
     ...middlewares,
-    ...(schema ? [validateRequest(schema)] : []),
+    ...(hasSchema ? [validateRequest(schema)] : []),
     ...handler,
   );
 };
