@@ -11,6 +11,7 @@ import { upload, videoUpload } from "../middlewares/upload";
 import {
   courseSchema,
   createCourseOpenapiSchema,
+  createCourseVideoOpenapiSchema,
 } from "../validation/schemas/course.schema";
 import { imageUploadType, videoUploadType } from "../utils/errors";
 
@@ -49,6 +50,7 @@ openapiRoute({
   needAuth: true,
   summary: "建立線上課程-影片",
   formData: true,
+  openapiSchema: createCourseVideoOpenapiSchema,
   middlewares: [videoUploadType, videoUpload.single("video")],
   handler: [asyncHandler(createCourseVideo)],
   router: course_router,

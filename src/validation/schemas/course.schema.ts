@@ -23,3 +23,10 @@ export const createCourseOpenapiSchema = courseSchema.extend({
     description: "課程封面圖片（JPG、JPEG 或 PNG）",
   }),
 });
+
+export const createCourseVideoOpenapiSchema = courseSchema.extend({
+  video: z.string().openapi({
+    format: "binary",
+    description: "MP4 (video/mp4)、WebM (video/webm)",
+  }),
+});
