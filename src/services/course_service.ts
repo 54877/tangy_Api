@@ -6,6 +6,8 @@ import { useVideoRuler } from "../utils/videoValidation";
 import { uploadCourseVideo } from "../utils/uploadCourseVideo";
 import fs from "node:fs/promises";
 import { uploadCourseImage } from "../utils/uploadCourseImage";
+import { getCourseImageUrl } from "../utils/getCourseImageUrl";
+import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
@@ -41,15 +43,23 @@ export const createCourseLogic = async (
   await uploadCourseImage(fileName, processedImage);
 
   //執行Db
-  await createCourseDb(
-    title,
-    teacher,
-    price,
-    originalPrice,
-    fileName,
-    video,
-    duration,
-  );
+  try {
+    await createCourseDb(
+      title,
+      teacher,
+      price,
+      originalPrice,
+      fileName,
+      video,
+      duration,
+    );
+  } catch (error) {
+    await Promise.allSettled([
+      deleteCourseFile("course", fileName),
+      deleteCourseFile("videos", video),
+    ]);
+    throw error;
+  }
 };
 
 export const getCourseLogic = async () => {
@@ -59,30 +69,8 @@ export const getCourseLogic = async () => {
     return [];
   }
 
-  const result = await Promise.all(
-    dataList.map(async (course) => {
-      const { data, error } = await supabase.storage
-        .from("course")
-        .createSignedUrl(course.image, 60 * 10);
-
-      if (error) {
-        console.error("圖片下載失敗", {
-          courseId: course.id,
-          error,
-        });
-
-        return {
-          ...course,
-          image: null,
-        };
-      }
-
-      return {
-        ...course,
-        image: data,
-      };
-    }),
-  );
+  //取得image url加入dataList
+  const result = await getCourseImageUrl(dataList);
 
   return result;
 };
