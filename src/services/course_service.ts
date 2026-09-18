@@ -5,6 +5,7 @@ import { createCourseDb, getCourseDb } from "../repository/course_Repository";
 import { useVideoRuler } from "../utils/videoValidation";
 import { uploadCourseVideo } from "../utils/uploadCourseVideo";
 import fs from "node:fs/promises";
+import { uploadCourseImage } from "../utils/uploadCourseImage";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
@@ -34,18 +35,12 @@ export const createCourseLogic = async (
   video: string,
   duration: string,
 ) => {
+  //驗證照片
   const { processedImage, fileName } = await useImageRuler(image);
   //上傳到supabase storage
-  const { error } = await supabase.storage
-    .from("course")
-    .upload(fileName, processedImage, {
-      contentType: "image/webp",
-    });
+  await uploadCourseImage(fileName, processedImage);
 
-  if (error) {
-    throw new AppError("圖片上傳失敗", 500, "image");
-  }
-
+  //執行Db
   await createCourseDb(
     title,
     teacher,
