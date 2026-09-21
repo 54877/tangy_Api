@@ -4,7 +4,7 @@ import {
   priceScheme,
   teacherScheme,
   titleScheme,
-  videoScheme,
+  videoKeyScheme,
 } from "../rules/course.rule";
 
 export const courseSchema = z.object({
@@ -12,7 +12,7 @@ export const courseSchema = z.object({
   teacher: teacherScheme,
   price: priceScheme,
   originalPrice: priceScheme,
-  video: videoScheme,
+  videoKey: videoKeyScheme,
   duration: durationScheme,
 });
 
