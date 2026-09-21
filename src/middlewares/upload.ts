@@ -8,13 +8,20 @@ const imageStorage = multer.memoryStorage();
 
 const videoStorage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("===== MULTER DESTINATION =====");
+    console.log("cwd:", process.cwd());
+    console.log("destination:", path.resolve("uploads"));
     cb(null, "uploads");
   },
 
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
+    const filename = `${crypto.randomUUID()}${ext}`;
 
-    cb(null, `${crypto.randomUUID()}${ext}`);
+    console.log("===== MULTER FILENAME =====");
+    console.log("filename:", filename);
+
+    cb(null, filename);
   },
 });
 
