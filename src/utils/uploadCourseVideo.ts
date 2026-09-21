@@ -19,7 +19,5 @@ export const uploadCourseVideo = async (video: Express.Multer.File) => {
     throw new AppError("影片上傳失敗", 500, "video");
   }
 
-  await fs.unlink(video.path);
-
   return `video/${fileName}`;
 };
