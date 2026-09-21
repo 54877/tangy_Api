@@ -13,7 +13,7 @@ export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
   const { duration, videoKey } = await createCourseVideoLogic(video);
 
   success(res, 200, {
-    video: videoKey,
+    videoKey: videoKey,
     duration: duration,
   });
 };
