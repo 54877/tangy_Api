@@ -1,15 +1,16 @@
 import prisma from "../db/prisma";
+import { CourseType } from "../types/profileType";
 
-export const createCourseDb = async (
-  title: string,
-  teacher: string,
-  content: string,
-  price: string,
-  originalPrice: string,
-  fileName: string,
-  videoKey: string,
-  duration: string,
-) => {
+export const createCourseDb = async ({
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  fileName,
+  videoKey,
+  duration,
+}: Omit<CourseType, "image">) => {
   await prisma.courseTable.create({
     data: {
       title,

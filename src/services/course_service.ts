@@ -8,6 +8,7 @@ import { uploadCourseImage } from "../utils/uploadCourseImage";
 import { getCourseImageUrl } from "../utils/getCourseImageUrl";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
+import { CourseType } from "../types/profileType";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
@@ -28,16 +29,16 @@ export const createCourseVideoLogic = async (
   }
 };
 
-export const createCourseLogic = async (
-  title: string,
-  teacher: string,
-  content: string,
-  price: string,
-  originalPrice: string,
-  image: Express.Multer.File | undefined,
-  videoKey: string,
-  duration: string,
-) => {
+export const createCourseLogic = async ({
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  image,
+  videoKey,
+  duration,
+}: Omit<CourseType, "fileName">) => {
   const sanitizedContent = sanitizeCourseContent(content);
 
   //驗證照片
@@ -47,16 +48,16 @@ export const createCourseLogic = async (
 
   //執行Db
   try {
-    await createCourseDb(
+    await createCourseDb({
       title,
       teacher,
-      sanitizedContent,
+      content: sanitizedContent,
       price,
       originalPrice,
       fileName,
       videoKey,
       duration,
-    );
+    });
   } catch (error) {
     await Promise.allSettled([
       deleteCourseFile("course", fileName),
