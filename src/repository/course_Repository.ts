@@ -6,7 +6,7 @@ export const createCourseDb = async (
   price: string,
   originalPrice: string,
   fileName: string,
-  video: string,
+  videoKey: string,
   duration: string,
 ) => {
   await prisma.courseTable.create({
@@ -16,7 +16,7 @@ export const createCourseDb = async (
       price,
       originalPrice,
       image: fileName,
-      video,
+      video: videoKey,
       duration,
     },
   });

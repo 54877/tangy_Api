@@ -1,5 +1,4 @@
 import { AppError } from "../utils/errors";
-import { supabase } from "../config/supabase";
 import { useImageRuler } from "../utils/imageValidation";
 import { createCourseDb, getCourseDb } from "../repository/course_Repository";
 import { useVideoRuler } from "../utils/videoValidation";
@@ -34,7 +33,7 @@ export const createCourseLogic = async (
   price: string,
   originalPrice: string,
   image: Express.Multer.File | undefined,
-  video: string,
+  videoKey: string,
   duration: string,
 ) => {
   //驗證照片
@@ -50,13 +49,13 @@ export const createCourseLogic = async (
       price,
       originalPrice,
       fileName,
-      video,
+      videoKey,
       duration,
     );
   } catch (error) {
     await Promise.allSettled([
       deleteCourseFile("course", fileName),
-      deleteCourseFile("videos", video),
+      deleteCourseFile("videos", videoKey),
     ]);
     throw error;
   }
