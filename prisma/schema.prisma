@@ -103,6 +103,7 @@ model courseTable {
   rating        String @default("5")
   studentCount  String @default("0") @map("student_count")
   duration      String @default("0")
+  content       String @default("")
   price         String
   originalPrice String @map("original_price")
   image         String

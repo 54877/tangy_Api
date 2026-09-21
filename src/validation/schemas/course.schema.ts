@@ -1,5 +1,6 @@
 import { z } from "../../config/zod";
 import {
+  contentScheme,
   durationScheme,
   priceScheme,
   teacherScheme,
@@ -10,6 +11,7 @@ import {
 export const courseSchema = z.object({
   title: titleScheme,
   teacher: teacherScheme,
+  content: contentScheme,
   price: priceScheme,
   originalPrice: priceScheme,
   videoKey: videoKeyScheme,

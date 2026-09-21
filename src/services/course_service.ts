@@ -7,6 +7,7 @@ import fs from "node:fs/promises";
 import { uploadCourseImage } from "../utils/uploadCourseImage";
 import { getCourseImageUrl } from "../utils/getCourseImageUrl";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
+import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
@@ -30,12 +31,15 @@ export const createCourseVideoLogic = async (
 export const createCourseLogic = async (
   title: string,
   teacher: string,
+  content: string,
   price: string,
   originalPrice: string,
   image: Express.Multer.File | undefined,
   videoKey: string,
   duration: string,
 ) => {
+  const sanitizedContent = sanitizeCourseContent(content);
+
   //驗證照片
   const { processedImage, fileName } = await useImageRuler(image);
   //上傳到supabase storage
@@ -46,6 +50,7 @@ export const createCourseLogic = async (
     await createCourseDb(
       title,
       teacher,
+      sanitizedContent,
       price,
       originalPrice,
       fileName,

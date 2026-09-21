@@ -3,6 +3,7 @@ import prisma from "../db/prisma";
 export const createCourseDb = async (
   title: string,
   teacher: string,
+  content: string,
   price: string,
   originalPrice: string,
   fileName: string,
@@ -13,6 +14,7 @@ export const createCourseDb = async (
     data: {
       title,
       teacher,
+      content,
       price,
       originalPrice,
       image: fileName,
