@@ -41,6 +41,15 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
 //獲取線上課程列表
 export const getCourse: JwtAsyncFunction = async (req, res) => {
   const data = await getCourseLogic();
-
-  success(res, 200, data);
+  const result = data.map((course) => ({
+    id: course.id,
+    image: course.image,
+    originalPrice: course.originalPrice,
+    price: course.price,
+    rating: course.rating,
+    studentCount: course.studentCount,
+    teacher: course.teacher,
+    title: course.title,
+  }));
+  success(res, 200, result);
 };
