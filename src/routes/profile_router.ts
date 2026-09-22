@@ -18,6 +18,9 @@ import {
   svOpen,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
+import { imageUploadType } from "../utils/errors";
+import { upload } from "../middlewares/upload";
+import { createCourseOpenapiSchema } from "../validation/schemas/course.schema";
 
 export const profile_router = express.Router();
 
@@ -39,7 +42,10 @@ openapiRoute({
   tags: ["Profile"],
   needAuth: true,
   summary: "更新個人資料",
+  formData: true,
+  middlewares: [imageUploadType, upload.single("image")],
   schema: personalSchema,
+  openapiSchema: createCourseOpenapiSchema,
   handler: [asyncHandler(updatePersonal)],
   router: profile_router,
 });

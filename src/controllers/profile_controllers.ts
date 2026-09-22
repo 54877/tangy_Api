@@ -29,10 +29,19 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
   });
 };
 
+//更新個人資料
 export const updatePersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
+  const image = req.file;
   const { userName, gender, introduction, birthday } = req.body || {};
-  await updatePersonalByIdLogic(id, userName, gender, introduction, birthday);
+  await updatePersonalByIdLogic(
+    image,
+    id,
+    userName,
+    gender,
+    introduction,
+    birthday,
+  );
 
   res.status(201).json({
     message: "更新成功",
@@ -40,6 +49,7 @@ export const updatePersonal: JwtAsyncFunction = async (req, res) => {
   });
 };
 
+//變更密碼
 export const updatePassword: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
   const { newPassword, oldPassword } = req.body || {};

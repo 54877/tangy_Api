@@ -44,7 +44,7 @@ export const createCourseLogic = async ({
   //驗證照片
   const { processedImage, fileName } = await useImageRuler(image);
   //上傳到supabase storage
-  await uploadCourseImage(fileName, processedImage);
+  await uploadCourseImage(fileName, processedImage, "course");
 
   //執行Db
   try {

@@ -41,7 +41,7 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
 //獲取線上課程列表
 export const getCourse: JwtAsyncFunction = async (req, res) => {
   const data = await getCourseLogic();
-  console.log(data[0].duration);
+
   const result = data.map((course) => ({
     id: course.id,
     image: course.image?.signedUrl,

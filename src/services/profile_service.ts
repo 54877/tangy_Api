@@ -19,6 +19,8 @@ import {
   expiredSVCodeDb,
   verifySVDb,
 } from "../repository/auth_Repository";
+import { useImageRuler } from "../utils/imageValidation";
+import { uploadCourseImage } from "../utils/uploadCourseImage";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -77,14 +79,31 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
 };
 
 export const updatePersonalByIdLogic = async (
+  image: Express.Multer.File | undefined,
   id: string,
   userName: string,
   gender: string,
   introduction: string,
   birthday: string,
 ) => {
+  let userFileName = null;
+  if (image) {
+    //驗證照片
+    const { processedImage, fileName } = await useImageRuler(image);
+    userFileName = fileName;
+    //上傳到supabase storage
+    await uploadCourseImage(fileName, processedImage, "userImg");
+  }
   const birthdayDate = new Date(birthday);
-  await updateUserById(id, userName, gender, introduction, birthdayDate);
+  console.log("userFileName", userFileName);
+  await updateUserById(
+    userFileName,
+    id,
+    userName,
+    gender,
+    introduction,
+    birthdayDate,
+  );
 };
 
 export const updatePasswordLogic = async (

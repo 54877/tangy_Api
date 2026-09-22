@@ -31,3 +31,11 @@ export const svOpen = z.object({
   email: email,
   code: codeScheme,
 });
+
+// 上傳檔案由 Multer 此 schema 僅供 OpenAPI 文件使用。
+export const updataUserImgOpenapiSchema = personalSchema.extend({
+  image: z.string().openapi({
+    format: "binary",
+    description: "使用者圖片（JPG、JPEG 或 PNG）",
+  }),
+});

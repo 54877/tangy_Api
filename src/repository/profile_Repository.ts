@@ -1,6 +1,7 @@
 import prisma from "../db/prisma";
 
 export const updateUserById = async (
+  userFileName: string | null,
   id: string,
   userName: string,
   gender: string,
@@ -12,6 +13,7 @@ export const updateUserById = async (
       id: id,
     },
     data: {
+      image: userFileName,
       userName,
       gender,
       introduction,

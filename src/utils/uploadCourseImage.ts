@@ -1,13 +1,13 @@
-import fs from "node:fs/promises";
 import { supabase } from "../config/supabase";
 import { AppError } from "./errors";
 
 export const uploadCourseImage = async (
   fileName: string,
   processedImage: Buffer<ArrayBuffer>,
+  folder: string,
 ) => {
   const { error } = await supabase.storage
-    .from("course")
+    .from(folder)
     .upload(fileName, processedImage, {
       contentType: "image/webp",
     });
