@@ -24,7 +24,7 @@ model User {
   birthday     DateTime? @db.Date
   role         String    @default("user")
   svType       Boolean   @default(false) @map("sv_type")
-  image        String?
+  imageUrl     String?
 
   deviceTable deviceTable[]
 

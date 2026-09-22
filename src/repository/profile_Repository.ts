@@ -13,7 +13,7 @@ export const updateUserById = async (
       id: id,
     },
     data: {
-      image: userFileName,
+      imageUrl: userFileName,
       userName,
       gender,
       introduction,
