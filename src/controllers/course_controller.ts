@@ -50,6 +50,7 @@ export const getCourse: JwtAsyncFunction = async (req, res) => {
     studentCount: course.studentCount,
     teacher: course.teacher,
     title: course.title,
+    duration: String(Math.round(+course.duration / 60)),
   }));
   success(res, 200, result);
 };
