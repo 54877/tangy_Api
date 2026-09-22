@@ -86,18 +86,18 @@ export const updatePersonalByIdLogic = async (
   introduction: string,
   birthday: string,
 ) => {
-  let userFileName = null;
+  let imageUrl = null;
   if (image) {
     //驗證照片
     const { processedImage, fileName } = await useImageRuler(image);
-    userFileName = fileName;
+    imageUrl = fileName;
     //上傳到supabase storage
     await uploadCourseImage(fileName, processedImage, "userImg");
   }
   const birthdayDate = new Date(birthday);
-  console.log("userFileName", userFileName);
+  console.log("imageUrl", imageUrl);
   await updateUserById(
-    userFileName,
+    imageUrl,
     id,
     userName,
     gender,
