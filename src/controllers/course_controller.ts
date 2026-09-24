@@ -44,7 +44,7 @@ export const getCourse: JwtAsyncFunction = async (req, res) => {
 
   const result = data.map((course) => ({
     id: course.id,
-    image: course.image?.signedUrl,
+    imageUrl: course.imageUrl,
     originalPrice: course.originalPrice,
     price: course.price,
     rating: course.rating,

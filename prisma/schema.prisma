@@ -107,7 +107,7 @@ model courseTable {
   content       String
   price         String
   originalPrice String @map("original_price")
-  image         String
+  imageUrl      String @map("image_url")
   video         String
 
   @@map("course_table")

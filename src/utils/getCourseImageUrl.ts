@@ -1,33 +1,52 @@
 import { supabase } from "../config/supabase";
-import { getCourseDb } from "../repository/course_Repository";
 
-type Course = Awaited<ReturnType<typeof getCourseDb>>[number];
+type WithImage = {
+  imageUrl: string | null;
+};
 
-export const getCourseImageUrl = async (dataList: Course[]) => {
-  const result = await Promise.all(
-    dataList.map(async (course) => {
+// 多筆
+export const getCourseImageUrls = async <T extends WithImage>(
+  dataList: T[],
+  bucket: string,
+) => {
+  return Promise.all(
+    dataList.map(async (item) => {
+      if (!item.imageUrl) {
+        return {
+          ...item,
+          imageUrl: null,
+        };
+      }
+
       const { data, error } = await supabase.storage
-        .from("course")
-        .createSignedUrl(course.image, 60 * 10);
+        .from(bucket)
+        .createSignedUrl(item.imageUrl, 60 * 10);
 
       if (error) {
         console.error("圖片下載失敗", {
-          courseId: course.id,
           error,
         });
 
         return {
-          ...course,
-          image: null,
+          ...item,
+          imageUrl: null,
         };
       }
 
       return {
-        ...course,
-        image: data,
+        ...item,
+        imageUrl: data.signedUrl,
       };
     }),
   );
+};
 
-  return result;
+// 單筆
+export const getCourseImageUrl = async <T extends WithImage>(
+  data: T,
+  bucket: string,
+) => {
+  const result = await getCourseImageUrls([data], bucket);
+
+  return result[0];
 };

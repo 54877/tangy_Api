@@ -5,7 +5,7 @@ import { useVideoRuler } from "../utils/videoValidation";
 import { uploadCourseVideo } from "../utils/uploadCourseVideo";
 import fs from "node:fs/promises";
 import { uploadCourseImage } from "../utils/uploadCourseImage";
-import { getCourseImageUrl } from "../utils/getCourseImageUrl";
+import { getCourseImageUrls } from "../utils/getCourseImageUrl";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 import { CourseType } from "../types/profileType";
@@ -75,7 +75,7 @@ export const getCourseLogic = async () => {
   }
 
   //取得image url加入dataList
-  const result = await getCourseImageUrl(dataList);
+  const result = await getCourseImageUrls(dataList, "course");
 
   return result;
 };
