@@ -58,7 +58,7 @@ export const useImageRuler = async (image: Express.Multer.File | undefined) => {
     .toBuffer();
 
   //Server 產生新的檔案名稱
-  const fileName = `course/${crypto.randomUUID()}.webp`;
+  const fileName = `file/${crypto.randomUUID()}.webp`;
 
   return {
     processedImage,
