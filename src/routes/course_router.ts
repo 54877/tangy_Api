@@ -10,10 +10,10 @@ import {
 import { upload, videoUpload } from "../middlewares/upload";
 import {
   courseSchema,
-  createCourseOpenapiSchema,
   createCourseVideoOpenapiSchema,
 } from "../validation/schemas/course.schema";
 import { imageUploadType, videoUploadType } from "../utils/errors";
+import { createImageSchema } from "../validation/utils/imageSchema";
 
 export const course_router = express.Router();
 
@@ -38,7 +38,7 @@ openapiRoute({
   formData: true,
   middlewares: [imageUploadType, upload.single("image")],
   schema: courseSchema,
-  openapiSchema: createCourseOpenapiSchema,
+  openapiSchema: createImageSchema(courseSchema),
   handler: [asyncHandler(createCourse)],
   router: course_router,
 });

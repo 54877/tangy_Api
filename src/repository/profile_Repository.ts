@@ -1,7 +1,6 @@
 import prisma from "../db/prisma";
 
 export const updateUserById = async (
-  imageUrl: string | null,
   id: string,
   userName: string,
   gender: string,
@@ -13,11 +12,21 @@ export const updateUserById = async (
       id: id,
     },
     data: {
-      imageUrl,
       userName,
       gender,
       introduction,
       birthday,
+    },
+  });
+};
+
+export const updateUserImageById = async (imageUrl: string, id: string) => {
+  await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      imageUrl,
     },
   });
 };

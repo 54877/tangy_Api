@@ -10,6 +10,7 @@ import {
   SVDb,
   updatePasswordDb,
   updateUserById,
+  updateUserImageById,
 } from "../repository/profile_Repository";
 import { AppError } from "../utils/errors";
 import { randomInt } from "node:crypto";
@@ -79,14 +80,23 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
 };
 
 export const updatePersonalByIdLogic = async (
-  image: Express.Multer.File | undefined,
   id: string,
   userName: string,
   gender: string,
   introduction: string,
   birthday: string,
 ) => {
+  const birthdayDate = new Date(birthday);
+
+  await updateUserById(id, userName, gender, introduction, birthdayDate);
+};
+
+export const updateUserImageLogic = async (
+  image: Express.Multer.File | undefined,
+  id: string,
+) => {
   let imageUrl = null;
+
   if (image) {
     //驗證照片
     const { processedImage, fileName } = await useImageRuler(image);
@@ -94,16 +104,13 @@ export const updatePersonalByIdLogic = async (
     //上傳到supabase storage
     await uploadCourseImage(fileName, processedImage, "userImg");
   }
-  const birthdayDate = new Date(birthday);
+
   console.log("imageUrl", imageUrl);
-  await updateUserById(
-    imageUrl,
-    id,
-    userName,
-    gender,
-    introduction,
-    birthdayDate,
-  );
+  if (!imageUrl) {
+    throw new AppError("圖片上傳失敗", 500, "image");
+  }
+
+  await updateUserImageById(imageUrl, id);
 };
 
 export const updatePasswordLogic = async (

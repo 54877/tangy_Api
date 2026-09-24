@@ -1,3 +1,4 @@
+import { ZodObject, ZodRawShape } from "zod";
 import { z } from "../../config/zod";
 import {
   contentScheme,
@@ -16,14 +17,6 @@ export const courseSchema = z.object({
   originalPrice: priceScheme,
   videoKey: videoKeyScheme,
   duration: durationScheme,
-});
-
-// 上傳檔案由 Multer 此 schema 僅供 OpenAPI 文件使用。
-export const createCourseOpenapiSchema = courseSchema.extend({
-  image: z.string().openapi({
-    format: "binary",
-    description: "課程封面圖片（JPG、JPEG 或 PNG）",
-  }),
 });
 
 export const createCourseVideoOpenapiSchema = z.object({

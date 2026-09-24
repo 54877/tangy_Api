@@ -7,6 +7,7 @@ import {
   svClose,
   updatePasswordLogic,
   updatePersonalByIdLogic,
+  updateUserImageLogic,
 } from "../services/profile_service";
 import { JwtAsyncFunction } from "../types/asyncType";
 
@@ -32,16 +33,21 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
 //更新個人資料
 export const updatePersonal: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
-  const image = req.file;
   const { userName, gender, introduction, birthday } = req.body || {};
-  await updatePersonalByIdLogic(
-    image,
-    id,
-    userName,
-    gender,
-    introduction,
-    birthday,
-  );
+  await updatePersonalByIdLogic(id, userName, gender, introduction, birthday);
+
+  res.status(201).json({
+    message: "更新成功",
+    state: true,
+  });
+};
+
+//更新個人資料
+export const updateUserImage: JwtAsyncFunction = async (req, res) => {
+  const id = req.user?.id;
+  const image = req.file;
+
+  await updateUserImageLogic(image, id);
 
   res.status(201).json({
     message: "更新成功",

@@ -8,19 +8,19 @@ import {
   svControllers,
   updatePassword,
   updatePersonal,
+  updateUserImage,
 } from "../controllers/profile_controllers";
 import { authMiddleware } from "../middlewares/auth";
 import { asyncHandler } from "../utils/asyncHandler";
 import { openapiRoute } from "../utils/openapiRoute";
 import {
-  personalSchema,
   svEmail,
   svOpen,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
 import { imageUploadType } from "../utils/errors";
 import { upload } from "../middlewares/upload";
-import { createCourseOpenapiSchema } from "../validation/schemas/course.schema";
+import { createImageSchema } from "../validation/utils/imageSchema";
 
 export const profile_router = express.Router();
 
@@ -43,10 +43,20 @@ openapiRoute({
   needAuth: true,
   summary: "更新個人資料",
   formData: true,
-  middlewares: [imageUploadType, upload.single("image")],
-  schema: personalSchema,
-  openapiSchema: createCourseOpenapiSchema,
   handler: [asyncHandler(updatePersonal)],
+  router: profile_router,
+});
+
+openapiRoute({
+  method: "put",
+  path: "/updateUserImage",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "更新個人照片",
+  formData: true,
+  middlewares: [imageUploadType, upload.single("image")],
+  openapiSchema: createImageSchema,
+  handler: [asyncHandler(updateUserImage)],
   router: profile_router,
 });
 
