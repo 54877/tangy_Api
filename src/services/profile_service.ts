@@ -22,6 +22,7 @@ import {
 } from "../repository/auth_Repository";
 import { useImageRuler } from "../utils/imageValidation";
 import { uploadCourseImage } from "../utils/uploadCourseImage";
+import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -105,12 +106,17 @@ export const updateUserImageLogic = async (
     await uploadCourseImage(fileName, processedImage, "userImg");
   }
 
-  console.log("imageUrl", imageUrl);
   if (!imageUrl) {
     throw new AppError("圖片上傳失敗", 500, "image");
   }
 
-  await updateUserImageById(imageUrl, id);
+  //執行Db
+  try {
+    await updateUserImageById(imageUrl, id);
+  } catch (error) {
+    await deleteCourseFile("userImg", imageUrl);
+    throw error;
+  }
 };
 
 export const updatePasswordLogic = async (
