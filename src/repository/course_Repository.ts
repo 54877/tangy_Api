@@ -18,7 +18,7 @@ export const createCourseDb = async ({
       content,
       price,
       originalPrice,
-      image: fileName,
+      imageUrl: fileName,
       video: videoKey,
       duration,
     },
