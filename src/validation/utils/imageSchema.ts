@@ -3,7 +3,7 @@ import { z } from "../../config/zod";
 
 // 上傳檔案由 Multer 處理，此 schema 僅供 OpenAPI 文件使用。
 export const createImageSchema = <T extends ZodRawShape>(
-  schema?: ZodObject<T>,
+  schema: ZodObject<T>,
 ) => {
   const imageSchema = {
     image: z.string().openapi({
@@ -12,5 +12,5 @@ export const createImageSchema = <T extends ZodRawShape>(
     }),
   };
 
-  return schema ? schema.extend(imageSchema) : z.object(imageSchema);
+  return schema.extend(imageSchema);
 };

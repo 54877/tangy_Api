@@ -11,15 +11,15 @@ import {
   updateUserImage,
 } from "../controllers/profile_controllers";
 import { authMiddleware } from "../middlewares/auth";
+import { upload } from "../middlewares/upload";
 import { asyncHandler } from "../utils/asyncHandler";
+import { imageUploadType } from "../utils/errors";
 import { openapiRoute } from "../utils/openapiRoute";
 import {
   svEmail,
   svOpen,
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
-import { imageUploadType } from "../utils/errors";
-import { upload } from "../middlewares/upload";
 import { createImageSchema } from "../validation/utils/imageSchema";
 
 export const profile_router = express.Router();
@@ -55,7 +55,7 @@ openapiRoute({
   summary: "更新個人照片",
   formData: true,
   middlewares: [imageUploadType, upload.single("image")],
-  openapiSchema: createImageSchema,
+  openapiSchema: createImageSchema(),
   handler: [asyncHandler(updateUserImage)],
   router: profile_router,
 });
