@@ -112,3 +112,10 @@ model courseTable {
 
   @@map("course_table")
 }
+
+model tagsTable {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  @@map("tags_table")
+}
