@@ -97,7 +97,8 @@ export const updateUserImageLogic = async (
   id: string,
 ) => {
   let imageUrl = null;
-
+  const data = await getUserById(id);
+  const oldImageUrl = data?.imageUrl;
   if (image) {
     //驗證照片
     const { processedImage, fileName } = await useImageRuler(image);
@@ -118,10 +119,8 @@ export const updateUserImageLogic = async (
     throw error;
   }
 
-  const data = await getUserById(id);
-
-  if (data?.imageUrl) {
-    await deleteCourseFile("userImg", data?.imageUrl);
+  if (oldImageUrl) {
+    await deleteCourseFile("userImg", oldImageUrl);
   }
 };
 
