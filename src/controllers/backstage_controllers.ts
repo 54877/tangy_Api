@@ -2,6 +2,7 @@ import {
   createTagLogic,
   deleteTagLogic,
   editTagLogic,
+  deleteCourseLogic,
 } from "../services/backstage_service";
 import { JwtAsyncFunction } from "../types/asyncType";
 import { success } from "../utils/success";
@@ -26,6 +27,14 @@ export const editTag: JwtAsyncFunction = async (req, res) => {
   const { id, label } = req.body;
 
   await editTagLogic(Number(id), label);
+
+  success(res, 200);
+};
+
+export const deleteCourse: JwtAsyncFunction = async (req, res) => {
+  const { id } = req.body;
+
+  await deleteCourseLogic(id);
 
   success(res, 200);
 };

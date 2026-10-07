@@ -4,14 +4,15 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { authMiddleware } from "../middlewares/auth";
 import {
   createTag,
+  deleteCourse,
   deleteTag,
   editTag,
 } from "../controllers/backstage_controllers";
 import {
   EditTagSchema,
-  TagIdSchema,
   TagSchema,
 } from "../validation/schemas/backstage.schema";
+import { IdSchema } from "../validation/schemas/common.schema";
 
 export const backStage_router = express.Router();
 
@@ -29,12 +30,12 @@ openapiRoute({
 });
 
 openapiRoute({
-  method: "post",
+  method: "delete",
   path: "/deleteTag",
   tags: ["後台"],
   needAuth: true,
   summary: "刪除標籤",
-  schema: TagIdSchema,
+  schema: IdSchema,
   handler: [asyncHandler(deleteTag)],
   router: backStage_router,
 });
@@ -49,3 +50,19 @@ openapiRoute({
   handler: [asyncHandler(editTag)],
   router: backStage_router,
 });
+
+//刪除課程
+openapiRoute({
+  method: "delete",
+  path: "/deleteCourse",
+  tags: ["後台"],
+  needAuth: true,
+  summary: "刪除課程",
+  schema: IdSchema,
+  handler: [asyncHandler(deleteCourse)],
+  router: backStage_router,
+});
+
+//讀取所有user資料(帳號、權限)
+//修改user權限
+//審核課程 -> 新增完畢後建立課程的db需要跟者修改

@@ -42,12 +42,13 @@ export const updatePersonal: JwtAsyncFunction = async (req, res) => {
   });
 };
 
-//更新個人資料
+//更新個人照片
 export const updateUserImage: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
   const image = req.file;
+  const { fileName } = req.body || {};
 
-  await updateUserImageLogic(image, id);
+  await updateUserImageLogic(image, id, fileName);
 
   res.status(201).json({
     message: "更新成功",

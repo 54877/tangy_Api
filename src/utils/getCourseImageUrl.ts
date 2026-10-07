@@ -11,16 +11,18 @@ export const getCourseImageUrls = async <T extends WithImage>(
 ) => {
   return Promise.all(
     dataList.map(async (item) => {
-      if (!item.imageUrl) {
+      const imageFileName = item.imageUrl;
+
+      if (!imageFileName) {
         return {
           ...item,
           imageUrl: null,
+          imageFileName: null,
         };
       }
-
       const { data, error } = await supabase.storage
         .from(bucket)
-        .createSignedUrl(item.imageUrl, 60 * 10);
+        .createSignedUrl(imageFileName, 60 * 10);
 
       if (error) {
         console.error("圖片下載失敗", {
@@ -30,12 +32,14 @@ export const getCourseImageUrls = async <T extends WithImage>(
         return {
           ...item,
           imageUrl: null,
+          imageFileName: null,
         };
       }
 
       return {
         ...item,
         imageUrl: data.signedUrl,
+        imageFileName: imageFileName,
       };
     }),
   );

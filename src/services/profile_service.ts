@@ -95,6 +95,7 @@ export const updatePersonalByIdLogic = async (
 export const updateUserImageLogic = async (
   image: Express.Multer.File | undefined,
   id: string,
+  fileName: string | undefined,
 ) => {
   let imageUrl = null;
 
@@ -116,6 +117,10 @@ export const updateUserImageLogic = async (
   } catch (error) {
     await deleteCourseFile("userImg", imageUrl);
     throw error;
+  }
+  console.log("fileName", fileName);
+  if (fileName) {
+    await deleteCourseFile("userImg", fileName);
   }
 };
 

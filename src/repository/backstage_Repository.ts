@@ -35,3 +35,11 @@ export const editTagDb = async (id: number, label: string) => {
     },
   });
 };
+
+export const deleteCourseByIdDb = async (id: string) => {
+  return await prisma.courseTable.delete({
+    where: {
+      id,
+    },
+  });
+};

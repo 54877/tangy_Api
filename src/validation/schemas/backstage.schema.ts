@@ -5,10 +5,6 @@ export const TagSchema = z.object({
   label: TagScheme,
 });
 
-export const TagIdSchema = z.object({
-  id: TagIdScheme,
-});
-
 export const EditTagSchema = z.object({
   id: TagIdScheme,
   label: TagScheme,
