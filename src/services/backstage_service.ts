@@ -37,7 +37,7 @@ export const deleteCourseLogic = async (id: string) => {
   }
 
   await Promise.all([
-    deleteCourseFile("course", course.video),
+    deleteCourseFile("video", course.video),
     deleteCourseFile("course", course.imageUrl),
   ]);
 };
