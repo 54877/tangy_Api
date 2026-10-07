@@ -117,6 +117,12 @@ export const updateUserImageLogic = async (
     await deleteCourseFile("userImg", imageUrl);
     throw error;
   }
+
+  const data = await getUserById(id);
+
+  if (data?.imageUrl) {
+    await deleteCourseFile("userImg", data?.imageUrl);
+  }
 };
 
 export const updatePasswordLogic = async (
