@@ -46,9 +46,8 @@ export const updatePersonal: JwtAsyncFunction = async (req, res) => {
 export const updateUserImage: JwtAsyncFunction = async (req, res) => {
   const id = req.user?.id;
   const image = req.file;
-  const { imageFileName } = req.body || {};
 
-  await updateUserImageLogic(image, id, imageFileName);
+  await updateUserImageLogic(image, id);
 
   res.status(201).json({
     message: "更新成功",

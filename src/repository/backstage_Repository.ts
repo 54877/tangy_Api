@@ -43,3 +43,11 @@ export const deleteCourseByIdDb = async (id: string) => {
     },
   });
 };
+
+export const getCourseByIdDb = async (id: string) => {
+  return await prisma.courseTable.findUnique({
+    where: {
+      id,
+    },
+  });
+};

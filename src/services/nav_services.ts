@@ -22,7 +22,6 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     email: result.email,
     userName: result.userName,
     imageUrl: result.imageUrl,
-    imageFileName: result.imageFileName,
     svType: result.svType,
     role: result.role,
   };
