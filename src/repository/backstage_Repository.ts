@@ -51,3 +51,22 @@ export const getCourseByIdDb = async (id: string) => {
     },
   });
 };
+
+export const getAllUsersDb = async () => {
+  return await prisma.user.findMany();
+};
+
+export const getAllTagsDb = async () => {
+  return await prisma.tagsTable.findMany();
+};
+
+export const editUserRoleDb = async (id: string, role: string) => {
+  return await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      role,
+    },
+  });
+};

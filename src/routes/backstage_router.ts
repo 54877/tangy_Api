@@ -7,6 +7,9 @@ import {
   deleteCourse,
   deleteTag,
   editTag,
+  editUserRole,
+  getAllTags,
+  getAllUsers,
 } from "../controllers/backstage_controllers";
 import {
   EditTagSchema,
@@ -19,9 +22,19 @@ export const backStage_router = express.Router();
 backStage_router.use(authMiddleware);
 
 openapiRoute({
+  method: "get",
+  path: "/getAllTags",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "標籤列表",
+  handler: [asyncHandler(getAllTags)],
+  router: backStage_router,
+});
+
+openapiRoute({
   method: "post",
   path: "/createTag",
-  tags: ["後台"],
+  tags: ["backStage"],
   needAuth: true,
   summary: "建立標籤",
   schema: TagSchema,
@@ -32,7 +45,7 @@ openapiRoute({
 openapiRoute({
   method: "delete",
   path: "/deleteTag",
-  tags: ["後台"],
+  tags: ["backStage"],
   needAuth: true,
   summary: "刪除標籤",
   schema: IdSchema,
@@ -43,7 +56,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/editTag",
-  tags: ["後台"],
+  tags: ["backStage"],
   needAuth: true,
   summary: "編輯標籤",
   schema: EditTagSchema,
@@ -51,11 +64,10 @@ openapiRoute({
   router: backStage_router,
 });
 
-//刪除課程
 openapiRoute({
   method: "delete",
   path: "/deleteCourse",
-  tags: ["後台"],
+  tags: ["backStage"],
   needAuth: true,
   summary: "刪除課程",
   schema: IdSchema,
@@ -63,6 +75,26 @@ openapiRoute({
   router: backStage_router,
 });
 
-//讀取所有user資料(帳號、權限)
+openapiRoute({
+  method: "get",
+  path: "/getAllUsers",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "使用者資料列表",
+  handler: [asyncHandler(getAllUsers)],
+  router: backStage_router,
+});
+
 //修改user權限
-//審核課程 -> 新增完畢後建立課程的db需要跟者修改
+openapiRoute({
+  method: "post",
+  path: "/editUserRole",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "修改使用者權限",
+  schema: IdSchema,
+  handler: [asyncHandler(editUserRole)],
+  router: backStage_router,
+});
+
+//審核課程 -> 新增完畢後建立課程的db需要跟者修改 ()
