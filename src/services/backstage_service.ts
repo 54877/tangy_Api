@@ -53,8 +53,9 @@ export const getAllUsersLogic = async () => {
 };
 
 export const getAllTagsLogic = async () => {
+  console.log("tags123");
   const tags = await getAllTagsDb();
-
+  console.log(tags);
   return tags;
 };
 

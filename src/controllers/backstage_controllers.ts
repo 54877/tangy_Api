@@ -65,6 +65,7 @@ export const getAllUsers: JwtAsyncFunction = async (req, res) => {
 };
 
 export const getAllTags: JwtAsyncFunction = async (req, res) => {
+  console.log("1223");
   const Data = await getAllTagsLogic();
 
   success(res, 200, Data);

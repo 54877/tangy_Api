@@ -138,14 +138,14 @@ export const loginUserLogic = async ({
     userDate,
   };
 };
-
+ 
 //是否二次驗證
 export const isSvLogic = async (email: string) => {
   const user = await userEmail(email, "帳密有誤");
   if (user.svType) {
     await sendSVEmail(user.id, user.email);
     return true;
-  }
+  } 
   return false;
 };
 
