@@ -17,18 +17,18 @@ export const createTagDb = async (label: string) => {
   }
 };
 
-export const deleteTagByIdDb = async (id: number) => {
+export const deleteTagByIdDb = async (key: number) => {
   return await prisma.tagsTable.delete({
     where: {
-      id,
+      key,
     },
   });
 };
 
-export const editTagDb = async (id: number, label: string) => {
+export const editTagDb = async (key: number, label: string) => {
   return await prisma.tagsTable.update({
     where: {
-      id,
+      key,
     },
     data: {
       label,

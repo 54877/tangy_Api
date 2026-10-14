@@ -17,13 +17,13 @@ export const createTagLogic = async (label: string) => {
 };
 
 //刪除tag
-export const deleteTagLogic = async (id: number) => {
-  await deleteTagByIdDb(id);
+export const deleteTagLogic = async (key: number) => {
+  await deleteTagByIdDb(key);
 };
 
 //編輯tag
-export const editTagLogic = async (id: number, label: string) => {
-  await editTagDb(id, label);
+export const editTagLogic = async (key: number, label: string) => {
+  await editTagDb(key, label);
 };
 
 //刪除課程
@@ -53,9 +53,7 @@ export const getAllUsersLogic = async () => {
 };
 
 export const getAllTagsLogic = async () => {
-  console.log("tags123");
   const tags = await getAllTagsDb();
-  console.log(tags);
   return tags;
 };
 

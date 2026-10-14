@@ -23,21 +23,21 @@ export const createTag: JwtAsyncFunction = async (req, res) => {
 };
 
 export const deleteTag: JwtAsyncFunction = async (req, res) => {
-  const { id } = req.body;
+  const { key } = req.body;
 
   isAdmin(req);
 
-  await deleteTagLogic(Number(id));
+  await deleteTagLogic(Number(key));
 
   success(res, 200);
 };
 
 export const editTag: JwtAsyncFunction = async (req, res) => {
-  const { id, label } = req.body;
+  const { key, label } = req.body;
 
   isAdmin(req);
 
-  await editTagLogic(Number(id), label);
+  await editTagLogic(Number(key), label);
 
   success(res, 200);
 };
@@ -65,7 +65,6 @@ export const getAllUsers: JwtAsyncFunction = async (req, res) => {
 };
 
 export const getAllTags: JwtAsyncFunction = async (req, res) => {
-  console.log("1223");
   const Data = await getAllTagsLogic();
 
   success(res, 200, Data);

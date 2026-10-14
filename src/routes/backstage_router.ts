@@ -15,7 +15,7 @@ import {
   EditTagSchema,
   TagSchema,
 } from "../validation/schemas/backstage.schema";
-import { IdSchema } from "../validation/schemas/common.schema";
+import { IdSchema, KeySchema } from "../validation/schemas/common.schema";
 
 export const backStage_router = express.Router();
 
@@ -48,7 +48,7 @@ openapiRoute({
   tags: ["backStage"],
   needAuth: true,
   summary: "刪除標籤",
-  schema: IdSchema,
+  schema: KeySchema,
   handler: [asyncHandler(deleteTag)],
   router: backStage_router,
 });
