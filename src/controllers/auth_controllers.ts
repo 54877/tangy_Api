@@ -11,6 +11,7 @@ import {
 import { Request, Response } from "express";
 import { AsyncFunction } from "../types/asyncType";
 import { createAccessToken } from "../utils/jwt";
+import { success } from "../utils/success";
 
 const getLoginData = async (req: Request) => {
   const { email, password, code } = req.body || {};
@@ -45,10 +46,7 @@ export const registerUser: AsyncFunction = async (req, res) => {
   const { password, userName, email } = req.body || {};
   await registerUserLogic({ password, userName, email });
 
-  res.status(201).json({
-    message: "註冊成功",
-    state: true,
-  });
+  success(res, 201, undefined, "註冊成功");
 };
 
 //登入
@@ -58,11 +56,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
   const isSV = await isSvLogic(email);
 
   if (isSV) {
-    res.status(200).json({
-      svType: true,
-      message: "驗證碼成功寄出",
-      state: true,
-    });
+    success(res, 200, { svType: true }, "驗證碼成功寄出");
     return;
   }
 
@@ -73,12 +67,7 @@ export const loginUser: AsyncFunction = async (req, res) => {
   //建立cookies
   cookiesFn(res, refreshToken, id);
 
-  res.status(201).json({
-    accessToken,
-    userDate,
-    message: "登入成功",
-    state: true,
-  });
+  success(res, 201, { accessToken, userDate }, "登入成功");
 };
 
 //登入SV
@@ -92,12 +81,7 @@ export const loginUserSV: AsyncFunction = async (req, res) => {
   //建立cookies
   cookiesFn(res, refreshToken, id);
 
-  res.status(201).json({
-    accessToken,
-    userDate,
-    message: "登入成功",
-    state: true,
-  });
+  success(res, 201, { accessToken, userDate }, "登入成功");
 };
 
 //寄信
@@ -105,10 +89,7 @@ export const sendEmailControllers: AsyncFunction = async (req, res) => {
   const { email } = req.body || {};
   await sendEmail(email);
 
-  res.status(201).json({
-    message: "email存在",
-    state: true,
-  });
+  success(res, 201, undefined, "email存在");
 };
 
 //更新密碼
@@ -116,10 +97,7 @@ export const newPassword: AsyncFunction = async (req, res) => {
   const { email, code, newPassword } = req.body || {};
   await newPasswordLogic(email, code, newPassword);
 
-  res.status(200).json({
-    message: "密碼更新成功",
-    state: true,
-  });
+  success(res, 200, undefined, "密碼更新成功");
 };
 
 //登出
@@ -134,15 +112,11 @@ export const logoutControllers: AsyncFunction = async (req, res) => {
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 
-  res.status(200).json({
-    message: "成功登出",
-    state: true,
-  });
+  success(res, 200, undefined, "成功登出");
 };
 
 //access過期替換
 export const refresh: AsyncFunction = async (req, res) => {
-  const ip = req.ip ?? "unknown";
   const deviceId = req.cookies.deviceId;
   const refreshToken = req.cookies.refreshToken;
   const { newPayload, newRefreshToken } = await refreshTokenLogic(
@@ -160,11 +134,9 @@ export const refresh: AsyncFunction = async (req, res) => {
   });
 
   //設置新cookies refresh token
-  cookiesFn(res, newRefreshToken);
+  if (newRefreshToken) {
+    cookiesFn(res, newRefreshToken);
+  }
 
-  res.status(200).json({
-    accessToken,
-    message: "成功替換",
-    state: true,
-  });
+  success(res, 200, { accessToken }, "成功替換");
 };

@@ -224,14 +224,16 @@ export const refreshTokenChange = async (
   absoluteExpiresAt: Date,
 ) => {
   return await prisma.$transaction(async (tx) => {
-    await tx.refreshToken.update({
-      where: {
-        tokenHash: oldToken,
-      },
+    const claimed = await tx.refreshToken.updateMany({
+      where: { tokenHash: oldToken, revokedAt: null },
       data: {
         revokedAt: new Date(),
       },
     });
+
+    if (claimed.count === 0) {
+      return false;
+    }
 
     await tx.refreshToken.create({
       data: {
@@ -250,5 +252,7 @@ export const refreshTokenChange = async (
         lastUseAt: new Date(),
       },
     });
+
+    return true;
   });
 };

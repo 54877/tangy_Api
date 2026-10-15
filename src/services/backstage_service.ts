@@ -10,6 +10,7 @@ import {
 } from "../repository/backstage_Repository";
 import { getUserById } from "../repository/nav_Repository";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
+import { AppError } from "../utils/errors";
 
 //建立tag
 export const createTagLogic = async (label: string) => {
@@ -31,13 +32,13 @@ export const deleteCourseLogic = async (id: string) => {
   const course = await getCourseByIdDb(id);
 
   if (!course) {
-    throw new Error("課程不存在");
+    throw new AppError("課程不存在", 404);
   }
 
   try {
     await deleteCourseByIdDb(id);
   } catch (err) {
-    throw new Error("刪除課程失敗");
+    throw new AppError("刪除課程失敗", 500);
   }
 
   await Promise.all([

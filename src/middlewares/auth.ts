@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { TokenPayload } from "../utils/jwt";
+import { AppError } from "../utils/errors";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -16,14 +17,12 @@ export const authMiddleware = (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
-): Response | void => {
+): void => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      return res.status(401).json({
-        message: "未登入",
-      });
+      throw new AppError("未登入", 401);
     }
 
     const token = authHeader.split(" ")[1];
@@ -34,9 +33,6 @@ export const authMiddleware = (
 
     next();
   } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      message: "Token 無效",
-    });
+    next(error);
   }
 };

@@ -1,9 +1,14 @@
 import { Response } from "express";
 
-export const success = (res: Response, state: number, dataSet?: unknown) => {
-  res.status(state).json({
+export const success = (
+  res: Response,
+  statusCode: number,
+  dataSet?: unknown,
+  message = "成功",
+) => {
+  res.status(statusCode).json({
     dataSet,
-    message: "成功",
+    message,
     state: true,
   });
 };

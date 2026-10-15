@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { z } from "../config/zod";
+import { AppError } from "../utils/errors";
 
 export const validateRequest =
   <T extends z.ZodTypeAny>(schema: T) =>
@@ -16,10 +17,7 @@ export const validateRequest =
         {} as Record<string, string[]>,
       );
 
-      return res.status(400).json({
-        message: "Validation error",
-        errors: formatted,
-      });
+      return next(new AppError("Validation error", 400, undefined, formatted));
     }
 
     req.body = result.data;

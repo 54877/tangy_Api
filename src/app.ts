@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { errorHandler } from "./utils/errors.js";
+import { AppError, errorHandler } from "./utils/errors.js";
 import { auth_router } from "./routes/auth_router.js";
 import { nav_router } from "./routes/nav_router.js";
 import { profile_router } from "./routes/profile_router.js";
@@ -47,6 +47,11 @@ app.use("/tangy", course_router);
 app.use("/tangy", profile_router);
 app.use("/tangy", nav_router);
 app.use("/tangy", backStage_router);
+
+//統一處理不存在的路由
+app.use((req, res, next) => {
+  next(new AppError("找不到此 API", 404));
+});
 
 //統一處理錯誤
 app.use(errorHandler);

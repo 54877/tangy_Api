@@ -218,7 +218,7 @@ export const refreshTokenLogic = async (
   }
 
   //移除舊refresh token 建立新 refresh token
-  await refreshTokenChange(
+  const rotated = await refreshTokenChange(
     storedToken.tokenHash,
     storedToken.deviceId,
     newHashToken,
@@ -226,7 +226,7 @@ export const refreshTokenLogic = async (
     absoluteExpiresAt,
   );
 
-  return { newPayload, newRefreshToken };
+  return { newPayload, newRefreshToken: rotated ? newRefreshToken : null };
 };
 
 //驗證碼寄信
