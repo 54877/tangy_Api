@@ -114,8 +114,10 @@ model courseTable {
 }
 
 model tagsTable {
-  key   Int    @id @default(autoincrement())
-  label String @unique
+  key       Int      @id @default(autoincrement())
+  label     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  useCount  String   @default("0") @map("use_count")
 
   @@map("tags_table")
 }

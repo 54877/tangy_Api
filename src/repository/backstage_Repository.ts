@@ -6,6 +6,7 @@ export const createTagDb = async (label: string) => {
     return await prisma.tagsTable.create({
       data: {
         label,
+        createdAt: new Date(),
       },
     });
   } catch (err: any) {
@@ -32,6 +33,7 @@ export const editTagDb = async (key: number, label: string) => {
     },
     data: {
       label,
+      createdAt: new Date(),
     },
   });
 };
