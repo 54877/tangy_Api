@@ -54,8 +54,11 @@ export const getAllUsersLogic = async () => {
 };
 
 export const getAllTagsLogic = async () => {
-  const tags = await getAllTagsDb();
-  return tags;
+  const tagList = (await getAllTagsDb()).map((tag) => ({
+    ...tag,
+    key: String(tag.key),
+  }));
+  return tagList;
 };
 
 export const editUserRoleLogic = async (id: string) => {
