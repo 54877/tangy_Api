@@ -56,6 +56,8 @@ export const getAllUsers: JwtAsyncFunction = async (req, res) => {
   const userData = await getAllUsersLogic();
 
   const result = userData.map((user) => ({
+    id: user.id,
+    createAt: user.createdAt,
     email: user.email,
     role: user.role,
     userName: user.userName,
