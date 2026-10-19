@@ -61,7 +61,11 @@ export const getAllTagsLogic = async () => {
   return tagList;
 };
 
-export const editUserRoleLogic = async (id: string) => {
+export const editUserRoleLogic = async (id: string, userId: string) => {
+  if (id === userId) {
+    throw new AppError("不可修改自己權限", 403);
+  }
+
   const user = await getUserById(id);
 
   await editUserRoleDb(id, user?.role === "user" ? "admin" : "user");

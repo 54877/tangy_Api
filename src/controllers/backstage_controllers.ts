@@ -74,10 +74,11 @@ export const getAllTags: JwtAsyncFunction = async (req, res) => {
 
 export const editUserRole: JwtAsyncFunction = async (req, res) => {
   const { id } = req.body;
+  const userId = req.user.id;
 
   isAdmin(req);
 
-  await editUserRoleLogic(id);
+  await editUserRoleLogic(id, userId);
 
   success(res, 200);
 };
