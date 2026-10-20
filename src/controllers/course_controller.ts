@@ -30,7 +30,9 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
     duration,
     tagsKey,
   } = req.body;
+
   const image = req.file;
+
   await createCourseLogic({
     title,
     teacher,
