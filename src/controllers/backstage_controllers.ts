@@ -6,6 +6,7 @@ import {
   getAllUsersLogic,
   getAllTagsLogic,
   editUserRoleLogic,
+  reviewCourseLogic,
 } from "../services/backstage_service";
 import { JwtAsyncFunction } from "../types/asyncType";
 import { isAdmin } from "../utils/role";
@@ -79,6 +80,36 @@ export const editUserRole: JwtAsyncFunction = async (req, res) => {
   isAdmin(req);
 
   await editUserRoleLogic(id, userId);
+
+  success(res, 200);
+};
+
+export const reviewCourse: JwtAsyncFunction = async (req, res) => {
+  const {
+    id,
+    title,
+    teacher,
+    content,
+    price,
+    originalPrice,
+    videoKey,
+    duration,
+    fileName,
+    reviewStatus,
+  } = req.body;
+
+  await reviewCourseLogic({
+    id,
+    title,
+    teacher,
+    content,
+    price,
+    originalPrice,
+    fileName,
+    videoKey,
+    duration,
+    reviewStatus,
+  });
 
   success(res, 200);
 };

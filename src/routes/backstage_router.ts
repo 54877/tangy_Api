@@ -10,6 +10,7 @@ import {
   editUserRole,
   getAllTags,
   getAllUsers,
+  reviewCourse,
 } from "../controllers/backstage_controllers";
 import {
   EditTagSchema,
@@ -98,3 +99,13 @@ openapiRoute({
 });
 
 //審核課程 -> 新增完畢後建立課程的db需要跟者修改 ()
+openapiRoute({
+  method: "put",
+  path: "/reviewCourse",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "審核課程",
+  schema: IdSchema,
+  handler: [asyncHandler(reviewCourse)],
+  router: backStage_router,
+});

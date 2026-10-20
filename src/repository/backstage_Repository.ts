@@ -1,4 +1,5 @@
 import prisma from "../db/prisma";
+import { CourseType } from "../types/profileType";
 import { AppError } from "../utils/errors";
 
 export const createTagDb = async (label: string) => {
@@ -69,6 +70,36 @@ export const editUserRoleDb = async (id: string, role: string) => {
     },
     data: {
       role,
+    },
+  });
+};
+
+export const reviewCourseLogicDb = async ({
+  id,
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  fileName,
+  videoKey,
+  duration,
+  reviewStatus,
+}: Omit<CourseType, "image">) => {
+  await prisma.courseTable.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+      teacher,
+      content,
+      price,
+      originalPrice,
+      imageUrl: fileName,
+      video: videoKey,
+      duration,
+      reviewStatus,
     },
   });
 };

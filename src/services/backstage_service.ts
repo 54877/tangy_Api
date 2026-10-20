@@ -7,10 +7,13 @@ import {
   getAllTagsDb,
   getAllUsersDb,
   getCourseByIdDb,
+  reviewCourseLogicDb,
 } from "../repository/backstage_Repository";
 import { getUserById } from "../repository/nav_Repository";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 import { AppError } from "../utils/errors";
+import { CourseType } from "../types/profileType";
+import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 
 //建立tag
 export const createTagLogic = async (label: string) => {
@@ -69,4 +72,33 @@ export const editUserRoleLogic = async (id: string, userId: string) => {
   const user = await getUserById(id);
 
   await editUserRoleDb(id, user?.role === "user" ? "admin" : "user");
+};
+
+export const reviewCourseLogic = async ({
+  id,
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  fileName,
+  videoKey,
+  duration,
+  reviewStatus,
+}: Omit<CourseType, "image">) => {
+  const sanitizedContent = sanitizeCourseContent(content);
+
+  //執行Db
+  await reviewCourseLogicDb({
+    id,
+    title,
+    teacher,
+    content: sanitizedContent,
+    price,
+    originalPrice,
+    fileName,
+    videoKey,
+    duration,
+    reviewStatus,
+  });
 };

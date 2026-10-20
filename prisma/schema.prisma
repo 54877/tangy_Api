@@ -97,6 +97,12 @@ model deviceTable {
   @@map("device_table")
 }
 
+enum CourseReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model courseTable {
   id            String @id @default(uuid()) @db.Uuid
   title         String
@@ -109,6 +115,8 @@ model courseTable {
   originalPrice String @map("original_price")
   imageUrl      String @map("image_url")
   video         String
+
+  reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
   @@map("course_table")
 }

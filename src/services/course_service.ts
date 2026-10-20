@@ -38,7 +38,7 @@ export const createCourseLogic = async ({
   image,
   videoKey,
   duration,
-}: Omit<CourseType, "fileName">) => {
+}: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
   const sanitizedContent = sanitizeCourseContent(content);
 
   //驗證照片

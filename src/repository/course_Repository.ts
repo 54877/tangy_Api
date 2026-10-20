@@ -10,7 +10,7 @@ export const createCourseDb = async ({
   fileName,
   videoKey,
   duration,
-}: Omit<CourseType, "image">) => {
+}: Omit<CourseType, "image" | "id" | "reviewStatus">) => {
   await prisma.courseTable.create({
     data: {
       title,
