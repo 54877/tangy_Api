@@ -38,6 +38,7 @@ export const createCourseLogic = async ({
   image,
   videoKey,
   duration,
+  tagsKey,
 }: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
   const sanitizedContent = sanitizeCourseContent(content);
 
@@ -57,6 +58,7 @@ export const createCourseLogic = async ({
       fileName,
       videoKey,
       duration,
+      tagsKey,
     });
   } catch (error) {
     await Promise.allSettled([

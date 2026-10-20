@@ -21,7 +21,6 @@ export const optionalString = z
     invalid_type_error: "必須是字串",
   })
   .trim()
-  .optional()
   .openapi({
     example: "string",
   });

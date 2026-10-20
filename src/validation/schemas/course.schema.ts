@@ -3,6 +3,7 @@ import {
   contentScheme,
   durationScheme,
   priceScheme,
+  tagScheme,
   teacherScheme,
   titleScheme,
   videoKeyScheme,
@@ -16,6 +17,7 @@ export const courseSchema = z.object({
   originalPrice: priceScheme,
   videoKey: videoKeyScheme,
   duration: durationScheme,
+  tagsKey: tagScheme,
 });
 
 export const createCourseVideoOpenapiSchema = z.object({

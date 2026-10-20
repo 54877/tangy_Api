@@ -21,5 +21,6 @@ export interface CourseType {
   fileName: string;
   videoKey: string;
   duration: string;
+  tagsKey: string[];
   reviewStatus: "PENDING" | "APPROVED" | "REJECTED";
 }

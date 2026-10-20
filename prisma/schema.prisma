@@ -118,7 +118,6 @@ model courseTable {
   imageUrl      String   @map("image_url")
   video         String
   tagsKey       String[] @default([]) @map("tags_key")
-  tagsLabel     String[] @default([]) @map("tags_label")
 
   reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
