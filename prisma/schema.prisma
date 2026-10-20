@@ -101,20 +101,24 @@ enum CourseReviewStatus {
   PENDING
   APPROVED
   REJECTED
+
+  @@map("course_review_status")
 }
 
 model courseTable {
-  id            String @id @default(uuid()) @db.Uuid
+  id            String   @id @default(uuid()) @db.Uuid
   title         String
   teacher       String
-  rating        String @default("5")
-  studentCount  String @default("0") @map("student_count")
-  duration      String @default("0")
+  rating        String   @default("5")
+  studentCount  String   @default("0") @map("student_count")
+  duration      String   @default("0")
   content       String
   price         String
-  originalPrice String @map("original_price")
-  imageUrl      String @map("image_url")
+  originalPrice String   @map("original_price")
+  imageUrl      String   @map("image_url")
   video         String
+  tagsKey       String[] @default([]) @map("tags_key")
+  tagsLabel     String[] @default([]) @map("tags_label")
 
   reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
