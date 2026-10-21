@@ -85,6 +85,7 @@ export const reviewCourseLogicDb = async ({
   videoKey,
   duration,
   reviewStatus,
+  tagsKey,
 }: Omit<CourseType, "image">) => {
   await prisma.courseTable.update({
     where: {
@@ -100,6 +101,7 @@ export const reviewCourseLogicDb = async ({
       video: videoKey,
       duration,
       reviewStatus,
+      tagsKey,
     },
   });
 };

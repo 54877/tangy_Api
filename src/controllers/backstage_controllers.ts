@@ -96,6 +96,7 @@ export const reviewCourse: JwtAsyncFunction = async (req, res) => {
     duration,
     fileName,
     reviewStatus,
+    tagsKey,
   } = req.body;
 
   await reviewCourseLogic({
@@ -109,6 +110,7 @@ export const reviewCourse: JwtAsyncFunction = async (req, res) => {
     videoKey,
     duration,
     reviewStatus,
+    tagsKey,
   });
 
   success(res, 200);

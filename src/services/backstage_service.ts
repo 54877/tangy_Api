@@ -85,6 +85,7 @@ export const reviewCourseLogic = async ({
   videoKey,
   duration,
   reviewStatus,
+  tagsKey,
 }: Omit<CourseType, "image">) => {
   const sanitizedContent = sanitizeCourseContent(content);
 
@@ -100,5 +101,6 @@ export const reviewCourseLogic = async ({
     videoKey,
     duration,
     reviewStatus,
+    tagsKey,
   });
 };
