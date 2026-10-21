@@ -1,4 +1,4 @@
-import { optionalString, requiredString } from "../primitives/string";
+import { requiredString } from "../primitives/string";
 
 export const titleScheme = requiredString.max(30, "不可超過30個字元");
 
@@ -10,10 +10,7 @@ export const videoKeyScheme = requiredString.max(47, "不可超過47個字元");
 
 export const durationScheme = requiredString.max(10, "不可超過10個字元");
 
-export const tagScheme = requiredString
-  .max(10, "不可超過10個字元")
-  .array()
-  .max(3, "不可選超過3個標籤");
+export const tagScheme = requiredString.max(50, "不可超過50個字元");
 
 export const contentScheme = requiredString.max(
   7_000_000,
