@@ -16,3 +16,4 @@ export const isAdmin = (req: AuthenticatedRequest) => {
   }
   return true;
 };
+
