@@ -1,10 +1,14 @@
 import {
+  createCourseCategoryDb,
   createTagDb,
+  deleteCourseCategoryDb,
   deleteCourseByIdDb,
   deleteTagByIdDb,
   editTagDb,
+  editCourseCategoryDb,
   editUserRoleDb,
   getAllTagsDb,
+  getAllCourseCategoriesDb,
   getAllUsersDb,
   getCourseByIdDb,
   reviewCourseLogicDb,
@@ -30,6 +34,19 @@ export const editTagLogic = async (key: number, label: string) => {
   await editTagDb(key, label);
 };
 
+export const getAllCourseCategoriesLogic = async () => {
+  return await getAllCourseCategoriesDb();
+};
+
+export const createCourseCategoryLogic = async (CategoryName: string) =>
+  createCourseCategoryDb(CategoryName);
+
+export const editCourseCategoryLogic = async (id: string, CategoryName: string) =>
+  editCourseCategoryDb(id, CategoryName);
+
+export const deleteCourseCategoryLogic = async (id: string) =>
+  deleteCourseCategoryDb(id);
+
 //刪除課程
 export const deleteCourseLogic = async (id: string) => {
   const course = await getCourseByIdDb(id);
@@ -41,6 +58,9 @@ export const deleteCourseLogic = async (id: string) => {
   try {
     await deleteCourseByIdDb(id);
   } catch (err) {
+    if (err instanceof AppError) {
+      throw err;
+    }
     throw new AppError("刪除課程失敗", 500);
   }
 

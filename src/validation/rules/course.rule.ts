@@ -4,7 +4,9 @@ export const titleScheme = requiredString.max(30, "不可超過30個字元");
 
 export const teacherScheme = requiredString.max(20, "不可超過20個字元");
 
-export const priceScheme = requiredString.max(10, "不可超過10個字元");
+export const priceScheme = requiredString
+  .max(10, "不可超過10個字元")
+  .regex(/^(0|[1-9]\d*)$/, "只能輸入 0~9 的數字，且不可有多餘的開頭 0");
 
 export const videoKeyScheme = requiredString.max(47, "不可超過47個字元");
 

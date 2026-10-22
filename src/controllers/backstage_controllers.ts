@@ -1,10 +1,14 @@
 import {
+  createCourseCategoryLogic,
   createTagLogic,
+  deleteCourseCategoryLogic,
   deleteTagLogic,
   editTagLogic,
   deleteCourseLogic,
   getAllUsersLogic,
   getAllTagsLogic,
+  getAllCourseCategoriesLogic,
+  editCourseCategoryLogic,
   editUserRoleLogic,
   reviewCourseLogic,
 } from "../services/backstage_service";
@@ -13,10 +17,8 @@ import { isAdmin } from "../utils/role";
 import { success } from "../utils/success";
 
 export const createTag: JwtAsyncFunction = async (req, res) => {
-  const { label } = req.body;
-  console.log(isAdmin(req));
-
   isAdmin(req);
+  const { label } = req.body;
 
   await createTagLogic(label);
 
@@ -24,9 +26,8 @@ export const createTag: JwtAsyncFunction = async (req, res) => {
 };
 
 export const deleteTag: JwtAsyncFunction = async (req, res) => {
-  const { key } = req.body;
-
   isAdmin(req);
+  const { key } = req.body;
 
   await deleteTagLogic(Number(key));
 
@@ -34,9 +35,8 @@ export const deleteTag: JwtAsyncFunction = async (req, res) => {
 };
 
 export const editTag: JwtAsyncFunction = async (req, res) => {
-  const { key, label } = req.body;
-
   isAdmin(req);
+  const { key, label } = req.body;
 
   await editTagLogic(Number(key), label);
 
@@ -44,9 +44,9 @@ export const editTag: JwtAsyncFunction = async (req, res) => {
 };
 
 export const deleteCourse: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
   const { id } = req.body;
 
-  isAdmin(req);
   await deleteCourseLogic(id);
 
   success(res, 200);
@@ -73,6 +73,33 @@ export const getAllTags: JwtAsyncFunction = async (req, res) => {
   success(res, 200, Data);
 };
 
+export const getAllCourseCategories: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
+  const categories = await getAllCourseCategoriesLogic();
+  success(res, 200, categories);
+};
+
+export const createCourseCategory: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
+  const { CategoryName } = req.body;
+  const category = await createCourseCategoryLogic(CategoryName);
+  success(res, 201, category);
+};
+
+export const editCourseCategory: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
+  const { id, CategoryName } = req.body;
+  const category = await editCourseCategoryLogic(id, CategoryName);
+  success(res, 200, category);
+};
+
+export const deleteCourseCategory: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
+  const { id } = req.body;
+  await deleteCourseCategoryLogic(id);
+  success(res, 200);
+};
+
 export const editUserRole: JwtAsyncFunction = async (req, res) => {
   const { id } = req.body;
   const userId = req.user.id;
@@ -85,6 +112,7 @@ export const editUserRole: JwtAsyncFunction = async (req, res) => {
 };
 
 export const reviewCourse: JwtAsyncFunction = async (req, res) => {
+  isAdmin(req);
   const {
     id,
     title,

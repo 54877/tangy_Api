@@ -3,16 +3,23 @@ import { openapiRoute } from "../utils/openapiRoute";
 import { asyncHandler } from "../utils/asyncHandler";
 import { authMiddleware } from "../middlewares/auth";
 import {
+  createCourseCategory,
   createTag,
+  deleteCourseCategory,
   deleteCourse,
   deleteTag,
   editTag,
+  editCourseCategory,
   editUserRole,
   getAllTags,
+  getAllCourseCategories,
   getAllUsers,
   reviewCourse,
 } from "../controllers/backstage_controllers";
 import {
+  CourseCategorySchema,
+  DeleteCourseCategorySchema,
+  EditCourseCategorySchema,
   EditTagSchema,
   TagSchema,
 } from "../validation/schemas/backstage.schema";
@@ -21,6 +28,49 @@ import { IdSchema, KeySchema } from "../validation/schemas/common.schema";
 export const backStage_router = express.Router();
 
 backStage_router.use(authMiddleware);
+
+openapiRoute({
+  method: "get",
+  path: "/getAllCourseCategories",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "課程分類列表",
+  handler: [asyncHandler(getAllCourseCategories)],
+  router: backStage_router,
+});
+
+openapiRoute({
+  method: "post",
+  path: "/createCourseCategory",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "建立課程分類",
+  schema: CourseCategorySchema,
+  handler: [asyncHandler(createCourseCategory)],
+  router: backStage_router,
+});
+
+openapiRoute({
+  method: "put",
+  path: "/editCourseCategory",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "編輯課程分類",
+  schema: EditCourseCategorySchema,
+  handler: [asyncHandler(editCourseCategory)],
+  router: backStage_router,
+});
+
+openapiRoute({
+  method: "delete",
+  path: "/deleteCourseCategory",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "刪除課程分類",
+  schema: DeleteCourseCategorySchema,
+  handler: [asyncHandler(deleteCourseCategory)],
+  router: backStage_router,
+});
 
 openapiRoute({
   method: "get",

@@ -22,7 +22,7 @@ export const getCourseImageUrls = async <T extends WithImage>(
       }
       const { data, error } = await supabase.storage
         .from(bucket)
-        .createSignedUrl(imageFileName, 60 * 10);
+        .createSignedUrl(imageFileName, 60 * 30);
 
       if (error) {
         console.error("圖片下載失敗", {
