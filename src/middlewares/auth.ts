@@ -13,6 +13,14 @@ export interface AuthenticatedRequest extends Request {
   user: TokenPayload;
 }
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: TokenPayload;
+    }
+  }
+}
+
 export const authMiddleware = (
   req: AuthRequest,
   res: Response,
