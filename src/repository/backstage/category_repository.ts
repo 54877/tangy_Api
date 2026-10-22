@@ -15,10 +15,10 @@ export const createCourseCategoryDb = async (CategoryName: string) => {
   }
 };
 
-export const editCourseCategoryDb = async (id: string, CategoryName: string) => {
+export const editCourseCategoryDb = async (categoryKey: string, CategoryName: string) => {
   try {
     return await prisma.courseCategoryTable.update({
-      where: { id },
+      where: { categoryKey },
       data: { CategoryName },
     });
   } catch (err: any) {
@@ -30,9 +30,9 @@ export const editCourseCategoryDb = async (id: string, CategoryName: string) => 
   }
 };
 
-export const deleteCourseCategoryDb = async (id: string) => {
+export const deleteCourseCategoryDb = async (categoryKey: string) => {
   try {
-    return await prisma.courseCategoryTable.delete({ where: { id } });
+    return await prisma.courseCategoryTable.delete({ where: { categoryKey } });
   } catch (err: any) {
     if (err.code === "P2025") throw new AppError("課程分類不存在", 404);
     throw err;

@@ -1,7 +1,7 @@
 import { z } from "../../../config/zod";
 import {
   CategoryNameScheme,
-  CourseCategoryIdScheme,
+  CategoryKeyScheme,
 } from "../../rules/backstage";
 
 export const CourseCategorySchema = z.object({
@@ -9,10 +9,10 @@ export const CourseCategorySchema = z.object({
 });
 
 export const EditCourseCategorySchema = z.object({
-  id: CourseCategoryIdScheme,
+  categoryKey: CategoryKeyScheme,
   CategoryName: CategoryNameScheme,
 });
 
 export const DeleteCourseCategorySchema = z.object({
-  id: CourseCategoryIdScheme,
+  categoryKey: CategoryKeyScheme,
 });

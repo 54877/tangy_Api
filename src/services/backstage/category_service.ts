@@ -10,8 +10,8 @@ export const getAllCourseCategoriesLogic = () => getAllCourseCategoriesDb();
 export const createCourseCategoryLogic = (CategoryName: string) =>
   createCourseCategoryDb(CategoryName);
 
-export const editCourseCategoryLogic = (id: string, CategoryName: string) =>
-  editCourseCategoryDb(id, CategoryName);
+export const editCourseCategoryLogic = (categoryKey: string, CategoryName: string) =>
+  editCourseCategoryDb(categoryKey, CategoryName);
 
-export const deleteCourseCategoryLogic = (id: string) =>
-  deleteCourseCategoryDb(id);
+export const deleteCourseCategoryLogic = (categoryKey: string) =>
+  deleteCourseCategoryDb(categoryKey);

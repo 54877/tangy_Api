@@ -134,7 +134,7 @@ model tagsTable {
 }
 
 model courseCategoryTable {
-  id           String   @id @default(uuid()) @db.Uuid
+  categoryKey  String   @id @default(uuid()) @map("category_key") @db.Uuid
   CategoryName String   @unique @map("category_name") @db.VarChar(10)
   createdAt    DateTime @default(now()) @map("created_at")
 

@@ -17,12 +17,12 @@ export const createCourseCategory: JwtAsyncFunction = async (req, res) => {
 };
 
 export const editCourseCategory: JwtAsyncFunction = async (req, res) => {
-  const { id, CategoryName } = req.body;
-  const category = await editCourseCategoryLogic(id, CategoryName);
+  const { categoryKey, CategoryName } = req.body;
+  const category = await editCourseCategoryLogic(categoryKey, CategoryName);
   success(res, 200, category);
 };
 
 export const deleteCourseCategory: JwtAsyncFunction = async (req, res) => {
-  await deleteCourseCategoryLogic(req.body.id);
+  await deleteCourseCategoryLogic(req.body.categoryKey);
   success(res, 200);
 };
