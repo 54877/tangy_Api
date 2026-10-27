@@ -33,3 +33,9 @@ export const editTagDb = async (key: number, label: string) => {
 };
 
 export const getAllTagsDb = async () => prisma.tagsTable.findMany();
+
+export const getTagsByKeysDb = (keys: number[]) =>
+  prisma.tagsTable.findMany({
+    where: { key: { in: keys } },
+    select: { key: true },
+  });

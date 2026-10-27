@@ -20,9 +20,20 @@ export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
 
 //建立線上課程
 export const createCourse: JwtAsyncFunction = async (req, res) => {
-  const { title, teacher, content, price, originalPrice, videoKey, duration } =
-    req.body;
-  const tagsKey = JSON.parse(req.body.tagsKey);
+  const {
+    title,
+    teacher,
+    content,
+    price,
+    originalPrice,
+    videoKey,
+    duration,
+    categoryKey,
+  } = req.body;
+  const parsedTagsKey: unknown = JSON.parse(req.body.tagsKey);
+  const tagsKey = (Array.isArray(parsedTagsKey) ? parsedTagsKey : [parsedTagsKey]).map(
+    String,
+  );
 
   const image = req.file;
 
@@ -36,6 +47,7 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
     videoKey,
     duration,
     tagsKey,
+    categoryKey,
   });
 
   success(res, 200);

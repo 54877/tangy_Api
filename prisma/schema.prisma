@@ -118,6 +118,7 @@ model courseTable {
   imageUrl      String   @map("image_url")
   video         String
   tagsKey       String[] @default([]) @map("tags_key")
+  categoryKey   String?  @map("category_key") @db.Uuid
 
   reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
@@ -137,6 +138,7 @@ model courseCategoryTable {
   categoryKey  String   @id @default(uuid()) @map("category_key") @db.Uuid
   CategoryName String   @unique @map("category_name") @db.VarChar(10)
   createdAt    DateTime @default(now()) @map("created_at")
+  useCount     String   @default("0") @map("use_count")
 
   @@map("course_category")
 }

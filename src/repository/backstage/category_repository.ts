@@ -4,6 +4,9 @@ import { AppError } from "../../utils/errors";
 export const getAllCourseCategoriesDb = async () =>
   prisma.courseCategoryTable.findMany({ orderBy: { createdAt: "asc" } });
 
+export const getCourseCategoryByKeyDb = (categoryKey: string) =>
+  prisma.courseCategoryTable.findUnique({ where: { categoryKey } });
+
 export const createCourseCategoryDb = async (CategoryName: string) => {
   try {
     return await prisma.courseCategoryTable.create({ data: { CategoryName } });

@@ -3,6 +3,7 @@ import {
   deviceCloseByIdControllers,
   deviceCloseByUserIdControllers,
   getPersonal,
+  getCourseFormOptions,
   sendSVEmailControllers,
   svCloseControllers,
   svControllers,
@@ -25,6 +26,16 @@ import { createImageSchema } from "../validation/utils/imageSchema";
 export const profile_router = express.Router();
 
 profile_router.use(authMiddleware);
+
+openapiRoute({
+  method: "get",
+  path: "/getCourseFormOptions",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "標籤與課程分類",
+  handler: [asyncHandler(getCourseFormOptions)],
+  router: profile_router,
+});
 
 openapiRoute({
   method: "get",

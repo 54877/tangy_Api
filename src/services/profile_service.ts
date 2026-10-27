@@ -5,6 +5,7 @@ import {
   createSVEmailVerification,
   deviceCloseById,
   deviceCloseByUserId,
+  getCourseFormOptionsDb,
   getUserDeviceByUserId,
   svCloseDb,
   SVDb,
@@ -79,6 +80,8 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
     device,
   };
 };
+
+export const getCourseFormOptionsLogic = () => getCourseFormOptionsDb();
 
 export const updatePersonalByIdLogic = async (
   id: string,

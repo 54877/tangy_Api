@@ -1,6 +1,8 @@
 import { AppError } from "../utils/errors";
 import { useImageRuler } from "../utils/imageValidation";
 import { createCourseDb, getCourseDb } from "../repository/course_Repository";
+import { getCourseCategoryByKeyDb } from "../repository/backstage/category_repository";
+import { getTagsByKeysDb } from "../repository/backstage/tag_repository";
 import { useVideoRuler } from "../utils/videoValidation";
 import { uploadCourseVideo } from "../utils/uploadCourseVideo";
 import fs from "node:fs/promises";
@@ -39,7 +41,26 @@ export const createCourseLogic = async ({
   videoKey,
   duration,
   tagsKey,
-}: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
+  categoryKey,
+}: Omit<CourseType, "fileName" | "id" | "reviewStatus" | "categoryKey"> & {
+  categoryKey: string;
+}) => {
+  const category = await getCourseCategoryByKeyDb(categoryKey);
+
+  if (!category) {
+    throw new AppError("課程分類不存在", 400, "categoryKey");
+  }
+
+  const tagKeys = [...new Set(tagsKey.map(Number))];
+  if (tagKeys.some((key) => !Number.isSafeInteger(key))) {
+    throw new AppError("包含不存在的標籤", 400, "tagsKey");
+  }
+  const existingTags = await getTagsByKeysDb(tagKeys);
+
+  if (existingTags.length !== tagKeys.length) {
+    throw new AppError("包含不存在的標籤", 400, "tagsKey");
+  }
+
   const sanitizedContent = sanitizeCourseContent(content);
 
   //驗證照片
@@ -58,7 +79,8 @@ export const createCourseLogic = async ({
       fileName,
       videoKey,
       duration,
-      tagsKey,
+      tagsKey: tagKeys.map(String),
+      categoryKey,
     });
   } catch (error) {
     await Promise.allSettled([

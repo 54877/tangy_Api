@@ -8,6 +8,7 @@ import {
   titleScheme,
   videoKeyScheme,
 } from "../rules/course.rule";
+import { CategoryKeyScheme } from "../rules/backstage";
 
 export const courseSchema = z.object({
   title: titleScheme,
@@ -18,6 +19,7 @@ export const courseSchema = z.object({
   videoKey: videoKeyScheme,
   duration: durationScheme,
   tagsKey: tagScheme,
+  categoryKey: CategoryKeyScheme,
 });
 
 export const createCourseVideoOpenapiSchema = z.object({

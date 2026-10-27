@@ -1,6 +1,7 @@
 import {
   deviceCloseByIdLogic,
   deviceCloseByUserIdLogic,
+  getCourseFormOptionsLogic,
   getPersonalByIdLogic,
   sendSVEmail,
   SV,
@@ -23,6 +24,11 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
   }));
 
   success(res, 200, { userDate, genderSelect, deviceDate });
+};
+
+// 建立課程頁面的標籤與分類選項
+export const getCourseFormOptions: JwtAsyncFunction = async (_req, res) => {
+  success(res, 200, await getCourseFormOptionsLogic());
 };
 
 //更新個人資料
