@@ -106,19 +106,22 @@ enum CourseReviewStatus {
 }
 
 model courseTable {
-  id            String   @id @default(uuid()) @db.Uuid
+  id            String @id @default(uuid()) @db.Uuid
   title         String
   teacher       String
-  rating        String   @default("5")
-  studentCount  String   @default("0") @map("student_count")
-  duration      String   @default("0")
+  rating        String @default("5")
+  studentCount  String @default("0") @map("student_count")
+  duration      String @default("0")
   content       String
   price         String
-  originalPrice String   @map("original_price")
-  imageUrl      String   @map("image_url")
+  originalPrice String @map("original_price")
+  imageUrl      String @map("image_url")
   video         String
-  tagsKey       String[] @default([]) @map("tags_key")
-  categoryKey   String?  @map("category_key") @db.Uuid
+
+  courseTags courseTagTable[]
+
+  categoryKey String              @map("category_key") @db.Uuid
+  category    courseCategoryTable @relation(fields: [categoryKey], references: [categoryKey], onDelete: Restrict, onUpdate: Cascade)
 
   reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
@@ -126,12 +129,25 @@ model courseTable {
 }
 
 model tagsTable {
-  key       Int      @id @default(autoincrement())
-  label     String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  useCount  String   @default("0") @map("use_count")
+  key        Int              @id @default(autoincrement())
+  label      String           @unique
+  createdAt  DateTime         @default(now()) @map("created_at")
+  useCount   String           @default("0") @map("use_count")
+  courseTags courseTagTable[]
 
   @@map("tags_table")
+}
+
+model courseTagTable {
+  courseId String @map("course_id") @db.Uuid
+  tagKey   Int    @map("tag_key")
+
+  course courseTable @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag    tagsTable   @relation(fields: [tagKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([courseId, tagKey])
+  @@index([tagKey])
+  @@map("course_tag")
 }
 
 model courseCategoryTable {
@@ -139,6 +155,8 @@ model courseCategoryTable {
   CategoryName String   @unique @map("category_name") @db.VarChar(10)
   createdAt    DateTime @default(now()) @map("created_at")
   useCount     String   @default("0") @map("use_count")
+
+  courses courseTable[]
 
   @@map("course_category")
 }

@@ -52,6 +52,7 @@ export const createCourseLogic = async ({
   }
 
   const tagKeys = [...new Set(tagsKey.map(Number))];
+
   if (tagKeys.some((key) => !Number.isSafeInteger(key))) {
     throw new AppError("包含不存在的標籤", 400, "tagsKey");
   }
@@ -99,7 +100,13 @@ export const getCourseLogic = async () => {
   }
 
   //取得image url加入dataList
-  const result = await getCourseImageUrls(dataList, "course");
+  const courses = dataList.map(({ courseTags, category, ...course }) => ({
+    ...course,
+    tags: courseTags.map(({ tag }) => tag.label),
+    category: category?.CategoryName ?? null,
+  }));
+
+  const result = await getCourseImageUrls(courses, "course");
 
   return result;
 };

@@ -31,9 +31,9 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
     categoryKey,
   } = req.body;
   const parsedTagsKey: unknown = JSON.parse(req.body.tagsKey);
-  const tagsKey = (Array.isArray(parsedTagsKey) ? parsedTagsKey : [parsedTagsKey]).map(
-    String,
-  );
+  const tagsKey = (
+    Array.isArray(parsedTagsKey) ? parsedTagsKey : [parsedTagsKey]
+  ).map(String);
 
   const image = req.file;
 
@@ -57,6 +57,7 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
 export const getCourse: JwtAsyncFunction = async (req, res) => {
   const data = await getCourseLogic();
 
+  console.log(data);
   const result = data.map((course) => ({
     id: course.id,
     imageUrl: course.imageUrl,
@@ -66,6 +67,8 @@ export const getCourse: JwtAsyncFunction = async (req, res) => {
     studentCount: course.studentCount,
     teacher: course.teacher,
     title: course.title,
+    tags: course.tags,
+    category: course.category,
     duration: String(Math.round(+course.duration) / 60),
   }));
   success(res, 200, result);

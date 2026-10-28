@@ -40,7 +40,12 @@ export const reviewCourseLogicDb = async ({
         video: videoKey,
         duration,
         reviewStatus,
-        tagsKey,
+        courseTags: {
+          deleteMany: {},
+          create: [...new Set(tagsKey)].map((key) => ({
+            tagKey: Number(key),
+          })),
+        },
       },
     });
   } catch (err: any) {

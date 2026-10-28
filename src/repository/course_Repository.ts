@@ -12,7 +12,9 @@ export const createCourseDb = async ({
   duration,
   tagsKey,
   categoryKey,
-}: Omit<CourseType, "image" | "id" | "reviewStatus" | "tagsLabel">) => {
+}: Omit<CourseType, "image" | "id" | "reviewStatus" | "tagsLabel"> & {
+  categoryKey: string;
+}) => {
   await prisma.courseTable.create({
     data: {
       title,
@@ -23,12 +25,25 @@ export const createCourseDb = async ({
       imageUrl: fileName,
       video: videoKey,
       duration,
-      tagsKey,
-      categoryKey,
+      category: {
+        connect: { categoryKey },
+      },
+      courseTags: {
+        create: tagsKey.map((key) => ({
+          tagKey: Number(key),
+        })),
+      },
     },
   });
 };
 
 export const getCourseDb = async () => {
-  return await prisma.courseTable.findMany();
+  return prisma.courseTable.findMany({
+    include: {
+      courseTags: {
+        include: { tag: { select: { label: true } } },
+      },
+      category: { select: { CategoryName: true } },
+    },
+  });
 };
