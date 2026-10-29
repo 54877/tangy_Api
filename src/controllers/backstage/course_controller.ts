@@ -1,6 +1,14 @@
-import { deleteCourseLogic, reviewCourseLogic } from "../../services/backstage/course_service";
+import {
+  deleteCourseLogic,
+  getAllCoursesForAdminLogic,
+  reviewCourseLogic,
+} from "../../services/backstage/course_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
+
+export const getAllCoursesForAdmin: JwtAsyncFunction = async (_req, res) => {
+  success(res, 200, await getAllCoursesForAdminLogic());
+};
 
 export const deleteCourse: JwtAsyncFunction = async (req, res) => {
   await deleteCourseLogic(req.body.id);
