@@ -8,6 +8,21 @@ import { backStageUserRouter } from "./backstage/user_router";
 
 export const backStage_router = express.Router();
 
+backStage_router.use((req, res, next) => {
+  const startedAt = Date.now();
+
+  res.on("finish", () => {
+    console.log("[Backstage API]", {
+      method: req.method,
+      path: req.originalUrl.split("?")[0],
+      status: res.statusCode,
+      durationMs: Date.now() - startedAt,
+    });
+  });
+
+  next();
+});
+
 // Keep authentication and the existing /tangy endpoint paths centralized.
 backStage_router.use(authMiddleware, adminMiddleware);
 backStage_router.use(backStageCourseRouter);
