@@ -7,7 +7,7 @@ import { useVideoRuler } from "../utils/videoValidation";
 import { uploadCourseVideo } from "../utils/uploadCourseVideo";
 import fs from "node:fs/promises";
 import { uploadCourseImage } from "../utils/uploadCourseImage";
-import { getCourseImageUrls } from "../utils/getCourseImageUrl";
+import { getStorageUrls } from "../utils/getStorageUrl";
 import { deleteCourseFile } from "../utils/removeSupabaseStorage";
 import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 import { CourseType } from "../types/profileType";
@@ -106,7 +106,7 @@ export const getCourseLogic = async () => {
     category: category?.CategoryName ?? null,
   }));
 
-  const result = await getCourseImageUrls(courses, "course");
+  const result = await getStorageUrls(courses, "course", "image");
 
   return result;
 };

@@ -1,6 +1,6 @@
 import { getUserById } from "../repository/nav_Repository";
 import { AppError } from "../utils/errors";
-import { getCourseImageUrl } from "../utils/getCourseImageUrl";
+import { getStorageUrl } from "../utils/getStorageUrl";
 
 //get user (nav)
 export const getUserByIdLogic = async (id: string | undefined) => {
@@ -15,7 +15,7 @@ export const getUserByIdLogic = async (id: string | undefined) => {
   }
 
   //取得image url加入dataList
-  const result = await getCourseImageUrl(user, "userImg");
+  const result = await getStorageUrl(user, "userImg", "image");
 
   return {
     id: result.id,

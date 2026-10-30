@@ -95,7 +95,11 @@ export const errorHandler = (
     message = "請求格式錯誤";
     errors = { message };
   }
-
+  console.error(`[API Error] ${req.method} ${req.originalUrl}`, {
+    statusCode,
+    errors,
+    stack: err instanceof Error ? err.stack : undefined,
+  });
   res.status(statusCode).json({
     state: false,
     errors,

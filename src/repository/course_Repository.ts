@@ -52,12 +52,18 @@ export const getCourseDb = async () => {
 
 export const getCourseForAdminDb = async () => {
   return prisma.courseTable.findMany({
-    include: {
+    select: {
+      id: true,
+      title: true,
+      originalPrice: true,
+      price: true,
+      rating: true,
+      studentCount: true,
       courseTags: {
-        include: { tag: { select: { label: true } } },
+        select: { tag: { select: { label: true } } },
       },
       category: { select: { CategoryName: true } },
-      user: { select: { userName: true, email: true } },
+      user: { select: { userName: true } },
     },
   });
 };
