@@ -26,7 +26,8 @@ model User {
   svType       Boolean   @default(false) @map("sv_type")
   imageUrl     String?   @map("image_url")
 
-  deviceTable deviceTable[]
+  deviceTable  deviceTable[]
+  courseTables courseTable[]
 
   @@map("user_table")
 }
@@ -118,6 +119,9 @@ model courseTable {
   imageUrl      String @map("image_url")
   video         String
 
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
   courseTags courseTagTable[]
 
   categoryKey String              @map("category_key") @db.Uuid
@@ -125,6 +129,7 @@ model courseTable {
 
   reviewStatus CourseReviewStatus @default(PENDING) @map("review_status")
 
+  @@index([userId])
   @@map("course_table")
 }
 

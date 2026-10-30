@@ -26,7 +26,8 @@ export const reviewCourseLogicDb = async ({
   duration,
   reviewStatus,
   tagsKey,
-}: Omit<CourseType, "image">) => {
+  categoryKey,
+}: Omit<CourseType, "image" | "userId">) => {
   try {
     await prisma.courseTable.update({
       where: { id },
@@ -40,6 +41,9 @@ export const reviewCourseLogicDb = async ({
         video: videoKey,
         duration,
         reviewStatus,
+        category: {
+          connect: { categoryKey },
+        },
         courseTags: {
           deleteMany: {},
           create: [...new Set(tagsKey)].map((key) => ({

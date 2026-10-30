@@ -28,6 +28,7 @@ export const reviewCourse: JwtAsyncFunction = async (req, res) => {
     fileName,
     reviewStatus,
     tagsKey,
+    categoryKey,
   } = req.body;
   await reviewCourseLogic({
     id,
@@ -41,6 +42,7 @@ export const reviewCourse: JwtAsyncFunction = async (req, res) => {
     duration,
     reviewStatus,
     tagsKey,
+    categoryKey,
   });
   success(res, 200);
 };

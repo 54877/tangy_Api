@@ -12,6 +12,7 @@ export interface UserProfileType {
 
 export interface CourseType {
   id: string;
+  userId: string;
   title: string;
   teacher: string;
   content: string;
@@ -22,6 +23,6 @@ export interface CourseType {
   videoKey: string;
   duration: string;
   tagsKey: string[];
-  categoryKey?: string;
+  categoryKey: string;
   reviewStatus: "PENDING" | "APPROVED" | "REJECTED";
 }

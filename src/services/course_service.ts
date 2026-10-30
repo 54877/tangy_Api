@@ -32,6 +32,7 @@ export const createCourseVideoLogic = async (
 };
 
 export const createCourseLogic = async ({
+  userId,
   title,
   teacher,
   content,
@@ -42,9 +43,7 @@ export const createCourseLogic = async ({
   duration,
   tagsKey,
   categoryKey,
-}: Omit<CourseType, "fileName" | "id" | "reviewStatus" | "categoryKey"> & {
-  categoryKey: string;
-}) => {
+}: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
   const category = await getCourseCategoryByKeyDb(categoryKey);
 
   if (!category) {
@@ -72,6 +71,7 @@ export const createCourseLogic = async ({
   //執行Db
   try {
     await createCourseDb({
+      userId,
       title,
       teacher,
       content: sanitizedContent,

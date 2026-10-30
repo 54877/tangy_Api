@@ -3,7 +3,7 @@ import {
   getCourseByIdDb,
   reviewCourseLogicDb,
 } from "../../repository/backstage/course_repository";
-import { getCourseDb } from "../../repository/course_Repository";
+import { getCourseForAdminDb } from "../../repository/course_Repository";
 import { supabase } from "../../config/supabase";
 import { AppError } from "../../utils/errors";
 import { getCourseImageUrls } from "../../utils/getCourseImageUrl";
@@ -12,12 +12,13 @@ import { sanitizeCourseContent } from "../../utils/sanitizeCourseContent";
 import { CourseType } from "../../types/profileType";
 
 export const getAllCoursesForAdminLogic = async () => {
-  const rows = await getCourseDb();
+  const rows = await getCourseForAdminDb();
 
-  const courses = rows.map(({ courseTags, category, ...course }) => ({
+  const courses = rows.map(({ courseTags, category, user, ...course }) => ({
     ...course,
     tags: courseTags.map(({ tag }) => tag.label),
     category: category?.CategoryName ?? null,
+    ...user,
   }));
 
   const coursesWithImages = await getCourseImageUrls(courses, "course");
@@ -27,7 +28,6 @@ export const getAllCoursesForAdminLogic = async () => {
       const { data, error } = await supabase.storage
         .from("videos")
         .createSignedUrl(video, 60 * 30);
-
       if (error) {
         throw new AppError("影片連結產生失敗", 500);
       }
@@ -69,7 +69,8 @@ export const reviewCourseLogic = async ({
   duration,
   reviewStatus,
   tagsKey,
-}: Omit<CourseType, "image">) => {
+  categoryKey,
+}: Omit<CourseType, "image" | "userId">) => {
   await reviewCourseLogicDb({
     id,
     title,
@@ -82,5 +83,6 @@ export const reviewCourseLogic = async ({
     duration,
     reviewStatus,
     tagsKey,
+    categoryKey,
   });
 };
