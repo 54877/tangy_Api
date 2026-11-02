@@ -6,7 +6,8 @@ import {
   getAllCoursesForAdmin,
   reviewCourse,
 } from "../../controllers/backstage/course_controller";
-import { IdSchema } from "../../validation/schemas/common.schema";
+import { UuidIdSchema } from "../../validation/schemas/common.schema";
+import { reviewCourseSchema } from "../../validation/schemas/backstage/course.schema";
 
 export const backStageCourseRouter = express.Router();
 
@@ -26,7 +27,7 @@ openapiRoute({
   tags: ["backStage"],
   needAuth: true,
   summary: "刪除課程",
-  schema: IdSchema,
+  schema: UuidIdSchema,
   handler: [asyncHandler(deleteCourse)],
   router: backStageCourseRouter,
 });
@@ -37,7 +38,7 @@ openapiRoute({
   tags: ["backStage"],
   needAuth: true,
   summary: "審核課程",
-  schema: IdSchema,
+  schema: reviewCourseSchema,
   handler: [asyncHandler(reviewCourse)],
   router: backStageCourseRouter,
 });

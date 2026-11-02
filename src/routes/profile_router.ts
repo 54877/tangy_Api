@@ -22,6 +22,10 @@ import {
   updatePasswordScheme,
 } from "../validation/schemas/profile.schema";
 import { createImageSchema } from "../validation/utils/imageSchema";
+import {
+  UuidIdSchema,
+  UuidUserIdSchema,
+} from "../validation/schemas/common.schema";
 
 export const profile_router = express.Router();
 
@@ -119,6 +123,7 @@ openapiRoute({
   path: "/DeviceCloseById",
   tags: ["Profile"],
   needAuth: true,
+  schema: UuidIdSchema,
   summary: "登出裝置",
   handler: [asyncHandler(deviceCloseByIdControllers)],
   router: profile_router,
@@ -129,6 +134,7 @@ openapiRoute({
   path: "/DeviceCloseByUserId",
   tags: ["Profile"],
   needAuth: true,
+  schema: UuidUserIdSchema,
   summary: "登出所有裝置",
   handler: [asyncHandler(deviceCloseByUserIdControllers)],
   router: profile_router,

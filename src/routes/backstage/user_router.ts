@@ -5,7 +5,7 @@ import {
   editUserRole,
   getAllUsers,
 } from "../../controllers/backstage/user_controller";
-import { IdSchema } from "../../validation/schemas/common.schema";
+import { UuidIdSchema } from "../../validation/schemas/common.schema";
 
 export const backStageUserRouter = express.Router();
 
@@ -25,7 +25,7 @@ openapiRoute({
   tags: ["backStage"],
   needAuth: true,
   summary: "修改使用者權限",
-  schema: IdSchema,
+  schema: UuidIdSchema,
   handler: [asyncHandler(editUserRole)],
   router: backStageUserRouter,
 });

@@ -1,12 +1,12 @@
 import {
   deleteCourseByIdDb,
   getCourseByIdDb,
-  reviewCourseLogicDb,
+  getCourseTagKeysByIdDb,
+  reviewCourseStatusDb,
 } from "../../repository/backstage/course_repository";
 import { getCourseForAdminDb } from "../../repository/course_Repository";
 import { AppError } from "../../utils/errors";
 import { deleteCourseFile } from "../../utils/removeSupabaseStorage";
-import { sanitizeCourseContent } from "../../utils/sanitizeCourseContent";
 import { CourseType } from "../../types/profileType";
 
 export const getAllCoursesForAdminLogic = async () => {
@@ -56,32 +56,19 @@ export const deleteCourseLogic = async (id: string) => {
   ]);
 };
 
-export const reviewCourseLogic = async ({
-  id,
-  title,
-  teacher,
-  content,
-  price,
-  originalPrice,
-  fileName,
-  videoKey,
-  duration,
-  reviewStatus,
-  tagsKey,
-  categoryKey,
-}: Omit<CourseType, "image" | "userId">) => {
-  await reviewCourseLogicDb({
-    id,
-    title,
-    teacher,
-    content: sanitizeCourseContent(content),
-    price,
-    originalPrice,
-    fileName,
-    videoKey,
-    duration,
-    reviewStatus,
-    tagsKey,
-    categoryKey,
-  });
+export const reviewCourseLogic = async (
+  id: string,
+  reviewStatus: CourseType["reviewStatus"],
+) => {
+  const course = await getCourseTagKeysByIdDb(id);
+
+  if (!course) {
+    throw new AppError("課程不存在", 404, "id");
+  }
+
+  if (course.courseTags.length === 0) {
+    throw new AppError("課程至少需要一個標籤才能審核", 400, "tagsKey");
+  }
+
+  await reviewCourseStatusDb(id, reviewStatus);
 };

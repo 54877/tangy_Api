@@ -16,33 +16,7 @@ export const deleteCourse: JwtAsyncFunction = async (req, res) => {
 };
 
 export const reviewCourse: JwtAsyncFunction = async (req, res) => {
-  const {
-    id,
-    title,
-    teacher,
-    content,
-    price,
-    originalPrice,
-    videoKey,
-    duration,
-    fileName,
-    reviewStatus,
-    tagsKey,
-    categoryKey,
-  } = req.body;
-  await reviewCourseLogic({
-    id,
-    title,
-    teacher,
-    content,
-    price,
-    originalPrice,
-    fileName,
-    videoKey,
-    duration,
-    reviewStatus,
-    tagsKey,
-    categoryKey,
-  });
+  const { id, reviewStatus } = req.body;
+  await reviewCourseLogic(id, reviewStatus);
   success(res, 200);
 };
