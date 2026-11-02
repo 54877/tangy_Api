@@ -7,6 +7,9 @@ export const getAllCourseCategoriesDb = async () =>
 export const getCourseCategoryByKeyDb = (categoryKey: string) =>
   prisma.courseCategoryTable.findUnique({ where: { categoryKey } });
 
+export const hasCoursesInCategoryDb = (categoryKey: string) =>
+  prisma.courseTable.count({ where: { categoryKey } }).then((count) => count > 0);
+
 export const createCourseCategoryDb = async (CategoryName: string) => {
   try {
     return await prisma.courseCategoryTable.create({ data: { CategoryName } });
@@ -38,6 +41,9 @@ export const deleteCourseCategoryDb = async (categoryKey: string) => {
     return await prisma.courseCategoryTable.delete({ where: { categoryKey } });
   } catch (err: any) {
     if (err.code === "P2025") throw new AppError("課程分類不存在", 404);
+    if (err.code === "P2003") {
+      throw new AppError("此分類還有相關課程，請先移除該課程", 409);
+    }
     throw err;
   }
 };
