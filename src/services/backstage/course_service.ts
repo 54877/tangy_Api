@@ -21,6 +21,7 @@ export const getAllCoursesForAdminLogic = async () => {
       rating,
       studentCount,
       courseTags,
+      reviewStatus,
       category,
       user,
     }) => ({
@@ -31,6 +32,7 @@ export const getAllCoursesForAdminLogic = async () => {
       tags: courseTags.map(({ tag }) => tag.label),
       originalPrice,
       price,
+      reviewStatus,
       rating,
       studentCount,
     }),
