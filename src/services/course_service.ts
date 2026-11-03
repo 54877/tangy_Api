@@ -1,14 +1,14 @@
 import { AppError } from "../utils/errors";
-import { useImageRuler } from "../utils/imageValidation";
+import { useImageRuler } from "../utils/image/imageValidation";
 import { createCourseDb, getCourseDb } from "../repository/course_Repository";
 import { getCourseCategoryByKeyDb } from "../repository/backstage/category_repository";
 import { getTagsByKeysDb } from "../repository/backstage/tag_repository";
-import { useVideoRuler } from "../utils/videoValidation";
-import { uploadCourseVideo } from "../utils/uploadCourseVideo";
+import { useVideoRuler } from "../utils/video/videoValidation";
+import { uploadCourseVideo } from "../utils/video/uploadCourseVideo";
 import fs from "node:fs/promises";
-import { uploadCourseImage } from "../utils/uploadCourseImage";
-import { getStorageUrls } from "../utils/getStorageUrl";
-import { deleteCourseFile } from "../utils/removeSupabaseStorage";
+import { uploadCourseImage } from "../utils/image/uploadCourseImage";
+import { getStorageUrls } from "../utils/supabase/getStorageUrl";
+import { deleteCourseFile } from "../utils/supabase/removeSupabaseStorage";
 import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 import { CourseType } from "../types/profileType";
 

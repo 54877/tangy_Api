@@ -3,7 +3,8 @@ import { openapiRoute } from "../../utils/openapiRoute";
 import { asyncHandler } from "../../utils/asyncHandler";
 import {
   deleteCourse,
-  getAllCoursesForAdmin,
+  getAdminCourseById,
+  getCoursesForAdmin,
   reviewCourse,
 } from "../../controllers/backstage/course_controller";
 import { UuidIdSchema } from "../../validation/schemas/common.schema";
@@ -16,8 +17,19 @@ openapiRoute({
   path: "/getCourseAdmin",
   tags: ["backStage"],
   needAuth: true,
-  summary: "取得完整課程資料",
-  handler: [asyncHandler(getAllCoursesForAdmin)],
+  summary: "課程資料列表",
+  handler: [asyncHandler(getCoursesForAdmin)],
+  router: backStageCourseRouter,
+});
+
+openapiRoute({
+  method: "get",
+  path: "/getCourseById",
+  tags: ["backStage"],
+  needAuth: true,
+  summary: "單筆課程資料",
+  schema: UuidIdSchema,
+  handler: [asyncHandler(getAdminCourseById)],
   router: backStageCourseRouter,
 });
 

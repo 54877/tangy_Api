@@ -1,5 +1,5 @@
-import { supabase } from "../config/supabase";
-import { AppError } from "./errors";
+import { supabase } from "../../config/supabase";
+import { AppError } from "../errors";
 
 export const uploadCourseImage = async (
   fileName: string,

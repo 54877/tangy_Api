@@ -21,9 +21,9 @@ import {
   expiredSVCodeDb,
   verifySVDb,
 } from "../repository/auth_Repository";
-import { useImageRuler } from "../utils/imageValidation";
-import { uploadCourseImage } from "../utils/uploadCourseImage";
-import { deleteCourseFile } from "../utils/removeSupabaseStorage";
+import { useImageRuler } from "../utils/image/imageValidation";
+import { uploadCourseImage } from "../utils/image/uploadCourseImage";
+import { deleteCourseFile } from "../utils/supabase/removeSupabaseStorage";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

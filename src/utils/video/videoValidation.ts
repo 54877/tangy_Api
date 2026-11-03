@@ -1,5 +1,5 @@
 import { fileTypeFromFile } from "file-type";
-import { AppError } from "./errors";
+import { AppError } from "../errors";
 import ffprobe from "ffprobe-static";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";

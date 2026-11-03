@@ -1,15 +1,17 @@
 import {
   deleteCourseByIdDb,
   getCourseByIdDb,
+  getCourseDetailByIdDb,
   getCourseTagKeysByIdDb,
   reviewCourseStatusDb,
 } from "../../repository/backstage/course_repository";
 import { getCourseForAdminDb } from "../../repository/course_Repository";
 import { AppError } from "../../utils/errors";
-import { deleteCourseFile } from "../../utils/removeSupabaseStorage";
+import { deleteCourseFile } from "../../utils/supabase/removeSupabaseStorage";
+import { getStorageUrl } from "../../utils/supabase/getStorageUrl";
 import { CourseType } from "../../types/profileType";
 
-export const getAllCoursesForAdminLogic = async () => {
+export const getCoursesForAdminLogic = async () => {
   const rows = await getCourseForAdminDb();
 
   return rows.map(
@@ -37,6 +39,36 @@ export const getAllCoursesForAdminLogic = async () => {
       studentCount,
     }),
   );
+};
+
+export const getAdminCourseByIdLogic = async (id: string) => {
+  const course = await getCourseDetailByIdDb(id);
+
+  if (!course) {
+    throw new AppError("課程不存在", 404, "id");
+  }
+
+  const [courseWithImageUrl, courseWithVideoUrl] = await Promise.all([
+    getStorageUrl(course, "course", "image"),
+    getStorageUrl(course, "videos", "video"),
+  ]);
+
+  const {
+    video: _videoKey,
+    courseTags,
+    category,
+    user,
+    ...courseDetails
+  } = course;
+
+  return {
+    ...courseDetails,
+    imageUrl: courseWithImageUrl.imageUrl,
+    videoUrl: courseWithVideoUrl.videoUrl,
+    category: category.CategoryName,
+    tags: courseTags.map(({ tag }) => tag.label),
+    userName: user.userName,
+  };
 };
 
 export const deleteCourseLogic = async (id: string) => {

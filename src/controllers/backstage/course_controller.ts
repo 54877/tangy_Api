@@ -1,22 +1,28 @@
 import {
   deleteCourseLogic,
-  getAllCoursesForAdminLogic,
+  getAdminCourseByIdLogic,
+  getCoursesForAdminLogic,
   reviewCourseLogic,
 } from "../../services/backstage/course_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
 
-export const getAllCoursesForAdmin: JwtAsyncFunction = async (_req, res) => {
-  success(res, 200, await getAllCoursesForAdminLogic());
+export const getCoursesForAdmin: JwtAsyncFunction = async (_req, res) => {
+  success(res, 200, await getCoursesForAdminLogic());
+};
+
+export const getAdminCourseById: JwtAsyncFunction = async (req, res) => {
+  success(res, 200, await getAdminCourseByIdLogic(req.body.id));
 };
 
 export const deleteCourse: JwtAsyncFunction = async (req, res) => {
-  await deleteCourseLogic(req.body.id);
-  success(res, 200);
+  success(res, 200, await deleteCourseLogic(req.body.id));
 };
 
 export const reviewCourse: JwtAsyncFunction = async (req, res) => {
-  const { id, reviewStatus } = req.body;
-  await reviewCourseLogic(id, reviewStatus);
-  success(res, 200);
+  success(
+    res,
+    200,
+    await reviewCourseLogic(req.body.id, req.body.reviewStatus),
+  );
 };

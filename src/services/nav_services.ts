@@ -1,6 +1,6 @@
 import { getUserById } from "../repository/nav_Repository";
 import { AppError } from "../utils/errors";
-import { getStorageUrl } from "../utils/getStorageUrl";
+import { getStorageUrl } from "../utils/supabase/getStorageUrl";
 
 //get user (nav)
 export const getUserByIdLogic = async (id: string | undefined) => {

@@ -14,6 +14,16 @@ export const deleteCourseByIdDb = async (id: string) => {
 export const getCourseByIdDb = async (id: string) =>
   prisma.courseTable.findUnique({ where: { id } });
 
+export const getCourseDetailByIdDb = async (id: string) =>
+  prisma.courseTable.findUnique({
+    where: { id },
+    include: {
+      courseTags: { select: { tag: { select: { label: true } } } },
+      category: { select: { CategoryName: true } },
+      user: { select: { userName: true } },
+    },
+  });
+
 export const getCourseTagKeysByIdDb = async (id: string) =>
   prisma.courseTable.findUnique({
     where: { id },

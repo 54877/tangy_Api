@@ -1,5 +1,5 @@
 import { fileTypeFromBuffer } from "file-type";
-import { AppError } from "./errors";
+import { AppError } from "../errors";
 import sharp from "sharp";
 
 export const useImageRuler = async (image: Express.Multer.File | undefined) => {

@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
-import { supabase } from "../config/supabase";
-import { AppError } from "./errors";
+import { supabase } from "../../config/supabase";
+import { AppError } from "../errors";
 
 export const uploadCourseVideo = async (video: Express.Multer.File) => {
   const fileName = `${crypto.randomUUID()}.${video.mimetype === "video/mp4" ? "mp4" : "webm"}`;
