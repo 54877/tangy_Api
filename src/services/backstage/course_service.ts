@@ -98,7 +98,7 @@ export const reviewCourseLogic = async (
     throw new AppError("課程不存在", 404, "id");
   }
 
-  if (course.courseTags.length === 0) {
+  if (course.courseTags.length === 0 && reviewStatus === "APPROVED") {
     throw new AppError("課程至少需要一個標籤才能審核", 400, "tagsKey");
   }
 
