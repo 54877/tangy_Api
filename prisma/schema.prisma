@@ -127,7 +127,7 @@ model courseTable {
   categoryKey String              @map("category_key") @db.Uuid
   category    courseCategoryTable @relation(fields: [categoryKey], references: [categoryKey], onDelete: Restrict, onUpdate: Cascade)
 
-  reviewContext String             @map("review_context")
+  reviewContext String?            @map("review_context")
   reviewStatus  CourseReviewStatus @default(PENDING) @map("review_status")
 
   @@index([userId])
