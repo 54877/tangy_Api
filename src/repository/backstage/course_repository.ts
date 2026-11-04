@@ -33,11 +33,12 @@ export const getCourseTagKeysByIdDb = async (id: string) =>
 export const reviewCourseStatusDb = async (
   id: string,
   reviewStatus: CourseType["reviewStatus"],
+  reviewContext: string,
 ) => {
   try {
     await prisma.courseTable.update({
       where: { id },
-      data: { reviewStatus },
+      data: { reviewStatus, reviewContext },
     });
   } catch (err: any) {
     if (err.code === "P2025") throw new AppError("課程不存在", 404);

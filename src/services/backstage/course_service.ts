@@ -91,6 +91,7 @@ export const deleteCourseLogic = async (id: string) => {
 export const reviewCourseLogic = async (
   id: string,
   reviewStatus: CourseType["reviewStatus"],
+  reviewContext: string,
 ) => {
   const course = await getCourseTagKeysByIdDb(id);
 
@@ -102,5 +103,9 @@ export const reviewCourseLogic = async (
     throw new AppError("課程至少需要一個標籤才能審核", 400, "tagsKey");
   }
 
-  await reviewCourseStatusDb(id, reviewStatus);
+  if (reviewContext === "" && reviewStatus === "REJECTED") {
+    throw new AppError("審核意見不能為空", 400, "reviewContext");
+  }
+
+  await reviewCourseStatusDb(id, reviewStatus, reviewContext);
 };

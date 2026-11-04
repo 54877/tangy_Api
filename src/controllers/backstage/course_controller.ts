@@ -25,6 +25,10 @@ export const reviewCourse: JwtAsyncFunction = async (req, res) => {
   success(
     res,
     200,
-    await reviewCourseLogic(req.body.id, req.body.reviewStatus),
+    await reviewCourseLogic(
+      req.body.id,
+      req.body.reviewStatus,
+      req.body.reviewContext ?? "",
+    ),
   );
 };
