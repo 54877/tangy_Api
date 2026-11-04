@@ -12,7 +12,9 @@ export const getCoursesForAdmin: JwtAsyncFunction = async (_req, res) => {
 };
 
 export const getAdminCourseById: JwtAsyncFunction = async (req, res) => {
-  success(res, 200, await getAdminCourseByIdLogic(req.body.id));
+  const { id } = req.body;
+  console.log("id", id);
+  success(res, 200, await getAdminCourseByIdLogic(id));
 };
 
 export const deleteCourse: JwtAsyncFunction = async (req, res) => {
