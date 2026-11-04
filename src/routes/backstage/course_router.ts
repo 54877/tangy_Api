@@ -23,7 +23,7 @@ openapiRoute({
 });
 
 openapiRoute({
-  method: "get",
+  method: "post",
   path: "/getCourseById",
   tags: ["backStage"],
   needAuth: true,
