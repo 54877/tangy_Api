@@ -60,6 +60,7 @@ export const getCourseForAdminDb = async () => {
       rating: true,
       studentCount: true,
       reviewStatus: true,
+      reviewContext: true,
       courseTags: {
         select: { tag: { select: { label: true } } },
       },
