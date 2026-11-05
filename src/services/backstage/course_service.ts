@@ -100,7 +100,7 @@ export const reviewCourseLogic = async (
   }
 
   if (course.courseTags.length === 0 && reviewStatus === "APPROVED") {
-    throw new AppError("課程至少需要一個標籤才能審核", 400, "tagsKey");
+    throw new AppError("課程至少需要一個標籤才能審核", 400);
   }
 
   if (reviewContext === "" && reviewStatus === "REJECTED") {

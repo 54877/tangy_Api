@@ -22,6 +22,10 @@ export const deleteCourse: JwtAsyncFunction = async (req, res) => {
 };
 
 export const reviewCourse: JwtAsyncFunction = async (req, res) => {
+  const { id, reviewStatus, reviewContext } = req.body;
+  console.log("id", id);
+  console.log("reviewStatus", reviewStatus);
+  console.log("reviewContext", reviewContext);
   success(
     res,
     200,
