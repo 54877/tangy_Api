@@ -1,7 +1,10 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/auth";
 import { createCourse, createCourseVideo } from "../../controllers/course_controller";
-import { getCourseFormOptions } from "../../controllers/profile/profile_course_controller";
+import {
+  getCourseFormOptions,
+  getMyCourse,
+} from "../../controllers/profile/profile_course_controller";
 import { upload, videoUpload } from "../../middlewares/upload";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { imageUploadType, videoUploadType } from "../../utils/errors";
@@ -15,6 +18,16 @@ import { createImageSchema } from "../../validation/utils/imageSchema";
 export const profileCourseRouter = express.Router();
 
 profileCourseRouter.use(authMiddleware);
+
+openapiRoute({
+  method: "get",
+  path: "/myCourse",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "取得我的課程列表",
+  handler: [asyncHandler(getMyCourse)],
+  router: profileCourseRouter,
+});
 
 openapiRoute({
   method: "get",

@@ -18,3 +18,31 @@ export const getCourseFormOptionsDb = async () => {
     categories,
   };
 };
+
+export const getMyCourseDb = async (userId: string) => {
+  const courses = await prisma.courseTable.findMany({
+    where: { userId },
+    select: {
+      title: true,
+      teacher: true,
+      rating: true,
+      studentCount: true,
+      duration: true,
+      price: true,
+      originalPrice: true,
+      reviewContext: true,
+      reviewStatus: true,
+      reviewCount: true,
+      courseTags: {
+        select: { tag: { select: { label: true } } },
+      },
+      category: { select: { CategoryName: true } },
+    },
+  });
+
+  return courses.map(({ category, courseTags, ...course }) => ({
+    ...course,
+    courseTags: courseTags.map(({ tag }) => tag.label),
+    category: category?.CategoryName ?? null,
+  }));
+};
