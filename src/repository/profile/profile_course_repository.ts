@@ -23,6 +23,7 @@ export const getMyCourseDb = async (userId: string) => {
   const courses = await prisma.courseTable.findMany({
     where: { userId },
     select: {
+      id: true,
       title: true,
       teacher: true,
       rating: true,
@@ -40,9 +41,17 @@ export const getMyCourseDb = async (userId: string) => {
     },
   });
 
-  return courses.map(({ category, courseTags, ...course }) => ({
+  return courses.map(({ category, ...course }) => ({
     ...course,
-    courseTags: courseTags.map(({ tag }) => tag.label),
     category: category?.CategoryName ?? null,
   }));
 };
+
+export const getMyCourseDetailByIdDb = async (id: string, userId: string) =>
+  prisma.courseTable.findFirst({
+    where: { id, userId },
+    include: {
+      courseTags: { select: { tag: { select: { label: true } } } },
+      category: { select: { CategoryName: true } },
+    },
+  });

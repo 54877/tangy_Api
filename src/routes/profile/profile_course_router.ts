@@ -1,7 +1,11 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/auth";
-import { createCourse, createCourseVideo } from "../../controllers/course_controller";
 import {
+  createCourse,
+  createCourseVideo,
+} from "../../controllers/course_controller";
+import {
+  getMyCourseDetailById,
   getCourseFormOptions,
   getMyCourse,
 } from "../../controllers/profile/profile_course_controller";
@@ -13,11 +17,23 @@ import {
   courseSchema,
   createCourseVideoOpenapiSchema,
 } from "../../validation/schemas/course.schema";
+import { UuidIdSchema } from "../../validation/schemas/common.schema";
 import { createImageSchema } from "../../validation/utils/imageSchema";
 
 export const profileCourseRouter = express.Router();
 
 profileCourseRouter.use(authMiddleware);
+
+openapiRoute({
+  method: "post",
+  path: "/getMyCourseById",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "取得我的課程單筆詳細資料",
+  schema: UuidIdSchema,
+  handler: [asyncHandler(getMyCourseDetailById)],
+  router: profileCourseRouter,
+});
 
 openapiRoute({
   method: "get",
