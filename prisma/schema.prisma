@@ -129,6 +129,7 @@ model courseTable {
 
   reviewContext String?            @map("review_context")
   reviewStatus  CourseReviewStatus @default(PENDING) @map("review_status")
+  reviewCount   Int                @default(0) @map("review_count")
 
   @@index([userId])
   @@map("course_table")

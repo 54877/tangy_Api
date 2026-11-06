@@ -1,4 +1,4 @@
-import prisma from "../db/prisma";
+import prisma from "../../db/prisma";
 
 export const updateUserById = async (
   id: string,
@@ -98,25 +98,6 @@ export const getUserDeviceByUserId = async (userId: string) => {
   });
 };
 
-// 建立課程頁面使用的標籤與分類選項，不回傳後台專用欄位。
-export const getCourseFormOptionsDb = async () => {
-  const [tags, categories] = await Promise.all([
-    prisma.tagsTable.findMany({
-      select: { key: true, label: true },
-      orderBy: { key: "asc" },
-    }),
-    prisma.courseCategoryTable.findMany({
-      select: { categoryKey: true, CategoryName: true },
-      orderBy: { createdAt: "asc" },
-    }),
-  ]);
-
-  return {
-    tags: tags.map((tag) => ({ ...tag, key: String(tag.key) })),
-    categories,
-  };
-};
-
 //刪除裝置 by id
 export const deviceCloseById = async (id: string) => {
   return await prisma.deviceTable.delete({
@@ -134,3 +115,5 @@ export const deviceCloseByUserId = async (userId: string) => {
     },
   });
 };
+
+

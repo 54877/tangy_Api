@@ -25,6 +25,7 @@ export const getCoursesForAdminLogic = async () => {
       courseTags,
       reviewStatus,
       reviewContext,
+      reviewCount,
       category,
       user,
     }) => ({
@@ -37,6 +38,7 @@ export const getCoursesForAdminLogic = async () => {
       price,
       reviewStatus,
       reviewContext,
+      reviewCount,
       rating,
       studentCount,
     }),

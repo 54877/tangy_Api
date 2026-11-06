@@ -1,7 +1,6 @@
 import {
   deviceCloseByIdLogic,
   deviceCloseByUserIdLogic,
-  getCourseFormOptionsLogic,
   getPersonalByIdLogic,
   sendSVEmail,
   SV,
@@ -9,9 +8,9 @@ import {
   updatePasswordLogic,
   updatePersonalByIdLogic,
   updateUserImageLogic,
-} from "../services/profile_service";
-import { JwtAsyncFunction } from "../types/asyncType";
-import { success } from "../utils/success";
+} from "../../services/profile/profile_personal_service";
+import { JwtAsyncFunction } from "../../types/asyncType";
+import { success } from "../../utils/success";
 
 //個人資料
 export const getPersonal: JwtAsyncFunction = async (req, res) => {
@@ -24,11 +23,6 @@ export const getPersonal: JwtAsyncFunction = async (req, res) => {
   }));
 
   success(res, 200, { userDate, genderSelect, deviceDate });
-};
-
-// 建立課程頁面的標籤與分類選項
-export const getCourseFormOptions: JwtAsyncFunction = async (_req, res) => {
-  success(res, 200, await getCourseFormOptionsLogic());
 };
 
 //更新個人資料

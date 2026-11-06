@@ -23,7 +23,7 @@ import {
   TokenPayload,
 } from "../utils/jwt";
 import { Resend } from "resend";
-import { sendSVEmail, svCodeCheck } from "./profile_service";
+import { sendSVEmail, svCodeCheck } from "./profile/profile_personal_service";
 import { getUserRole } from "../utils/role";
 import { UAParser } from "ua-parser-js";
 
@@ -310,3 +310,4 @@ export const verifyLoginUser = async (
 
   return userDate;
 };
+

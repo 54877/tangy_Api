@@ -36,9 +36,29 @@ export const reviewCourseStatusDb = async (
   reviewContext: string,
 ) => {
   try {
-    await prisma.courseTable.update({
-      where: { id },
-      data: { reviewStatus, reviewContext },
+    return await prisma.$transaction(async (tx) => {
+      if (reviewContext === "") {
+        await tx.courseTable.update({
+          where: { id },
+          data: { reviewStatus },
+        });
+        return;
+      }
+
+      const course = await tx.courseTable.update({
+        where: { id },
+        data: {
+          reviewStatus,
+          reviewContext,
+          reviewCount: { increment: 1 },
+        },
+      });
+
+      if (course.reviewCount > 3) {
+        await tx.courseTable.delete({
+          where: { id },
+        });
+      }
     });
   } catch (err: any) {
     if (err.code === "P2025") throw new AppError("課程不存在", 404);

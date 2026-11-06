@@ -1,29 +1,28 @@
 import bcrypt from "bcrypt";
-import { genderSelect } from "../constants/gender";
-import { getUserById } from "../repository/nav_Repository";
+import { genderSelect } from "../../constants/gender";
+import { getUserById } from "../../repository/nav_Repository";
 import {
   createSVEmailVerification,
   deviceCloseById,
   deviceCloseByUserId,
-  getCourseFormOptionsDb,
   getUserDeviceByUserId,
   svCloseDb,
   SVDb,
   updatePasswordDb,
   updateUserById,
   updateUserImageById,
-} from "../repository/profile_Repository";
-import { AppError } from "../utils/errors";
+} from "../../repository/profile/profile_personal_repository";
+import { AppError } from "../../utils/errors";
 import { randomInt } from "node:crypto";
 import { Resend } from "resend";
 import {
   codeSVCountDb,
   expiredSVCodeDb,
   verifySVDb,
-} from "../repository/auth_Repository";
-import { useImageRuler } from "../utils/image/imageValidation";
-import { uploadCourseImage } from "../utils/image/uploadCourseImage";
-import { deleteCourseFile } from "../utils/supabase/removeSupabaseStorage";
+} from "../../repository/auth_Repository";
+import { useImageRuler } from "../../utils/image/imageValidation";
+import { uploadCourseImage } from "../../utils/image/uploadCourseImage";
+import { deleteCourseFile } from "../../utils/supabase/removeSupabaseStorage";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -80,8 +79,6 @@ export const getPersonalByIdLogic = async (id: string | undefined) => {
     device,
   };
 };
-
-export const getCourseFormOptionsLogic = () => getCourseFormOptionsDb();
 
 export const updatePersonalByIdLogic = async (
   id: string,
