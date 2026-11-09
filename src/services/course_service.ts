@@ -47,6 +47,7 @@ export const createCourseLogic = async ({
   console.log("price", price);
   console.log("originalPrice", originalPrice);
   if (price > originalPrice) {
+    console.log("價格不可高於原價123");
     throw new AppError("價格不可高於原價", 400, "price");
   }
 
