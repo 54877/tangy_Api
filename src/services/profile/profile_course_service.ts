@@ -29,6 +29,7 @@ export const getMyCourseDetailByIdLogic = async (
 
   return {
     ...courseDetails,
+    videoKey: _videoKey,
     imageUrl: courseWithImageUrl.imageUrl,
     videoUrl: courseWithVideoUrl.videoUrl,
     category: category?.CategoryName ?? null,

@@ -45,7 +45,7 @@ export const createCourseLogic = async ({
   categoryKey,
 }: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
   if (price > originalPrice) {
-    throw new AppError("價格不可高於原價", 400, price);
+    throw new AppError("價格不可高於原價", 400, "price");
   }
 
   const category = await getCourseCategoryByKeyDb(categoryKey);
