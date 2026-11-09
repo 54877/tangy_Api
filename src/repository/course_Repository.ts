@@ -23,6 +23,7 @@ export const createCourseDb = async ({
       originalPrice,
       imageUrl: fileName,
       video: videoKey,
+      tagsKey,
       duration,
       category: {
         connect: { categoryKey },

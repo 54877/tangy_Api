@@ -1,6 +1,5 @@
 import prisma from "../../db/prisma";
 
-// Options used by the course creation form.
 export const getCourseFormOptionsDb = async () => {
   const [tags, categories] = await Promise.all([
     prisma.tagsTable.findMany({
@@ -51,7 +50,9 @@ export const getMyCourseDetailByIdDb = async (id: string, userId: string) =>
   prisma.courseTable.findFirst({
     where: { id, userId },
     include: {
-      courseTags: { select: { tag: { select: { label: true } } } },
+      courseTags: {
+        select: { tag: { select: { label: true } } },
+      },
       category: { select: { CategoryName: true } },
     },
   });

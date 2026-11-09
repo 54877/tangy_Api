@@ -12,7 +12,16 @@ export const createTagDb = async (label: string) => {
 
 export const deleteTagByIdDb = async (key: number) => {
   try {
-    return await prisma.tagsTable.delete({ where: { key } });
+    return await prisma.$transaction(async (tx) => {
+      const tagKey = String(key);
+      await tx.$executeRaw`
+        UPDATE "course_table"
+        SET "tags_key" = array_remove("tags_key", ${tagKey})
+        WHERE ${tagKey} = ANY("tags_key")
+      `;
+      await tx.courseTagTable.deleteMany({ where: { tagKey: key } });
+      return tx.tagsTable.delete({ where: { key } });
+    });
   } catch (err: any) {
     if (err.code === "P2025") throw new AppError("標籤不存在", 404);
     throw err;

@@ -33,5 +33,6 @@ export const getMyCourseDetailByIdLogic = async (
     videoUrl: courseWithVideoUrl.videoUrl,
     category: category?.CategoryName ?? null,
     tags: courseTags.map(({ tag }) => tag.label),
+    tagsKey: course.tagsKey,
   };
 };
