@@ -44,6 +44,8 @@ export const createCourseLogic = async ({
   tagsKey,
   categoryKey,
 }: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
+  console.log("price", price);
+  console.log("originalPrice", originalPrice);
   if (price > originalPrice) {
     throw new AppError("價格不可高於原價", 400, "price");
   }
