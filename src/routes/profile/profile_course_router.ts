@@ -8,6 +8,7 @@ import {
   getMyCourseDetailById,
   getCourseFormOptions,
   getMyCourse,
+  reReviewMyCourse,
 } from "../../controllers/profile/profile_course_controller";
 import { upload, videoUpload } from "../../middlewares/upload";
 import { asyncHandler } from "../../utils/asyncHandler";
@@ -16,9 +17,14 @@ import { openapiRoute } from "../../utils/openapiRoute";
 import {
   courseSchema,
   createCourseVideoOpenapiSchema,
+  reReviewCourseBaseSchema,
+  reReviewCourseSchema,
 } from "../../validation/schemas/course.schema";
 import { UuidIdSchema } from "../../validation/schemas/common.schema";
-import { createImageSchema } from "../../validation/utils/imageSchema";
+import {
+  createImageSchema,
+  createImageSchemaOptional,
+} from "../../validation/utils/imageSchema";
 
 export const profileCourseRouter = express.Router();
 
@@ -32,6 +38,20 @@ openapiRoute({
   summary: "取得我的課程單筆詳細資料",
   schema: UuidIdSchema,
   handler: [asyncHandler(getMyCourseDetailById)],
+  router: profileCourseRouter,
+});
+
+openapiRoute({
+  method: "put",
+  path: "/reReviewCourse",
+  tags: ["Profile"],
+  needAuth: true,
+  summary: "重新送審課程",
+  formData: true,
+  middlewares: [imageUploadType, upload.single("image")],
+  schema: reReviewCourseSchema,
+  openapiSchema: createImageSchemaOptional(reReviewCourseBaseSchema),
+  handler: [asyncHandler(reReviewMyCourse)],
   router: profileCourseRouter,
 });
 
@@ -74,7 +94,7 @@ openapiRoute({
   path: "/createCourseVideo",
   tags: ["Profile"],
   needAuth: true,
-  summary: "建立線上課程-影片",
+  summary: "建立(審核)線上課程-影片",
   formData: true,
   openapiSchema: createCourseVideoOpenapiSchema,
   middlewares: [videoUploadType, videoUpload.single("video")],

@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "node:path";
+import { MAX_MULTIPART_FIELD_SIZE } from "../constants/upload";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const MAX_VIDEO_FILE_SIZE = 50 * 1024 * 1024; //50MB
@@ -23,6 +24,9 @@ export const upload = multer({
 
   limits: {
     fileSize: MAX_FILE_SIZE,
+    fieldSize: MAX_MULTIPART_FIELD_SIZE,
+    fields: 10,
+    parts: 11,
   },
 });
 

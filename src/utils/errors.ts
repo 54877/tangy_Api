@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import multer from "multer";
+import { MAX_MULTIPART_FIELD_SIZE } from "../constants/upload";
 
 export class AppError extends Error {
   statusCode: number;
@@ -69,6 +70,20 @@ export const errorHandler = (
         errors: {
           message: multerMessage,
         },
+      });
+    }
+    if (err.code === "LIMIT_FIELD_VALUE") {
+      return res.status(413).json({
+        state: false,
+        errors: {
+          message: `單一表單欄位不可超過 ${MAX_MULTIPART_FIELD_SIZE / 1024 / 1024} MB`,
+        },
+      });
+    }
+    if (err.code === "LIMIT_FIELD_COUNT" || err.code === "LIMIT_PART_COUNT") {
+      return res.status(400).json({
+        state: false,
+        errors: { message: "表單欄位數量超過限制" },
       });
     }
   }

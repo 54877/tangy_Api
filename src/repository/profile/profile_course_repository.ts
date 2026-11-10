@@ -1,5 +1,61 @@
 import prisma from "../../db/prisma";
 
+export const updateMyCourseForReviewDb = async ({
+  id,
+  userId,
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  imageUrl,
+  video,
+  duration,
+  tagsKey,
+  categoryKey,
+}: {
+  id: string;
+  userId: string;
+  title: string;
+  teacher: string;
+  content: string;
+  price: string;
+  originalPrice: string;
+  imageUrl: string;
+  video: string;
+  duration: string;
+  tagsKey: string[];
+  categoryKey: string;
+}) =>
+  prisma.$transaction(async (tx) => {
+    const course = await tx.courseTable.findFirst({
+      where: { id, userId },
+      select: { id: true },
+    });
+    if (!course) return null;
+
+    return tx.courseTable.update({
+      where: { id },
+      data: {
+        title,
+        teacher,
+        content,
+        price,
+        originalPrice,
+        imageUrl,
+        video,
+        duration,
+        reviewStatus: "PENDING",
+        category: { connect: { categoryKey } },
+        courseTags: {
+          deleteMany: {},
+          create: tagsKey.map((key) => ({ tagKey: Number(key) })),
+        },
+        tagsKey,
+      },
+    });
+  });
+
 export const getCourseFormOptionsDb = async () => {
   const [tags, categories] = await Promise.all([
     prisma.tagsTable.findMany({

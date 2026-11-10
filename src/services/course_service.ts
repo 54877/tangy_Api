@@ -1,16 +1,14 @@
 import { AppError } from "../utils/errors";
 import { useImageRuler } from "../utils/image/imageValidation";
 import { createCourseDb, getCourseDb } from "../repository/course_Repository";
-import { getCourseCategoryByKeyDb } from "../repository/backstage/category_repository";
-import { getTagsByKeysDb } from "../repository/backstage/tag_repository";
 import { useVideoRuler } from "../utils/video/videoValidation";
 import { uploadCourseVideo } from "../utils/video/uploadCourseVideo";
 import fs from "node:fs/promises";
 import { uploadCourseImage } from "../utils/image/uploadCourseImage";
 import { getStorageUrls } from "../utils/supabase/getStorageUrl";
 import { deleteCourseFile } from "../utils/supabase/removeSupabaseStorage";
-import { sanitizeCourseContent } from "../utils/sanitizeCourseContent";
 import { CourseType } from "../types/profileType";
+import { validateCourseFields } from "../utils/courseValidation";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
@@ -44,31 +42,13 @@ export const createCourseLogic = async ({
   tagsKey,
   categoryKey,
 }: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
-  console.log("price", price);
-  console.log("originalPrice", originalPrice);
-  if (price > originalPrice) {
-    console.log("價格不可高於原價123");
-    throw new AppError("價格不可高於原價", 400, "price");
-  }
-
-  const category = await getCourseCategoryByKeyDb(categoryKey);
-
-  if (!category) {
-    throw new AppError("課程分類不存在", 400, "categoryKey");
-  }
-
-  const tagKeys = [...new Set(tagsKey.map(Number))];
-
-  if (tagKeys.some((key) => !Number.isSafeInteger(key))) {
-    throw new AppError("包含不存在的標籤", 400, "tagsKey");
-  }
-  const existingTags = await getTagsByKeysDb(tagKeys);
-
-  if (existingTags.length !== tagKeys.length) {
-    throw new AppError("包含不存在的標籤", 400, "tagsKey");
-  }
-
-  const sanitizedContent = sanitizeCourseContent(content);
+  const { tagKeys, sanitizedContent } = await validateCourseFields({
+    price,
+    originalPrice,
+    content,
+    tagsKey,
+    categoryKey,
+  });
 
   //驗證照片
   const { processedImage, fileName } = await useImageRuler(image);

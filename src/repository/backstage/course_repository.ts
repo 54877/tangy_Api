@@ -27,7 +27,12 @@ export const getCourseDetailByIdDb = async (id: string) =>
 export const getCourseTagKeysByIdDb = async (id: string) =>
   prisma.courseTable.findUnique({
     where: { id },
-    select: { courseTags: { select: { tagKey: true } } },
+    select: {
+      video: true,
+      imageUrl: true,
+      reviewCount: true,
+      courseTags: { select: { tagKey: true } },
+    },
   });
 
 export const reviewCourseStatusDb = async (
@@ -37,27 +42,29 @@ export const reviewCourseStatusDb = async (
 ) => {
   try {
     return await prisma.$transaction(async (tx) => {
-      if (reviewContext === "") {
+      if (reviewStatus === "APPROVED") {
         await tx.courseTable.update({
           where: { id },
           data: { reviewStatus },
         });
-        return;
+        return true;
       }
-
-      const course = await tx.courseTable.update({
-        where: { id },
-        data: {
-          reviewStatus,
-          reviewContext,
-          reviewCount: { increment: 1 },
-        },
-      });
-
-      if (course.reviewCount > 3) {
-        await tx.courseTable.delete({
+      if (reviewStatus === "REJECTED" && reviewContext !== "") {
+        const course = await tx.courseTable.update({
           where: { id },
+          data: {
+            reviewStatus,
+            reviewContext,
+            reviewCount: { increment: 1 },
+          },
         });
+        if (course.reviewCount > 3) {
+          await tx.courseTable.delete({
+            where: { id },
+          });
+          return false;
+        }
+        return true;
       }
     });
   } catch (err: any) {

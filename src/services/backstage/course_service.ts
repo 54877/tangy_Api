@@ -87,7 +87,7 @@ export const deleteCourseLogic = async (id: string) => {
   }
 
   await Promise.all([
-    deleteCourseFile("video", course.video),
+    deleteCourseFile("videos", course.video),
     deleteCourseFile("course", course.imageUrl),
   ]);
 };
@@ -98,11 +98,11 @@ export const reviewCourseLogic = async (
   reviewContext: string,
 ) => {
   const course = await getCourseTagKeysByIdDb(id);
-
   if (!course) {
     throw new AppError("課程不存在", 404, "id");
   }
-
+  const videoKey = course.video;
+  const imageKey = course.imageUrl;
   if (course.courseTags.length === 0 && reviewStatus === "APPROVED") {
     throw new AppError("課程至少需要一個標籤才能審核", 400);
   }
@@ -111,5 +111,15 @@ export const reviewCourseLogic = async (
     throw new AppError("審核意見不能為空", 400, "reviewContext");
   }
 
-  await reviewCourseStatusDb(id, reviewStatus, reviewContext);
+  const isApproved = await reviewCourseStatusDb(
+    id,
+    reviewStatus,
+    reviewContext,
+  );
+  if (!isApproved) {
+    await Promise.allSettled([
+      deleteCourseFile("course", imageKey),
+      deleteCourseFile("videos", videoKey),
+    ]);
+  }
 };

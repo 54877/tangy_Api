@@ -1,0 +1,1 @@
+export const MAX_MULTIPART_FIELD_SIZE = 2 * 1024 * 1024;

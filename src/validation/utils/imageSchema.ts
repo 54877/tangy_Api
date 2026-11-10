@@ -14,3 +14,20 @@ export const createImageSchema = <T extends ZodRawShape>(
 
   return schema ? schema.extend(imageSchema) : z.object(imageSchema);
 };
+
+// 上傳檔案由 Multer 處理，此 schema 僅供 OpenAPI 文件使用。
+export const createImageSchemaOptional = <T extends ZodRawShape>(
+  schema?: ZodObject<T>,
+) => {
+  const imageSchema = {
+    image: z
+      .string()
+      .openapi({
+        format: "binary",
+        description: "課程封面圖片（JPG、JPEG 或 PNG）",
+      })
+      .optional(),
+  };
+
+  return schema ? schema.extend(imageSchema) : z.object(imageSchema);
+};
