@@ -136,6 +136,18 @@ model courseTable {
   @@map("course_table")
 }
 
+model courseVideoUploadTicketTable {
+  jti       String   @id @map("jti")
+  userId    String   @map("user_id")
+  videoKey  String   @map("video_key")
+  duration  String
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, expiresAt])
+  @@map("course_video_upload_ticket")
+}
+
 model tagsTable {
   key        Int              @id @default(autoincrement())
   label      String           @unique

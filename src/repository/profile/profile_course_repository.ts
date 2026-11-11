@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma";
+import { deleteVideoUploadTicket } from "../common/video_upload_ticket_repository";
 
 export const updateMyCourseForReviewDb = async ({
   id,
@@ -11,6 +12,7 @@ export const updateMyCourseForReviewDb = async ({
   imageUrl,
   video,
   duration,
+  videoUploadTicketJti,
   tagsKey,
   categoryKey,
 }: {
@@ -24,6 +26,7 @@ export const updateMyCourseForReviewDb = async ({
   imageUrl: string;
   video: string;
   duration: string;
+  videoUploadTicketJti?: string;
   tagsKey: string[];
   categoryKey: string;
 }) =>
@@ -33,6 +36,13 @@ export const updateMyCourseForReviewDb = async ({
       select: { id: true },
     });
     if (!course) return null;
+
+    if (videoUploadTicketJti) {
+      await deleteVideoUploadTicket(
+        { jti: videoUploadTicketJti, userId, videoKey: video },
+        { tx, required: true },
+      );
+    }
 
     return tx.courseTable.update({
       where: { id },

@@ -29,6 +29,7 @@ export const reReviewMyCourse: JwtAsyncFunction = async (req, res) => {
     originalPrice,
     videoKey,
     duration,
+    videoTicket,
     categoryKey,
   } = req.body;
 
@@ -51,6 +52,7 @@ export const reReviewMyCourse: JwtAsyncFunction = async (req, res) => {
     image,
     videoKey,
     duration,
+    videoTicket,
   });
   success(res, 200);
 };

@@ -9,21 +9,38 @@ import { getStorageUrls } from "../utils/supabase/getStorageUrl";
 import { deleteCourseFile } from "../utils/supabase/removeSupabaseStorage";
 import { CourseType } from "../types/profileType";
 import { validateCourseFields } from "../utils/courseValidation";
+import {
+  issueVideoUploadTicket,
+  verifyVideoUploadTicket,
+} from "../utils/videoUploadTicket";
+import { cleanupCourseAfterApiError } from "../utils/courseErrorCleanup";
 
 export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
+  userId: string,
 ) => {
   if (!video) {
     throw new AppError("請上傳影片", 400, "video");
   }
+  let videoKey: string | undefined;
   try {
     // 影片驗證並回傳時間
     const duration = await useVideoRuler(video);
 
     // 上傳影片
-    const videoKey = await uploadCourseVideo(video);
+    videoKey = await uploadCourseVideo(video);
+    const videoTicket = await issueVideoUploadTicket(
+      userId,
+      videoKey,
+      String(duration),
+    );
 
-    return { duration, videoKey };
+    return { duration, videoKey, videoTicket };
+  } catch (error) {
+    if (videoKey) {
+      await deleteCourseFile("videos", videoKey).catch(() => {});
+    }
+    throw error;
   } finally {
     await fs.unlink(video.path).catch(() => {});
   }
@@ -39,24 +56,37 @@ export const createCourseLogic = async ({
   image,
   videoKey,
   duration,
+  videoTicket,
   tagsKey,
   categoryKey,
-}: Omit<CourseType, "fileName" | "id" | "reviewStatus">) => {
-  const { tagKeys, sanitizedContent } = await validateCourseFields({
-    price,
-    originalPrice,
-    content,
-    tagsKey,
-    categoryKey,
-  });
+}: Omit<CourseType, "fileName" | "id" | "reviewStatus"> & {
+  videoTicket: string;
+}) => {
+  const ticket = verifyVideoUploadTicket(
+    videoTicket,
+    userId,
+    videoKey,
+    duration,
+  );
 
-  //驗證照片
-  const { processedImage, fileName } = await useImageRuler(image);
-  //上傳到supabase storage
-  await uploadCourseImage(fileName, processedImage, "course");
-
-  //執行Db
+  let fileName: string | undefined;
+  let imageUploadAttempted = false;
   try {
+    const { tagKeys, sanitizedContent } = await validateCourseFields({
+      price,
+      originalPrice,
+      content,
+      tagsKey,
+      categoryKey,
+    });
+
+    //驗證照片
+    const { processedImage, fileName: imagePath } = await useImageRuler(image);
+    fileName = imagePath;
+    //上傳到supabase storage
+    imageUploadAttempted = true;
+    await uploadCourseImage(fileName, processedImage, "course");
+
     await createCourseDb({
       userId,
       title,
@@ -67,14 +97,18 @@ export const createCourseLogic = async ({
       fileName,
       videoKey,
       duration,
+      videoUploadTicketJti: ticket.jti,
       tagsKey: tagKeys.map(String),
       categoryKey,
     });
   } catch (error) {
-    await Promise.allSettled([
-      deleteCourseFile("course", fileName),
-      deleteCourseFile("videos", videoKey),
-    ]);
+    await cleanupCourseAfterApiError({
+      verifiedVideoTicket: ticket,
+      userId,
+      imageUploadAttempted,
+      imagePath: fileName,
+      videoKey,
+    });
     throw error;
   }
 };

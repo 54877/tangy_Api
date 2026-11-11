@@ -10,11 +10,15 @@ import { success } from "../utils/success";
 export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
   const video = req.file;
 
-  const { duration, videoKey } = await createCourseVideoLogic(video);
+  const { duration, videoKey, videoTicket } = await createCourseVideoLogic(
+    video,
+    req.user.id,
+  );
 
   success(res, 200, {
     videoKey,
     duration,
+    videoTicket,
   });
 };
 
@@ -28,6 +32,7 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
     originalPrice,
     videoKey,
     duration,
+    videoTicket,
     categoryKey,
   } = req.body;
   const parsedTagsKey: unknown = JSON.parse(req.body.tagsKey);
@@ -47,6 +52,7 @@ export const createCourse: JwtAsyncFunction = async (req, res) => {
     image,
     videoKey,
     duration,
+    videoTicket,
     tagsKey,
     categoryKey,
   });

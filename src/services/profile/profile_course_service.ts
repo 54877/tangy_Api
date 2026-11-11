@@ -10,6 +10,8 @@ import { useImageRuler } from "../../utils/image/imageValidation";
 import { uploadCourseImage } from "../../utils/image/uploadCourseImage";
 import { deleteCourseFile } from "../../utils/supabase/removeSupabaseStorage";
 import { validateCourseFields } from "../../utils/courseValidation";
+import { verifyVideoUploadTicket } from "../../utils/videoUploadTicket";
+import { cleanupCourseAfterApiError } from "../../utils/courseErrorCleanup";
 
 export const getCourseFormOptionsLogic = () => getCourseFormOptionsDb();
 
@@ -43,6 +45,51 @@ export const getMyCourseDetailByIdLogic = async (
   };
 };
 
+//影片videokey 憑證驗證
+const videoKeyValidator = (
+  videoKey: string | undefined,
+  duration: string | undefined,
+  videoTicket: string | undefined,
+  userId: string,
+) => {
+  let verifiedVideoTicket:
+    | ReturnType<typeof verifyVideoUploadTicket>
+    | undefined;
+  const hasVideoKey = videoKey !== undefined;
+  const hasDuration = duration !== undefined;
+  const hasVideoTicket = videoTicket !== undefined;
+
+  if (hasVideoKey && hasDuration && hasVideoTicket) {
+    verifiedVideoTicket = verifyVideoUploadTicket(
+      videoTicket,
+      userId,
+      videoKey,
+      duration,
+    );
+  } else if (hasVideoKey || hasDuration || hasVideoTicket) {
+    throw new AppError(
+      "videoKey、duration 與 videoTicket 必須一起提供",
+      400,
+      "videoTicket",
+    );
+  }
+  return verifiedVideoTicket;
+};
+
+//課程驗證
+const courseValidator = (
+  course: any,
+  image?: Express.Multer.File,
+  videoKey?: string,
+) => {
+  if (course.reviewStatus !== "REJECTED")
+    throw new AppError("課程狀態不允許重新審核", 400);
+  if (!course.imageUrl && !image)
+    throw new AppError("請上傳圖片", 400, "image");
+  if (!course.video && !videoKey)
+    throw new AppError("請上傳影片", 400, "video");
+};
+
 export const reReviewMyCourseLogic = async ({
   id,
   userId,
@@ -56,6 +103,7 @@ export const reReviewMyCourseLogic = async ({
   image,
   videoKey,
   duration,
+  videoTicket,
 }: {
   id: string;
   userId: string;
@@ -69,37 +117,45 @@ export const reReviewMyCourseLogic = async ({
   image?: Express.Multer.File;
   videoKey?: string;
   duration?: string;
+  videoTicket?: string;
 }) => {
   const course = await getMyCourseDetailByIdDb(id, userId);
   if (!course) throw new AppError("課程不存在", 404);
-  if (course.reviewStatus !== "REJECTED")
-    throw new AppError("課程狀態不允許重新審核", 400);
-  if (!course.imageUrl && !image)
-    throw new AppError("請上傳圖片", 400, "image");
-  if (!course.video && !videoKey)
-    throw new AppError("請上傳影片", 400, "video");
 
-  const { tagKeys, sanitizedContent } = await validateCourseFields({
-    price,
-    originalPrice,
-    content,
-    tagsKey,
-    categoryKey,
-  });
+  //影片憑證驗證
+  const verifiedVideoTicket = videoKeyValidator(
+    videoKey,
+    duration,
+    videoTicket,
+    userId,
+  );
 
+  //video 與 image 上傳處理
   let newImagePath = course.imageUrl;
-  const newVideoKey = videoKey ?? course.video;
-  const newDuration = duration ?? course.duration;
-  let uploadedNewImage = false;
-
-  if (image) {
-    const { processedImage, fileName } = await useImageRuler(image);
-    await uploadCourseImage(fileName, processedImage, "course");
-    newImagePath = fileName;
-    uploadedNewImage = true;
-  }
+  const newVideoKey = verifiedVideoTicket?.videoKey ?? course.video;
+  const newDuration = verifiedVideoTicket?.duration ?? course.duration;
+  let imageUploadAttempted = false;
 
   try {
+    //course的image 與 videoKey 驗證
+    courseValidator(course, image, videoKey);
+
+    //一般欄位驗證
+    const { tagKeys, sanitizedContent } = await validateCourseFields({
+      price,
+      originalPrice,
+      content,
+      tagsKey,
+      categoryKey,
+    });
+
+    if (image) {
+      const { processedImage, fileName } = await useImageRuler(image);
+      newImagePath = fileName;
+      imageUploadAttempted = true;
+      await uploadCourseImage(fileName, processedImage, "course");
+    }
+
     const updated = await updateMyCourseForReviewDb({
       id,
       userId,
@@ -111,23 +167,24 @@ export const reReviewMyCourseLogic = async ({
       imageUrl: newImagePath,
       video: newVideoKey,
       duration: newDuration,
+      videoUploadTicketJti: verifiedVideoTicket?.jti,
       tagsKey: tagKeys.map(String),
       categoryKey,
     });
     if (!updated) throw new AppError("課程不存在", 404, "id");
   } catch (error) {
-    if (uploadedNewImage) {
-      await deleteCourseFile("course", newImagePath);
-    }
-    if (videoKey && course.video !== newVideoKey) {
-      await deleteCourseFile("videos", newVideoKey);
-    }
-
+    await cleanupCourseAfterApiError({
+      verifiedVideoTicket,
+      userId,
+      imageUploadAttempted,
+      imagePath: newImagePath,
+      videoKey: newVideoKey,
+    });
     throw error;
   }
   const cleanupTasks: Promise<unknown>[] = [];
 
-  if (uploadedNewImage && course.imageUrl !== newImagePath) {
+  if (imageUploadAttempted && course.imageUrl !== newImagePath) {
     cleanupTasks.push(deleteCourseFile("course", course.imageUrl));
   }
 
