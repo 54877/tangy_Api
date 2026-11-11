@@ -28,6 +28,7 @@ model User {
 
   deviceTable  deviceTable[]
   courseTables courseTable[]
+  favorites    favoriteCourseTable[]
 
   @@map("user_table")
 }
@@ -124,6 +125,7 @@ model courseTable {
   user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   courseTags courseTagTable[]
+  favorites  favoriteCourseTable[]
 
   categoryKey String              @map("category_key") @db.Uuid
   category    courseCategoryTable @relation(fields: [categoryKey], references: [categoryKey], onDelete: Restrict, onUpdate: Cascade)
@@ -168,6 +170,18 @@ model courseTagTable {
   @@id([courseId, tagKey])
   @@index([tagKey])
   @@map("course_tag")
+}
+
+model favoriteCourseTable {
+  userId    String      @map("user_id")
+  courseId  String      @map("course_id") @db.Uuid
+  createdAt DateTime    @default(now()) @map("created_at")
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    courseTable @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([userId, courseId])
+  @@index([courseId])
+  @@map("favorite_course")
 }
 
 model courseCategoryTable {
