@@ -15,7 +15,7 @@ profileFavoriteRouter.use(authMiddleware);
 openapiRoute({
   method: "post",
   path: "/favoriteCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Favorites"],
   needAuth: true,
   summary: "收藏課程",
   schema: UuidIdSchema,
@@ -26,7 +26,7 @@ openapiRoute({
 openapiRoute({
   method: "delete",
   path: "/favoriteCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Favorites"],
   needAuth: true,
   summary: "取消收藏課程",
   schema: UuidIdSchema,
@@ -37,7 +37,7 @@ openapiRoute({
 openapiRoute({
   method: "get",
   path: "/myFavoriteCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Favorites"],
   needAuth: true,
   summary: "取得我的收藏課程",
   handler: [asyncHandler(getMyFavoriteCourses)],

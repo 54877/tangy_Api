@@ -33,7 +33,7 @@ profilePersonalRouter.use(authMiddleware);
 openapiRoute({
   method: "get",
   path: "/personal",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "個人資料",
   handler: [asyncHandler(getPersonal)],
@@ -43,7 +43,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/updatePersonal",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "更新個人資料",
   formData: true,
@@ -54,7 +54,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/updateUserImage",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "更新個人照片",
   formData: true,
@@ -67,7 +67,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/updatePassword",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   schema: updatePasswordScheme,
   summary: "更新密碼(已登入)",
@@ -78,7 +78,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/SvSendEmail",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "sv寄信驗證",
   schema: svEmail,
@@ -89,7 +89,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/2FA",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "開啟2FA",
   schema: svOpen,
@@ -100,7 +100,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/2FAClose",
-  tags: ["Profile"],
+  tags: ["Profile / Person"],
   needAuth: true,
   summary: "關閉2FA",
   handler: [asyncHandler(svCloseControllers)],
@@ -110,7 +110,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/DeviceCloseById",
-  tags: ["Profile"],
+  tags: ["Profile / Devices"],
   needAuth: true,
   schema: UuidIdSchema,
   summary: "登出裝置",
@@ -121,7 +121,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/DeviceCloseByUserId",
-  tags: ["Profile"],
+  tags: ["Profile / Devices"],
   needAuth: true,
   schema: UuidUserIdSchema,
   summary: "登出所有裝置",

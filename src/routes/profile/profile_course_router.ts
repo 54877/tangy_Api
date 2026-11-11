@@ -34,7 +34,7 @@ profileCourseRouter.use(authMiddleware);
 openapiRoute({
   method: "post",
   path: "/getMyCourseById",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "取得我的課程單筆詳細資料",
   schema: UuidIdSchema,
@@ -45,7 +45,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/reReviewCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "重新送審課程",
   formData: true,
@@ -63,7 +63,7 @@ openapiRoute({
 openapiRoute({
   method: "get",
   path: "/myCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "取得我的課程列表",
   handler: [asyncHandler(getMyCourse)],
@@ -73,7 +73,7 @@ openapiRoute({
 openapiRoute({
   method: "get",
   path: "/getCourseFormOptions",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "標籤與課程分類",
   handler: [asyncHandler(getCourseFormOptions)],
@@ -83,7 +83,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/createCourse",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "建立線上課程",
   formData: true,
@@ -97,7 +97,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/createCourseVideo",
-  tags: ["Profile"],
+  tags: ["Profile / Courses"],
   needAuth: true,
   summary: "建立(審核)線上課程-影片",
   formData: true,

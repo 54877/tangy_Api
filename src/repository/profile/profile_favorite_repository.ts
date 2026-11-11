@@ -1,6 +1,9 @@
 import prisma from "../../db/prisma";
 
-export const createFavoriteCourseDb = async (userId: string, courseId: string) =>
+export const createFavoriteCourseDb = async (
+  userId: string,
+  courseId: string,
+) =>
   prisma.favoriteCourseTable.createMany({
     data: { userId, courseId },
     skipDuplicates: true,
@@ -26,12 +29,8 @@ export const getMyFavoriteCoursesDb = (userId: string) =>
           id: true,
           title: true,
           teacher: true,
-          rating: true,
-          studentCount: true,
           duration: true,
           price: true,
-          originalPrice: true,
-          imageUrl: true,
           courseTags: { select: { tag: { select: { label: true } } } },
           category: { select: { CategoryName: true } },
         },
