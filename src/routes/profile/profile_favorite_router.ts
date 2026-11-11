@@ -25,7 +25,7 @@ openapiRoute({
 
 openapiRoute({
   method: "delete",
-  path: "/favoriteCourse",
+  path: "/deleteFavoriteCourse",
   tags: ["Profile / Favorites"],
   needAuth: true,
   summary: "取消收藏課程",

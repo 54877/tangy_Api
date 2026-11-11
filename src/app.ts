@@ -36,7 +36,7 @@ app.use(
 app.use(cookieParser());
 
 // 解析 JSON 格式的請求體
-app.use(express.json());
+app.use(express.json({ limit: "256kb" }));
 
 //swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
