@@ -1,5 +1,6 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/auth";
+import { userRateLimit } from "../../middlewares/userRateLimit";
 import {
   createCourse,
   createCourseVideo,
@@ -48,7 +49,11 @@ openapiRoute({
   needAuth: true,
   summary: "重新送審課程",
   formData: true,
-  middlewares: [imageUploadType, upload.single("image")],
+  middlewares: [
+    userRateLimit(3_000, 1),
+    imageUploadType,
+    upload.single("image"),
+  ],
   schema: reReviewCourseSchema,
   openapiSchema: createImageSchemaOptional(reReviewCourseBaseSchema),
   handler: [asyncHandler(reReviewMyCourse)],
