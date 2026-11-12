@@ -25,7 +25,7 @@ export const upload = multer({
   limits: {
     fileSize: MAX_FILE_SIZE,
     fieldSize: MAX_MULTIPART_FIELD_SIZE,
-    fields: 11,
+    fields: 12,
     parts: 12,
   },
 });
