@@ -3,7 +3,7 @@ import {
   getAdminCourseByIdLogic,
   getCoursesForAdminLogic,
   reviewCourseLogic,
-} from "../../services/backstage/course_service";
+} from "../../services/backstage/backStage_course_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
 

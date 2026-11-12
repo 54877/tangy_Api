@@ -2,10 +2,10 @@ import {
   deleteCourseByIdDb,
   getCourseByIdDb,
   getCourseDetailByIdDb,
+  getCourseForAdminDb,
   getCourseTagKeysByIdDb,
   reviewCourseStatusDb,
-} from "../../repository/backstage/course_repository";
-import { getCourseForAdminDb } from "../../repository/course_Repository";
+} from "../../repository/backstage/backStage_course_repository";
 import { AppError } from "../../utils/errors";
 import { deleteCourseFile } from "../../utils/supabase/removeSupabaseStorage";
 import { getStorageUrl } from "../../utils/supabase/getStorageUrl";

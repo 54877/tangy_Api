@@ -1,10 +1,10 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/auth";
 import { adminMiddleware } from "../middlewares/role.mid";
-import { backStageCategoryRouter } from "./backstage/category_router";
-import { backStageCourseRouter } from "./backstage/course_router";
-import { backStageTagRouter } from "./backstage/tag_router";
-import { backStageUserRouter } from "./backstage/user_router";
+import { backStageCategoryRouter } from "./backstage/backStage_category_router";
+import { backStageCourseRouter } from "./backstage/backStage_course_router";
+import { backStageTagRouter } from "./backstage/backStage_tag_router";
+import { backStageUserRouter } from "./backstage/backStage_user_router";
 
 export const backStage_router = express.Router();
 

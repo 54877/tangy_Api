@@ -4,7 +4,7 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import {
   editUserRole,
   getAllUsers,
-} from "../../controllers/backstage/user_controller";
+} from "../../controllers/backstage/backStage_user_controller";
 import { UuidIdSchema } from "../../validation/schemas/common.schema";
 
 export const backStageUserRouter = express.Router();
@@ -12,7 +12,7 @@ export const backStageUserRouter = express.Router();
 openapiRoute({
   method: "get",
   path: "/getAllUsers",
-  tags: ["backStage"],
+  tags: ["Backstage / Users"],
   needAuth: true,
   summary: "使用者資料列表",
   handler: [asyncHandler(getAllUsers)],
@@ -22,7 +22,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/editUserRole",
-  tags: ["backStage"],
+  tags: ["Backstage / Users"],
   needAuth: true,
   summary: "修改使用者權限",
   schema: UuidIdSchema,

@@ -6,16 +6,16 @@ import {
   getAdminCourseById,
   getCoursesForAdmin,
   reviewCourse,
-} from "../../controllers/backstage/course_controller";
+} from "../../controllers/backstage/backStage_course_controller";
 import { UuidIdSchema } from "../../validation/schemas/common.schema";
-import { reviewCourseSchema } from "../../validation/schemas/backstage/course.schema";
+import { reviewCourseSchema } from "../../validation/schemas/backstage/backStage_course.schema";
 
 export const backStageCourseRouter = express.Router();
 
 openapiRoute({
   method: "get",
   path: "/getCourseAdmin",
-  tags: ["backStage"],
+  tags: ["Backstage / Courses"],
   needAuth: true,
   summary: "課程資料列表",
   handler: [asyncHandler(getCoursesForAdmin)],
@@ -25,7 +25,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/getCourseById",
-  tags: ["backStage"],
+  tags: ["Backstage / Courses"],
   needAuth: true,
   summary: "單筆課程資料",
   schema: UuidIdSchema,
@@ -36,7 +36,7 @@ openapiRoute({
 openapiRoute({
   method: "delete",
   path: "/deleteCourse",
-  tags: ["backStage"],
+  tags: ["Backstage / Courses"],
   needAuth: true,
   summary: "刪除課程",
   schema: UuidIdSchema,
@@ -47,7 +47,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/reviewCourse",
-  tags: ["backStage"],
+  tags: ["Backstage / Courses"],
   needAuth: true,
   summary: "審核課程",
   schema: reviewCourseSchema,

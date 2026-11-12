@@ -2,7 +2,7 @@ import { z } from "../../../config/zod";
 import {
   CategoryNameScheme,
   CategoryKeyScheme,
-} from "../../rules/backstage";
+} from "../../rules/backstage.rule";
 
 export const CourseCategorySchema = z.object({
   CategoryName: CategoryNameScheme,

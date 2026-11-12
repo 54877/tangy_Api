@@ -3,7 +3,7 @@ import {
   deleteCourseCategoryLogic,
   editCourseCategoryLogic,
   getAllCourseCategoriesLogic,
-} from "../../services/backstage/category_service";
+} from "../../services/backstage/backStage_category_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
 

@@ -4,8 +4,6 @@ import { userRateLimit } from "../../middlewares/userRateLimit";
 import {
   createCourse,
   createCourseVideo,
-} from "../../controllers/course_controller";
-import {
   getMyCourseDetailById,
   getCourseFormOptions,
   getMyCourse,
@@ -15,17 +13,18 @@ import { upload, videoUpload } from "../../middlewares/upload";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { imageUploadType, videoUploadType } from "../../utils/errors";
 import { openapiRoute } from "../../utils/openapiRoute";
+
+import { UuidIdSchema } from "../../validation/schemas/common.schema";
+import {
+  createImageSchema,
+  createImageSchemaOptional,
+} from "../../validation/utils/imageSchema";
 import {
   courseSchema,
   createCourseVideoOpenapiSchema,
   reReviewCourseBaseSchema,
   reReviewCourseSchema,
 } from "../../validation/schemas/course.schema";
-import { UuidIdSchema } from "../../validation/schemas/common.schema";
-import {
-  createImageSchema,
-  createImageSchemaOptional,
-} from "../../validation/utils/imageSchema";
 
 export const profileCourseRouter = express.Router();
 

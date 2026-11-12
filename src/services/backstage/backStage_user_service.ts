@@ -1,7 +1,7 @@
 import {
   editUserRoleDb,
   getAllUsersDb,
-} from "../../repository/backstage/user_repository";
+} from "../../repository/backstage/backStage_user_repository";
 import { getUserById } from "../../repository/nav_Repository";
 import { AppError } from "../../utils/errors";
 

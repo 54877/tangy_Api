@@ -1,8 +1,6 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/auth";
 import {
-  deviceCloseByIdControllers,
-  deviceCloseByUserIdControllers,
   getPersonal,
   sendSVEmailControllers,
   svCloseControllers,
@@ -21,10 +19,6 @@ import {
   updatePasswordScheme,
 } from "../../validation/schemas/profile.schema";
 import { createImageSchema } from "../../validation/utils/imageSchema";
-import {
-  UuidIdSchema,
-  UuidUserIdSchema,
-} from "../../validation/schemas/common.schema";
 
 export const profilePersonalRouter = express.Router();
 
@@ -106,26 +100,3 @@ openapiRoute({
   handler: [asyncHandler(svCloseControllers)],
   router: profilePersonalRouter,
 });
-
-openapiRoute({
-  method: "post",
-  path: "/DeviceCloseById",
-  tags: ["Profile / Devices"],
-  needAuth: true,
-  schema: UuidIdSchema,
-  summary: "登出裝置",
-  handler: [asyncHandler(deviceCloseByIdControllers)],
-  router: profilePersonalRouter,
-});
-
-openapiRoute({
-  method: "post",
-  path: "/DeviceCloseByUserId",
-  tags: ["Profile / Devices"],
-  needAuth: true,
-  schema: UuidUserIdSchema,
-  summary: "登出所有裝置",
-  handler: [asyncHandler(deviceCloseByUserIdControllers)],
-  router: profilePersonalRouter,
-});
-

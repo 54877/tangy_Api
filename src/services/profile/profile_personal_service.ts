@@ -3,15 +3,13 @@ import { genderSelect } from "../../constants/gender";
 import { getUserById } from "../../repository/nav_Repository";
 import {
   createSVEmailVerification,
-  deviceCloseById,
-  deviceCloseByUserId,
-  getUserDeviceByUserId,
   svCloseDb,
   SVDb,
   updatePasswordDb,
   updateUserById,
   updateUserImageById,
 } from "../../repository/profile/profile_personal_repository";
+import { getUserDeviceByUserId } from "../../repository/profile/profile_device_repository";
 import { AppError } from "../../utils/errors";
 import { randomInt } from "node:crypto";
 import { Resend } from "resend";
@@ -177,12 +175,4 @@ export const SV = async (email: string, code: string) => {
 //關閉sv
 export const svClose = async (id: string) => {
   await svCloseDb(id);
-};
-
-export const deviceCloseByIdLogic = async (id: string) => {
-  await deviceCloseById(id);
-};
-
-export const deviceCloseByUserIdLogic = async (userId: string) => {
-  await deviceCloseByUserId(userId);
 };

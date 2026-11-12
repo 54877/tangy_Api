@@ -8,7 +8,7 @@ import {
   titleScheme,
   videoKeyScheme,
 } from "../rules/course.rule";
-import { CategoryKeyScheme } from "../rules/backstage";
+import { CategoryKeyScheme } from "../rules/backstage.rule";
 
 export const courseSchema = z.object({
   title: titleScheme,

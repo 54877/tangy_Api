@@ -3,6 +3,7 @@ import {
   getCourseFormOptionsDb,
   getMyCourseDb,
   updateMyCourseForReviewDb,
+  createCourseDb,
 } from "../../repository/profile/profile_course_repository";
 import { AppError } from "../../utils/errors";
 import { getStorageUrl } from "../../utils/supabase/getStorageUrl";
@@ -10,8 +11,101 @@ import { useImageRuler } from "../../utils/image/imageValidation";
 import { uploadCourseImage } from "../../utils/image/uploadCourseImage";
 import { deleteCourseFile } from "../../utils/supabase/removeSupabaseStorage";
 import { validateCourseFields } from "../../utils/courseValidation";
-import { verifyVideoUploadTicket } from "../../utils/videoUploadTicket";
+import {
+  verifyVideoUploadTicket,
+  issueVideoUploadTicket,
+} from "../../utils/videoUploadTicket";
 import { cleanupCourseAfterApiError } from "../../utils/courseErrorCleanup";
+import { CourseType } from "../../types/profileType";
+import { useVideoRuler } from "../../utils/video/videoValidation";
+import { uploadCourseVideo } from "../../utils/video/uploadCourseVideo";
+import fs from "node:fs/promises";
+
+export const createCourseVideoLogic = async (
+  video: Express.Multer.File | undefined,
+  userId: string,
+) => {
+  if (!video) throw new AppError("請上傳影片", 400, "video");
+
+  let videoKey: string | undefined;
+  try {
+    const duration = await useVideoRuler(video);
+    videoKey = await uploadCourseVideo(video);
+    const videoTicket = await issueVideoUploadTicket(
+      userId,
+      videoKey,
+      String(duration),
+    );
+    return { duration, videoKey, videoTicket };
+  } catch (error) {
+    if (videoKey) await deleteCourseFile("videos", videoKey).catch(() => {});
+    throw error;
+  } finally {
+    await fs.unlink(video.path).catch(() => {});
+  }
+};
+
+export const createCourseLogic = async ({
+  userId,
+  title,
+  teacher,
+  content,
+  price,
+  originalPrice,
+  image,
+  videoKey,
+  duration,
+  videoTicket,
+  tagsKey,
+  categoryKey,
+}: Omit<CourseType, "fileName" | "id" | "reviewStatus"> & {
+  videoTicket: string;
+}) => {
+  const ticket = verifyVideoUploadTicket(
+    videoTicket,
+    userId,
+    videoKey,
+    duration,
+  );
+  let fileName: string | undefined;
+  let imageUploadAttempted = false;
+  try {
+    const { tagKeys, sanitizedContent } = await validateCourseFields({
+      price,
+      originalPrice,
+      content,
+      tagsKey,
+      categoryKey,
+    });
+    const { processedImage, fileName: imagePath } = await useImageRuler(image);
+    fileName = imagePath;
+    imageUploadAttempted = true;
+    await uploadCourseImage(fileName, processedImage, "course");
+    await createCourseDb({
+      userId,
+      title,
+      teacher,
+      content: sanitizedContent,
+      price,
+      originalPrice,
+      fileName,
+      videoKey,
+      duration,
+      videoUploadTicketJti: ticket.jti,
+      tagsKey: tagKeys.map(String),
+      categoryKey,
+    });
+  } catch (error) {
+    await cleanupCourseAfterApiError({
+      verifiedVideoTicket: ticket,
+      userId,
+      imageUploadAttempted,
+      imagePath: fileName,
+      videoKey,
+    });
+    throw error;
+  }
+};
 
 export const getCourseFormOptionsLogic = () => getCourseFormOptionsDb();
 

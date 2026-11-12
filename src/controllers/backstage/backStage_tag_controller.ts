@@ -3,7 +3,7 @@ import {
   deleteTagLogic,
   editTagLogic,
   getAllTagsLogic,
-} from "../../services/backstage/tag_service";
+} from "../../services/backstage/backStage_tag_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
 

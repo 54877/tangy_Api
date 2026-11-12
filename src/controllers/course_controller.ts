@@ -1,64 +1,6 @@
-import {
-  createCourseLogic,
-  createCourseVideoLogic,
-  getCourseLogic,
-} from "../services/course_service";
+import { getCourseLogic } from "../services/course_service";
 import { JwtAsyncFunction } from "../types/asyncType";
 import { success } from "../utils/success";
-
-//建立線上課程-video
-export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
-  const video = req.file;
-
-  const { duration, videoKey, videoTicket } = await createCourseVideoLogic(
-    video,
-    req.user.id,
-  );
-
-  success(res, 200, {
-    videoKey,
-    duration,
-    videoTicket,
-  });
-};
-
-//建立線上課程
-export const createCourse: JwtAsyncFunction = async (req, res) => {
-  const {
-    title,
-    teacher,
-    content,
-    price,
-    originalPrice,
-    videoKey,
-    duration,
-    videoTicket,
-    categoryKey,
-  } = req.body;
-  const parsedTagsKey: unknown = JSON.parse(req.body.tagsKey);
-  const tagsKey = (
-    Array.isArray(parsedTagsKey) ? parsedTagsKey : [parsedTagsKey]
-  ).map(String);
-
-  const image = req.file;
-
-  await createCourseLogic({
-    userId: req.user.id,
-    title,
-    teacher,
-    content,
-    price,
-    originalPrice,
-    image,
-    videoKey,
-    duration,
-    videoTicket,
-    tagsKey,
-    categoryKey,
-  });
-
-  success(res, 200);
-};
 
 //獲取線上課程列表
 export const getCourse: JwtAsyncFunction = async (req, res) => {

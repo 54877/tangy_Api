@@ -2,6 +2,27 @@ import prisma from "../../db/prisma";
 import { CourseType } from "../../types/profileType";
 import { AppError } from "../../utils/errors";
 
+export const getCourseForAdminDb = async () => {
+  return prisma.courseTable.findMany({
+    select: {
+      id: true,
+      title: true,
+      originalPrice: true,
+      price: true,
+      rating: true,
+      studentCount: true,
+      reviewStatus: true,
+      reviewContext: true,
+      reviewCount: true,
+      courseTags: {
+        select: { tag: { select: { label: true } } },
+      },
+      category: { select: { CategoryName: true } },
+      user: { select: { userName: true } },
+    },
+  });
+};
+
 export const deleteCourseByIdDb = async (id: string) => {
   try {
     return await prisma.courseTable.delete({ where: { id } });

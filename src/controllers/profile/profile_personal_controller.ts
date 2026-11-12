@@ -1,6 +1,4 @@
 import {
-  deviceCloseByIdLogic,
-  deviceCloseByUserIdLogic,
   getPersonalByIdLogic,
   sendSVEmail,
   SV,
@@ -76,28 +74,4 @@ export const svCloseControllers: JwtAsyncFunction = async (req, res) => {
   await svClose(id);
 
   success(res, 201, undefined, "成功關閉2FA");
-};
-
-//登出device by id
-export const deviceCloseByIdControllers: JwtAsyncFunction = async (
-  req,
-  res,
-) => {
-  const { id } = req.body || {};
-
-  await deviceCloseByIdLogic(id);
-
-  success(res, 201, undefined, "成功關閉device");
-};
-
-//登出所有device by id
-export const deviceCloseByUserIdControllers: JwtAsyncFunction = async (
-  req,
-  res,
-) => {
-  const { userId } = req.body || {};
-
-  await deviceCloseByUserIdLogic(userId);
-
-  success(res, 201, undefined, "成功關閉device");
 };

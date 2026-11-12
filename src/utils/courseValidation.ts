@@ -1,5 +1,5 @@
-import { getCourseCategoryByKeyDb } from "../repository/backstage/category_repository";
-import { getTagsByKeysDb } from "../repository/backstage/tag_repository";
+import { getCourseCategoryByKeyDb } from "../repository/backstage/backStage_category_repository";
+import { getTagsByKeysDb } from "../repository/backstage/backStage_tag_repository";
 import { AppError } from "./errors";
 import { sanitizeCourseContent } from "./sanitizeCourseContent";
 

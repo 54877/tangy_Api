@@ -4,7 +4,7 @@ import {
   editCourseCategoryDb,
   getAllCourseCategoriesDb,
   hasCoursesInCategoryDb,
-} from "../../repository/backstage/category_repository";
+} from "../../repository/backstage/backStage_category_repository";
 import { AppError } from "../../utils/errors";
 
 export const getAllCourseCategoriesLogic = () => getAllCourseCategoriesDb();

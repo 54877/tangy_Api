@@ -6,11 +6,11 @@ import {
   deleteTag,
   editTag,
   getAllTags,
-} from "../../controllers/backstage/tag_controller";
+} from "../../controllers/backstage/backStage_tag_controller";
 import {
   EditTagSchema,
   TagSchema,
-} from "../../validation/schemas/backstage/tag.schema";
+} from "../../validation/schemas/backstage/backStage_tag.schema";
 import { KeySchema } from "../../validation/schemas/common.schema";
 
 export const backStageTagRouter = express.Router();
@@ -18,7 +18,7 @@ export const backStageTagRouter = express.Router();
 openapiRoute({
   method: "get",
   path: "/getAllTags",
-  tags: ["backStage"],
+  tags: ["Backstage / Tags"],
   needAuth: true,
   summary: "標籤列表",
   handler: [asyncHandler(getAllTags)],
@@ -28,7 +28,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/createTag",
-  tags: ["backStage"],
+  tags: ["Backstage / Tags"],
   needAuth: true,
   summary: "建立標籤",
   schema: TagSchema,
@@ -39,7 +39,7 @@ openapiRoute({
 openapiRoute({
   method: "delete",
   path: "/deleteTag",
-  tags: ["backStage"],
+  tags: ["Backstage / Tags"],
   needAuth: true,
   summary: "刪除標籤",
   schema: KeySchema,
@@ -50,7 +50,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/editTag",
-  tags: ["backStage"],
+  tags: ["Backstage / Tags"],
   needAuth: true,
   summary: "編輯標籤",
   schema: EditTagSchema,

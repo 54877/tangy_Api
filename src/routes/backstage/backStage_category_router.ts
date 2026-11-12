@@ -6,19 +6,19 @@ import {
   deleteCourseCategory,
   editCourseCategory,
   getAllCourseCategories,
-} from "../../controllers/backstage/category_controller";
+} from "../../controllers/backstage/backStage_category_controller";
 import {
   CourseCategorySchema,
   DeleteCourseCategorySchema,
   EditCourseCategorySchema,
-} from "../../validation/schemas/backstage/category.schema";
+} from "../../validation/schemas/backstage/backStage_category.schema";
 
 export const backStageCategoryRouter = express.Router();
 
 openapiRoute({
   method: "get",
   path: "/getAllCourseCategories",
-  tags: ["backStage"],
+  tags: ["Backstage / Categories"],
   needAuth: true,
   summary: "課程分類列表",
   handler: [asyncHandler(getAllCourseCategories)],
@@ -28,7 +28,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/createCourseCategory",
-  tags: ["backStage"],
+  tags: ["Backstage / Categories"],
   needAuth: true,
   summary: "建立課程分類",
   schema: CourseCategorySchema,
@@ -39,7 +39,7 @@ openapiRoute({
 openapiRoute({
   method: "put",
   path: "/editCourseCategory",
-  tags: ["backStage"],
+  tags: ["Backstage / Categories"],
   needAuth: true,
   summary: "編輯課程分類",
   schema: EditCourseCategorySchema,
@@ -50,7 +50,7 @@ openapiRoute({
 openapiRoute({
   method: "delete",
   path: "/deleteCourseCategory",
-  tags: ["backStage"],
+  tags: ["Backstage / Categories"],
   needAuth: true,
   summary: "刪除課程分類",
   schema: DeleteCourseCategorySchema,

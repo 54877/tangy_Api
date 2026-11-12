@@ -1,7 +1,7 @@
 import {
   editUserRoleLogic,
   getAllUsersLogic,
-} from "../../services/backstage/user_service";
+} from "../../services/backstage/backStage_user_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
 

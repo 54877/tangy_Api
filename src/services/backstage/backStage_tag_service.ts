@@ -3,7 +3,7 @@ import {
   deleteTagByIdDb,
   editTagDb,
   getAllTagsDb,
-} from "../../repository/backstage/tag_repository";
+} from "../../repository/backstage/backStage_tag_repository";
 
 export const createTagLogic = (label: string) => createTagDb(label);
 export const deleteTagLogic = (key: number) => deleteTagByIdDb(key);
