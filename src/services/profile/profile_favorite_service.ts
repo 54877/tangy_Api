@@ -28,7 +28,6 @@ export const getMyFavoriteCoursesLogic = async (userId: string) => {
     ...course,
     favoriteAt: createdAt,
     category: course.category?.CategoryName ?? null,
-    tags: course.courseTags.map(({ tag }) => tag.label),
   }));
   return courses;
 };

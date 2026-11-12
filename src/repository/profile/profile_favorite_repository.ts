@@ -31,7 +31,6 @@ export const getMyFavoriteCoursesDb = (userId: string) =>
           teacher: true,
           duration: true,
           price: true,
-          courseTags: { select: { tag: { select: { label: true } } } },
           category: { select: { CategoryName: true } },
         },
       },
