@@ -26,8 +26,7 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     imageUrl: result.imageUrl,
     svType: result.svType,
     role: result.role,
-    categoryList: categoryList.map(({ categoryKey, CategoryName }) => ({
-      categoryKey,
+    categoryList: categoryList.map(({ CategoryName }) => ({
       CategoryName,
     })),
   };
