@@ -1,4 +1,5 @@
 import { getUserById } from "../repository/nav_Repository";
+import { getAllCourseCategoriesDb } from "../repository/backstage/backStage_category_repository";
 import { AppError } from "../utils/errors";
 import { getStorageUrl } from "../utils/supabase/getStorageUrl";
 
@@ -16,6 +17,7 @@ export const getUserByIdLogic = async (id: string | undefined) => {
 
   //取得image url加入dataList
   const result = await getStorageUrl(user, "userImg", "image");
+  const categoryList = await getAllCourseCategoriesDb();
 
   return {
     id: result.id,
@@ -24,5 +26,9 @@ export const getUserByIdLogic = async (id: string | undefined) => {
     imageUrl: result.imageUrl,
     svType: result.svType,
     role: result.role,
+    categoryList: categoryList.map(({ categoryKey, CategoryName }) => ({
+      categoryKey,
+      CategoryName,
+    })),
   };
 };
