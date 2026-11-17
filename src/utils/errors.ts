@@ -68,7 +68,7 @@ export const errorHandler = (
       return res.status(413).json({
         state: false,
         errors: {
-          message: multerMessage,
+          video: multerMessage,
         },
       });
     }
