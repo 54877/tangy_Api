@@ -23,6 +23,11 @@ export const courseSchema = z.object({
   categoryKey: CategoryKeyScheme,
 });
 
+export const searchCourseSchema = z.object({
+  context: z.string().max(30, "不可超過30個字元").optional(),
+  categoryKey: z.array(CategoryKeyScheme).max(5, "最多只能選擇5個課程分類").optional(),
+});
+
 export const createCourseVideoOpenapiSchema = z.object({
   video: z.string().openapi({
     format: "binary",
