@@ -94,7 +94,6 @@ export const getMyCourseDb = async (userId: string) => {
       teacher: true,
       rating: true,
       studentCount: true,
-      duration: true,
       price: true,
       originalPrice: true,
       reviewContext: true,

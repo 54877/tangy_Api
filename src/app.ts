@@ -5,6 +5,7 @@ import { auth_router } from "./routes/auth_router.js";
 import { nav_router } from "./routes/nav_router.js";
 import { profile_router } from "./routes/profile_router.js";
 import { course_router } from "./routes/course_router.js";
+import { homePage_router } from "./routes/homePage_router.js";
 import { backStage_router } from "./routes/backstage_router.js";
 
 import swaggerUi from "swagger-ui-express";
@@ -44,6 +45,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //api
 app.use("/tangy", auth_router);
 app.use("/tangy", course_router);
+app.use("/tangy", homePage_router);
 app.use("/tangy", profile_router);
 app.use("/tangy", nav_router);
 app.use("/tangy", backStage_router);

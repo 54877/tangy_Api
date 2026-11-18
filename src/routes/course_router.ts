@@ -9,9 +9,7 @@ openapiRoute({
   method: "get",
   path: "/getCourse",
   tags: ["Course"],
-  needAuth: true,
   summary: "所有線上課程",
   handler: [asyncHandler(getCourse)],
   router: course_router,
 });
-
