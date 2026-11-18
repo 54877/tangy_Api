@@ -16,7 +16,7 @@ export const getHomepageCourse: AsyncFunction = async (_req, res) => {
     title: course.title,
     tags: course.tags,
     category: course.category,
-    duration: String(Math.round(+course.duration) / 60),
+    duration: course.duration,
   }));
 
   success(res, 200, result);
