@@ -11,10 +11,24 @@ export type CreateMediaUploadInput = {
   expiresAt: Date;
 };
 
-export const createMediaUploadDb = (input: CreateMediaUploadInput) =>
-  prisma.mediaUploadTable.create({
+export const createMediaUploadDb = async (input: CreateMediaUploadInput) =>
+  await prisma.mediaUploadTable.create({
     data: {
       ...input,
       status: MediaUploadStatus.PENDING_UPLOAD,
     },
   });
+
+export const mediaUploadVideo = async (uploadId: string) => {
+  return prisma.mediaUploadTable.findUnique({ where: { uploadId } });
+};
+
+export const updateMediaUploadState = async (
+  uploadId: string,
+  status: MediaUploadStatus,
+) => {
+  return prisma.mediaUploadTable.updateMany({
+    where: { uploadId, status: MediaUploadStatus.PENDING_UPLOAD },
+    data: { status },
+  });
+};

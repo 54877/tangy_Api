@@ -1,6 +1,11 @@
 import { randomUUID } from "node:crypto";
+import { MediaUploadStatus } from "@prisma/client";
 import { supabase } from "../config/supabase";
-import { createMediaUploadDb } from "../repository/mediaUpload_Repository";
+import {
+  createMediaUploadDb,
+  mediaUploadVideo,
+  updateMediaUploadState,
+} from "../repository/mediaUpload_Repository";
 import { AppError } from "../utils/errors";
 
 type GetUploadTokenInput = {
@@ -78,4 +83,62 @@ export const getUploadTokenLogic = async (input: GetUploadTokenInput) => {
     path,
     token: data.token,
   };
+};
+
+export const checkCompleteLogic = async (uploadId: string) => {
+  const data = await mediaUploadVideo(uploadId);
+  if (!data) {
+    throw new AppError("找不到這筆上傳紀錄", 404);
+  }
+
+  if (data.status === MediaUploadStatus.PENDING_VERIFICATION ||
+      data.status === MediaUploadStatus.VERIFYING ||
+      data.status === MediaUploadStatus.READY) {
+    return { uploadId, status: data.status };
+  }
+
+  if (data.status !== MediaUploadStatus.PENDING_UPLOAD) {
+    throw new AppError("這筆上傳目前無法確認完成", 409);
+  }
+
+  if (Date.now() > data.expiresAt.getTime()) {
+    await updateMediaUploadState(uploadId, MediaUploadStatus.FAILED);
+    throw new AppError("上傳授權已逾時，請重新上傳", 410);
+  }
+
+  const { data: fileInfo, error } = await supabase.storage
+    .from(data.bucket)
+    .info(data.path);
+
+  if (error) {
+    if (error.statusCode === "404") {
+      throw new AppError("Storage 中尚未找到已上傳的檔案", 409);
+    }
+    throw new AppError("目前無法確認 Storage 檔案狀態", 502);
+  }
+
+  if (fileInfo.size === undefined || BigInt(fileInfo.size) !== data.expectedSize) {
+    throw new AppError("Storage 檔案大小與申請時不符", 409);
+  }
+
+  if (fileInfo.contentType && fileInfo.contentType !== data.contentType) {
+    throw new AppError("Storage 檔案格式與申請時不符", 409);
+  }
+
+  const updated = await updateMediaUploadState(
+    uploadId,
+    MediaUploadStatus.PENDING_VERIFICATION,
+  );
+
+  if (updated.count !== 1) {
+    const latest = await mediaUploadVideo(uploadId);
+    if (latest?.status === MediaUploadStatus.PENDING_VERIFICATION ||
+        latest?.status === MediaUploadStatus.VERIFYING ||
+        latest?.status === MediaUploadStatus.READY) {
+      return { uploadId, status: latest.status };
+    }
+    throw new AppError("上傳狀態已變更，請重新查詢", 409);
+  }
+
+  return { uploadId, status: MediaUploadStatus.PENDING_VERIFICATION };
 };
