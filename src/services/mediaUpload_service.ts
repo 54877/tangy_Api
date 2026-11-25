@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { MediaUploadStatus } from "@prisma/client";
 import { supabase } from "../config/supabase";
+import { mediaUploadQueue } from "../queues/mediaUpload.queue.js";
 import {
   createMediaUploadDb,
   mediaUploadVideo,
@@ -85,25 +86,41 @@ export const getUploadTokenLogic = async (input: GetUploadTokenInput) => {
   };
 };
 
-export const checkCompleteLogic = async (uploadId: string) => {
+//將API加入序列
+const addQueue = async (uploadId: string) => {
+  await mediaUploadQueue.add(
+    "verify-upload",
+    { uploadId },
+    { jobId: uploadId },
+  );
+};
+
+//驗證db檔案
+const mediaValidation = async (uploadId: string) => {
   const data = await mediaUploadVideo(uploadId);
   if (!data) {
     throw new AppError("找不到這筆上傳紀錄", 404);
   }
 
-  if (data.status === MediaUploadStatus.PENDING_VERIFICATION ||
-      data.status === MediaUploadStatus.VERIFYING ||
-      data.status === MediaUploadStatus.READY) {
+  if (
+    data.status === MediaUploadStatus.PENDING_VERIFICATION ||
+    data.status === MediaUploadStatus.VERIFYING
+  ) {
+    await addQueue(uploadId);
     return { uploadId, status: data.status };
   }
 
-  if (data.status !== MediaUploadStatus.PENDING_UPLOAD) {
-    throw new AppError("這筆上傳目前無法確認完成", 409);
+  if (data.status === MediaUploadStatus.READY) {
+    return { uploadId, status: data.status };
   }
 
   if (Date.now() > data.expiresAt.getTime()) {
     await updateMediaUploadState(uploadId, MediaUploadStatus.FAILED);
     throw new AppError("上傳授權已逾時，請重新上傳", 410);
+  }
+
+  if (data.status !== MediaUploadStatus.PENDING_UPLOAD) {
+    throw new AppError("這筆上傳目前無法確認完成", 409);
   }
 
   const { data: fileInfo, error } = await supabase.storage
@@ -117,28 +134,48 @@ export const checkCompleteLogic = async (uploadId: string) => {
     throw new AppError("目前無法確認 Storage 檔案狀態", 502);
   }
 
-  if (fileInfo.size === undefined || BigInt(fileInfo.size) !== data.expectedSize) {
+  if (
+    fileInfo.size === undefined ||
+    BigInt(fileInfo.size) !== data.expectedSize
+  ) {
     throw new AppError("Storage 檔案大小與申請時不符", 409);
   }
 
   if (fileInfo.contentType && fileInfo.contentType !== data.contentType) {
     throw new AppError("Storage 檔案格式與申請時不符", 409);
   }
+};
 
+export const checkCompleteLogic = async (uploadId: string) => {
+  //驗證db檔案
+  const state = await mediaValidation(uploadId);
+
+  if (state) {
+    return state;
+  }
+  //更新狀態
   const updated = await updateMediaUploadState(
     uploadId,
     MediaUploadStatus.PENDING_VERIFICATION,
   );
 
+  // 處理併發確認完成的情況
   if (updated.count !== 1) {
     const latest = await mediaUploadVideo(uploadId);
-    if (latest?.status === MediaUploadStatus.PENDING_VERIFICATION ||
-        latest?.status === MediaUploadStatus.VERIFYING ||
-        latest?.status === MediaUploadStatus.READY) {
+    if (
+      latest?.status === MediaUploadStatus.PENDING_VERIFICATION ||
+      latest?.status === MediaUploadStatus.VERIFYING ||
+      latest?.status === MediaUploadStatus.READY
+    ) {
+      if (latest.status !== MediaUploadStatus.READY) {
+        await addQueue(uploadId);
+      }
       return { uploadId, status: latest.status };
     }
     throw new AppError("上傳狀態已變更，請重新查詢", 409);
   }
+
+  await addQueue(uploadId);
 
   return { uploadId, status: MediaUploadStatus.PENDING_VERIFICATION };
 };
