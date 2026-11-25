@@ -7,6 +7,7 @@ import { profile_router } from "./routes/profile_router.js";
 import { course_router } from "./routes/course_router.js";
 import { homePage_router } from "./routes/homePage_router.js";
 import { backStage_router } from "./routes/backstage_router.js";
+import { mediaUploadRouter } from "./routes/mediaUpload_router.js";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.js";
@@ -49,6 +50,7 @@ app.use("/tangy", homePage_router);
 app.use("/tangy", profile_router);
 app.use("/tangy", nav_router);
 app.use("/tangy", backStage_router);
+app.use("/tangy", mediaUploadRouter);
 
 //統一處理不存在的路由
 app.use((req, res, next) => {

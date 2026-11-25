@@ -107,6 +107,16 @@ enum CourseReviewStatus {
   @@map("course_review_status")
 }
 
+enum MediaUploadStatus {
+  PENDING_UPLOAD
+  PENDING_VERIFICATION
+  VERIFYING
+  READY
+  FAILED
+
+  @@map("media_upload_status")
+}
+
 model courseTable {
   id            String   @id @default(uuid()) @db.Uuid
   title         String
@@ -124,8 +134,9 @@ model courseTable {
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
 
-  courseTags courseTagTable[]
-  favorites  favoriteCourseTable[]
+  courseTags   courseTagTable[]
+  favorites    favoriteCourseTable[]
+  mediaUploads mediaUploadTable[]
 
   categoryKey String              @map("category_key") @db.Uuid
   category    courseCategoryTable @relation(fields: [categoryKey], references: [categoryKey], onDelete: Restrict, onUpdate: Cascade)
@@ -136,6 +147,26 @@ model courseTable {
 
   @@index([userId])
   @@map("course_table")
+}
+
+model mediaUploadTable {
+  uploadId     String            @id @default(uuid()) @map("upload_id") @db.Uuid
+  bucket       String            @default("videos")
+  path         String            @unique
+  expectedSize BigInt            @map("expected_size")
+  contentType  String            @map("content_type")
+  method       String
+  status       MediaUploadStatus @default(PENDING_UPLOAD)
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  expiresAt    DateTime          @map("expires_at")
+
+  courseId String?      @map("course_id") @db.Uuid
+  course   courseTable? @relation(fields: [courseId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([status, createdAt])
+  @@index([courseId])
+  @@map("media_upload")
 }
 
 model courseVideoUploadTicketTable {
