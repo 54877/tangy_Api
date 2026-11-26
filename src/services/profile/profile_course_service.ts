@@ -17,7 +17,6 @@ import {
 } from "../../utils/videoUploadTicket";
 import { cleanupCourseAfterApiError } from "../../utils/courseErrorCleanup";
 import { CourseType } from "../../types/profileType";
-import { useVideoRuler } from "../../utils/video/videoValidation";
 import { uploadCourseVideo } from "../../utils/video/uploadCourseVideo";
 import fs from "node:fs/promises";
 
@@ -25,24 +24,23 @@ export const createCourseVideoLogic = async (
   video: Express.Multer.File | undefined,
   userId: string,
 ) => {
-  if (!video) throw new AppError("請上傳影片", 400, "video");
-
-  let videoKey: string | undefined;
-  try {
-    const duration = await useVideoRuler(video);
-    videoKey = await uploadCourseVideo(video);
-    const videoTicket = await issueVideoUploadTicket(
-      userId,
-      videoKey,
-      String(duration),
-    );
-    return { duration, videoKey, videoTicket };
-  } catch (error) {
-    if (videoKey) await deleteCourseFile("videos", videoKey).catch(() => {});
-    throw error;
-  } finally {
-    await fs.unlink(video.path).catch(() => {});
-  }
+  // if (!video) throw new AppError("請上傳影片", 400, "video");
+  // let videoKey: string | undefined;
+  // try {
+  //   const duration = await useVideoRuler(video);
+  //   videoKey = await uploadCourseVideo(video);
+  //   const videoTicket = await issueVideoUploadTicket(
+  //     userId,
+  //     videoKey,
+  //     String(duration),
+  //   );
+  //   return { duration, videoKey, videoTicket };
+  // } catch (error) {
+  //   if (videoKey) await deleteCourseFile("videos", videoKey).catch(() => {});
+  //   throw error;
+  // } finally {
+  //   a wait fs.unlink(video.path).catch(() => {});
+  //}
 };
 
 export const createCourseLogic = async ({
