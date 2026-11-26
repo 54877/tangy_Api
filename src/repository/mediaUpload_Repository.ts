@@ -32,3 +32,20 @@ export const updateMediaUploadState = async (
     data: { status },
   });
 };
+
+export const updateMediaUploadVerification = async (
+  uploadId: string,
+  status: MediaUploadStatus,
+) =>
+  prisma.mediaUploadTable.updateMany({
+    where: {
+      uploadId,
+      status: {
+        in: [
+          MediaUploadStatus.PENDING_VERIFICATION,
+          MediaUploadStatus.VERIFYING,
+        ],
+      },
+    },
+    data: { status },
+  });

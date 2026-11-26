@@ -20,16 +20,16 @@ interface VideoMetadata {
 const execFileAsync = promisify(execFile);
 
 //影片規格驗證
-export const useVideoRuler = async (video: Express.Multer.File) => {
+export const validateVideoFile = async (path: string, mimetype: string) => {
   const allowedMimeTypes = new Set(["video/mp4", "video/webm"]);
 
   //MIME Type
-  if (!allowedMimeTypes.has(video.mimetype)) {
+  if (!allowedMimeTypes.has(mimetype)) {
     throw new AppError("只允許 MP4、webm影片", 400, "video");
   }
 
   //Magic bytes
-  const fileType = await fileTypeFromFile(video.path);
+  const fileType = await fileTypeFromFile(path);
 
   if (!fileType) {
     throw new AppError("無法辨識影片格式", 400, "video");
@@ -40,7 +40,7 @@ export const useVideoRuler = async (video: Express.Multer.File) => {
   }
 
   //ffprobe
-  const duration = await ffprobeValidation(video);
+  const duration = await ffprobeValidation(path);
 
   return duration;
 };
@@ -137,7 +137,7 @@ const validateVideoFormat = (metadata: VideoMetadata) => {
 };
 
 //ffprobe
-const ffprobeValidation = async (video: Express.Multer.File) => {
+const ffprobeValidation = async (path: string) => {
   try {
     const { stdout } = await execFileAsync(ffprobe.path, [
       "-v",
@@ -146,7 +146,7 @@ const ffprobeValidation = async (video: Express.Multer.File) => {
       "-show_format",
       "-of",
       "json",
-      video.path,
+      path,
     ]);
 
     const metadata = JSON.parse(stdout);
