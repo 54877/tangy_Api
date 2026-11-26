@@ -3,15 +3,14 @@ import { authMiddleware } from "../../middlewares/auth";
 import { userRateLimit } from "../../middlewares/userRateLimit";
 import {
   createCourse,
-  createCourseVideo,
   getMyCourseDetailById,
   getCourseFormOptions,
   getMyCourse,
   reReviewMyCourse,
 } from "../../controllers/profile/profile_course_controller";
-import { upload, videoUpload } from "../../middlewares/upload";
+import { upload } from "../../middlewares/upload";
 import { asyncHandler } from "../../utils/asyncHandler";
-import { imageUploadType, videoUploadType } from "../../utils/errors";
+import { imageUploadType } from "../../utils/errors";
 import { openapiRoute } from "../../utils/openapiRoute";
 
 import { UuidIdSchema } from "../../validation/schemas/common.schema";
@@ -21,7 +20,6 @@ import {
 } from "../../validation/utils/imageSchema";
 import {
   courseSchema,
-  createCourseVideoOpenapiSchema,
   reReviewCourseBaseSchema,
   reReviewCourseSchema,
 } from "../../validation/schemas/course.schema";
@@ -93,15 +91,3 @@ openapiRoute({
   router: profileCourseRouter,
 });
 
-openapiRoute({
-  method: "post",
-  path: "/createCourseVideo",
-  tags: ["Profile / Courses"],
-  needAuth: true,
-  summary: "建立(審核)線上課程-影片",
-  formData: true,
-  openapiSchema: createCourseVideoOpenapiSchema,
-  middlewares: [videoUploadType, videoUpload.single("video")],
-  handler: [asyncHandler(createCourseVideo)],
-  router: profileCourseRouter,
-});

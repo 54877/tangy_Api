@@ -28,13 +28,6 @@ export const searchCourseSchema = z.object({
   categoryKey: z.array(CategoryKeyScheme).max(5, "最多只能選擇5個課程分類").optional(),
 });
 
-export const createCourseVideoOpenapiSchema = z.object({
-  video: z.string().openapi({
-    format: "binary",
-    description: "MP4 (video/mp4)、WebM (video/webm)",
-  }),
-});
-
 export const reReviewCourseBaseSchema = courseSchema
   .omit({ videoKey: true, duration: true, videoTicket: true })
   .extend({

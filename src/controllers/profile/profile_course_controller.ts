@@ -1,6 +1,5 @@
 import {
   createCourseLogic,
-  createCourseVideoLogic,
   getMyCourseDetailByIdLogic,
   getCourseFormOptionsLogic,
   getMyCourseLogic,
@@ -8,19 +7,6 @@ import {
 } from "../../services/profile/profile_course_service";
 import { JwtAsyncFunction } from "../../types/asyncType";
 import { success } from "../../utils/success";
-
-export const createCourseVideo: JwtAsyncFunction = async (req, res) => {
-  // const { duration, videoKey, videoTicket } = await createCourseVideoLogic(
-  //   req.file,
-  //   req.user.id,
-  // );
-
-  success(
-    res,
-    200,
-    // { videoKey, duration, videoTicket }
-  );
-};
 
 export const createCourse: JwtAsyncFunction = async (req, res) => {
   const {

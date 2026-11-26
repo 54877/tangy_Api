@@ -32,15 +32,6 @@ export const imageUploadType = (
   next();
 };
 
-export const videoUploadType = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  req.uploadType = "video";
-  next();
-};
-
 export const errorHandler = (
   err: unknown,
   req: Request,
@@ -57,10 +48,7 @@ export const errorHandler = (
       errors: { message: "Token 無效" },
     });
   }
-  const multerMessage =
-    req.uploadType === "video"
-      ? "影片大小不可超過 50 MB"
-      : "圖片大小不可超過 5 MB";
+  const multerMessage = "圖片大小不可超過 5 MB";
 
   // Multer 錯誤
   if (err instanceof multer.MulterError) {

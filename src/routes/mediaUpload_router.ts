@@ -15,7 +15,7 @@ mediaUploadRouter.use(authMiddleware);
 openapiRoute({
   method: "post",
   path: "/getUploadToken",
-  tags: ["檔案"],
+  tags: ["file"],
   needAuth: true,
   summary: "取得授權",
   schema: getUploadTokenSchema,
@@ -26,7 +26,7 @@ openapiRoute({
 openapiRoute({
   method: "post",
   path: "/completeMediaUpload",
-  tags: ["檔案"],
+  tags: ["file"],
   needAuth: true,
   summary: "完成上傳確認",
   schema: completeMediaUploadSchema,
