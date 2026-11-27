@@ -46,8 +46,59 @@ export const getUploadTokenLogic = async (input: GetUploadTokenInput) => {
     .createSignedUploadUrl(path);
 
   if (error) {
+    //---------------------------------------
+    if (method === "tus") {
+      console.error("[tus-upload:sign-failed]", {
+        uploadId,
+        errorName: error.name,
+        errorMessage: error.message,
+        status: error.status,
+      });
+    }
+    //---------------------------------------
     throw new AppError("建立影片上傳授權失敗", 500);
   }
+
+  //---------------------------------------
+  if (method === "tus") {
+    const tokenParts = data.token.split(".");
+    let tokenHeader: Record<string, unknown> | null = null;
+    let tokenPayload: Record<string, unknown> | null = null;
+    try {
+      tokenHeader = JSON.parse(
+        Buffer.from(tokenParts[0] ?? "", "base64url").toString("utf8"),
+      );
+      tokenPayload = JSON.parse(
+        Buffer.from(tokenParts[1] ?? "", "base64url").toString("utf8"),
+      );
+    } catch {
+      // Log only token structure below; never print the token itself.
+    }
+    const configuredProjectRef = new URL(
+      process.env.SUPABASE_URL!,
+    ).hostname.split(".")[0];
+    const tokenObjectPath =
+      typeof tokenPayload?.url === "string"
+        ? tokenPayload.url.replace(`${VIDEO_BUCKET}/`, "")
+        : null;
+    console.info("[tus-upload:token-issued]", {
+      uploadId,
+      endpointProjectRef: endpoint?.split("https://")[1]?.split(".")[0],
+      configuredProjectRef,
+      tokenPartCount: tokenParts.length,
+      tokenPartsNonEmpty: tokenParts.map((part) => part.length > 0),
+      tokenAlgorithm: tokenHeader?.alg ?? null,
+      tokenKeyIdPresent: typeof tokenHeader?.kid === "string",
+      tokenScope: tokenPayload?.scope ?? null,
+      tokenBucketMatches:
+        typeof tokenPayload?.url === "string" &&
+        tokenPayload.url.startsWith(`${VIDEO_BUCKET}/`),
+      tokenPathMatches: tokenObjectPath === path,
+      tokenIssuedAt: tokenPayload?.iat ?? null,
+      tokenExpiresAt: tokenPayload?.exp ?? null,
+    });
+  }
+  //---------------------------------------
 
   const expiresAt = new Date(
     Date.now() +
